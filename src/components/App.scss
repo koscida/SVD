@@ -1,0 +1,74 @@
+.configuration {
+	.filterOptions {
+		text-align: center;
+		.filterOption:hover {
+			cursor: pointer;
+		}
+		.shown {
+			background: papayawhip;
+		}
+	}
+	
+}
+.seasonalDisplay {
+	.season {
+		
+		.seasonTimeline {
+			
+			> div {
+				border: 1px solid #E0E2EF;
+				text-align: center;
+			}
+			
+			> *.alt {
+				background: #F0F2FF; 
+			}
+			
+			.fishCell {
+				text-align: center;
+				.weather {
+					> * {
+						
+					}
+					.Sun {
+						background: rgb(247, 247, 228);
+						&.included {
+							background: palegoldenrod;
+						}
+					}
+					.Rain {
+						background: rgb(224, 247, 247);
+						&.included {
+								background: paleturquoise;
+							}
+					}
+					.Snow {
+						background: rgb(231, 247, 249);
+						&.included {
+								background: powderblue;
+							}
+					}
+					.Storm {
+						background: rgb(234, 234, 234);
+						&.included {
+								background: silver;
+							}
+					}
+					.Wind {
+						background: rgb(251, 235, 237);
+						&.included {
+								background: pink;
+							}
+					}
+					
+					img {
+						width: 100%;
+						max-width: 30px;
+						max-height: 30px;
+						margin: 0 auto;
+					}
+				}
+			}
+		}
+	}
+}
