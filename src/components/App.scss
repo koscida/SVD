@@ -20,53 +20,60 @@
 				text-align: center;
 			}
 			
-			> *.alt {
-				background: #F0F2FF; 
-			}
-			
 			.fishCell {
 				text-align: center;
+				
 				.weather {
-					> * {
-						
-					}
-					.Sun {
-						background: rgb(247, 247, 228);
-						&.included {
-							background: palegoldenrod;
-						}
-					}
-					.Rain {
-						background: rgb(224, 247, 247);
-						&.included {
-								background: paleturquoise;
-							}
-					}
-					.Snow {
-						background: rgb(231, 247, 249);
-						&.included {
-								background: powderblue;
-							}
-					}
-					.Storm {
-						background: rgb(234, 234, 234);
-						&.included {
-								background: silver;
-							}
-					}
-					.Wind {
-						background: rgb(251, 235, 237);
-						&.included {
-								background: pink;
-							}
-					}
-					
 					img {
 						width: 100%;
 						margin: 0 auto;
+						max-width: 30px;
+						max-height: 30px;
 					}
 				}
 			}
+			
+			
+						
+			.Sun {
+				background: rgb(247, 247, 228);
+				&.included {
+					background: rgb(238, 232, 170); // palegoldenrod
+				}
+			}
+			.Rain {
+				background: rgb(224, 247, 247);
+				&.included {
+					background: rgb(175, 238, 238); // paleturquoise
+				}
+			}
+			.Snow {
+				background: rgb(231, 247, 249);
+				&.included {
+					background: rgb(176, 224, 230); // powderblue
+				}
+			}
+			.Storm {
+				background: rgb(234, 234, 234);
+				&.included {
+					background: rgb(192, 192, 192); // silver
+				}
+			}
+			.Wind {
+				background: rgb(251, 235, 237);
+				&.included {
+					background: rgb(255, 192, 203); // pink
+				}
+			}
+			
+			>*.alt {
+				background: #F0F2FF;
+			}
+			
+			
+			
+			
+			
 		}
 	}
 }

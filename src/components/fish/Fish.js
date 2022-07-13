@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import SeasonalDisplay from './SeasonalDisplay'
 import data from '../data'
 import FishConfig from './FishConfig'
@@ -7,38 +7,38 @@ import FishConfig from './FishConfig'
 const dataSeasons = data.seasons
 const dataWeather = data.weather
 
-// get data local storage, if found
-const seasonsLocal = JSON.parse(localStorage.getItem('svd-fish-seasons'));
-const weatherLocal = JSON.parse(localStorage.getItem('svd-fish-weather'));
+// from: https://www.robinwieruch.de/local-storage-react/#local-storage-in-javascript
+const useLocalStorage = (key, initState) => {
+	const [value, setValue] = React.useState(
+		JSON.parse(localStorage.getItem(key)) ?? initState
+	);
+
+	React.useEffect(() => {
+		localStorage.setItem(key, JSON.stringify(value));
+	}, [value, key]);
+
+	return [value, setValue];
+};
 
 function Fish() {
-	const [seasons, setSeasons] = useState(seasonsLocal ?? [Object.values(dataSeasons)[0]])
-	const [weather, setWeather] = useState(weatherLocal ?? [Object.values(dataWeather)[0]])
-	
-	// config process before set new vars
-	const setConfigSeasons = (newSeason) => {
-		localStorage.setItem('svd-fish-seasons', JSON.stringify(newSeason));
-		setSeasons(newSeason)
-	}
-	const setConfigWeather = (newWeather) => {
-		localStorage.setItem('svd-fish-weather', JSON.stringify(newWeather));
-		setWeather(newWeather)
-	}
+	const [seasons, setSeasons] = useLocalStorage('svd-fish-seasons', [Object.values(dataSeasons)[0]])
+	const [weather, setWeather] = useLocalStorage('svd-fish-weather', [Object.values(dataWeather)[0]])
+	const [caughtFish, setCaughtFish] = useLocalStorage('svd-fish-caught', [1,2,3])
 	
 	// Main Display
 	return <div className='fishApp'>
 			
 			<FishConfig 
 				seasons={seasons}
-				setSeasons={setConfigSeasons}
+				setSeasons={setSeasons}
 				weather={weather}
-				setWeather={setConfigWeather}
+				setWeather={setWeather}
 				/>
 				
 			<div className='seasonalDisplay'>
-				{seasons.map(season => {
-					return <SeasonalDisplay season={season} weather={weather} key={season.id} />
-				})}
+				{seasons.map(season => 
+					<SeasonalDisplay season={season} weather={weather} caughtFish={caughtFish} setCaughtFish={setCaughtFish} key={season.id} />
+				)}
 			</div>
 		
 	</div>;
