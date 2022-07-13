@@ -7,43 +7,44 @@ const dataSeasonalFish = data.seasonalFish
 function SeasonalDisplay({season, weather}) {
 	const {name, image} = season
 	const weatherNames = weather.map(x => x.name)
-	const blockTimes = [...Array(20).keys()].map( i => {
-		const blockTime = new Date("1970-01-01 6:00:00");
-		blockTime.setHours(blockTime.getHours() + i)
-		// console.log("blockTime",blockTime)
-		return blockTime
+	
+	// get viable weather statuses for the season
+	const cellWeather = dataSeasons[name].weather.filter(w => weatherNames.includes(w))
+	
+	const lenBlockTimes = 20
+	const blockIncramenter = 1
+	const blockTimes = [...Array(lenBlockTimes).keys()].map( i => {
+		const startTime = new Date("1970-01-01 6:00:00");
+		startTime.setHours(startTime.getHours() + (i*blockIncramenter))
+		
+		const endTime = new Date(startTime);
+		endTime.setHours(endTime.getHours() + blockIncramenter)
+		
+		return [startTime, endTime]
 	})
 	
 	
-	const TimelineCell = ({fish}) => {
-		// get viable weather statuses for the season
-		const cellWeather = dataSeasons[name].weather.filter(w => weatherNames.includes(w))
+	const WeatherCell = ({fishWeather, cellWeather}) => {
 		const cellWLen = cellWeather.length
-		
-		// get viable fish weather statuses
-		let fishWeather = []
-		if(fish) {
-			fishWeather = fish.weather.filter(weatherStatus => {
-				return cellWeather.includes(weatherStatus)
-			})
-		}
-		
-		// vars
 		const gridStyle = {gridTemplateColumns: 'repeat(' + cellWLen + ', ' + (100/cellWLen) + '%)'}
 		
 		// display
 		return <div className='fishCell'>
 			
-			<div className='weather d-grid h-100' style={gridStyle}>
+			<div className='weather h-100 d-md-grid d-flex flex-column ' style={gridStyle}>
 				{cellWeather.map(weatherStatus => {
+					// if fish included for this weather cell
 					const included = fishWeather.includes(weatherStatus);
-					const imgShown = included && cellWLen === 1
+					// what image and text is shown
+					// const imgShown = included && cellWLen === 1
+					const imgShown = true
 					const src = imgShown && dataWeather[weatherStatus].images[name];
 					const imgName = !imgShown && (cellWLen === 2 ? dataWeather[weatherStatus].name : dataWeather[weatherStatus].shortName)
-					const weatherClass = weatherStatus + " h-100 d-flex p-1 flex-column " + (included ? " included" : '');
+					// class
+					const weatherClass =  "weatherStatus h-100 p-xl-1 " + weatherStatus + (included ? " included" : '');
 					// console.log(src)
-					return <div key={weatherStatus} className={weatherClass}>
-						{imgShown && <img src={"images/" + src} alt={weatherStatus} />}
+					return <div key={weatherStatus} className={weatherClass} style={{padding:"2px"}}>
+						{(included && imgShown) && <img src={"images/" + src} alt={weatherStatus} />}
 						{(included && !imgShown) && <p style={{fontSize: "0.8rem"}}>{imgName}</p>}
 					</div>
 				})}
@@ -52,13 +53,22 @@ function SeasonalDisplay({season, weather}) {
 	}
 	
 	const FishTimeline = ({fish,i}) => {
+		// get viable fish weather statuses
+		let fishWeather = []
+		if(fish) {
+			fishWeather = fish.weather.filter(weatherStatus => {
+				return cellWeather.includes(weatherStatus)
+			})
+		}
+		
 		const altClass = i % 2 === 0 ? " alt " : ""
+		
 		return <>
 			<div className={altClass}>
 				<p className='m-0'>{fish.name}</p>
 			</div>
 			
-			{blockTimes.map( (blockTime, i) => {
+			{blockTimes.map( ([blockTimeStart, blockTimeEnd], i) => {
 				// console.log("blockTime",blockTime)
 				
 				let isShown = false
@@ -69,14 +79,14 @@ function SeasonalDisplay({season, weather}) {
 					timeEnd.setHours(timeEnd.getHours() + time.end)
 					// console.log("timeStart",timeStart)
 					// console.log("timeEnd",timeEnd)
-					if(blockTime >= timeStart && blockTime <= timeEnd) {
+					if(timeStart <= blockTimeStart && timeEnd >= blockTimeEnd) {
 						isShown = true
 					}
 				})
 				
 				return isShown 
-					? <TimelineCell key={i} fish={fish} />
-					: <TimelineCell key={i} fish={null} />
+					? <WeatherCell key={i} fishWeather={fishWeather} cellWeather={cellWeather} />
+					: <WeatherCell key={i} fishWeather={[]} cellWeather={cellWeather} />
 			})}
 		</>
 	}
@@ -86,11 +96,11 @@ function SeasonalDisplay({season, weather}) {
 			<img src={"images/" + image} alt={name} className="me-2"/>
 			{name} 
 		</h3>
-		<div className='seasonTimeline d-grid' style={{gridTemplateColumns: '100px repeat(20, calc((100% - 100px) / 20))'}}>
+		<div className='seasonTimeline d-grid' style={{gridTemplateColumns: '100px repeat(' + lenBlockTimes + ', calc((100% - 100px) / ' + lenBlockTimes + '))'}}>
 			<div></div>
-			{blockTimes.map( (blockTime, i) => {
+			{blockTimes.map( ([blockTimeStart, blockTimeEnd], i) => {
 				// get hour
-				let hour = blockTime.getHours()
+				let hour = blockTimeStart.getHours()
 				let ending = "AM"
 				if(hour > 12) ending = "PM"
 				hour = hour % 12

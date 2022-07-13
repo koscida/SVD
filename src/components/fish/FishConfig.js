@@ -60,6 +60,7 @@ function FishConfig({seasons, setSeasons, weather, setWeather}) {
 					</div>
 				})}
 			</div>
+			
 		</div>
 	</>;
 }
