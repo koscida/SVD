@@ -1,8 +1,10 @@
 import data from '../data'
 import FishTimeline from './FishTimeline'
+import FishLocation from './FishLocation'
 
 const dataSeasons = data.seasons
 const dataWeather = data.weather
+const dataLocations = data.locations
 const dataSeasonalFish = data.seasonalFish
 
 const lenBlockTimes = 20
@@ -19,7 +21,7 @@ const blockTimes = [...Array(lenBlockTimes).keys()].map( i => {
 
 
 
-function SeasonalDisplay({season, weather, caughtFish, setCaughtFish}) {
+function SeasonalDisplay({season, weather, showBy, caughtFish, setCaughtFish}) {
 	const {name, image} = season
 	const weatherNames = weather.map(x => x.name)
 	
@@ -54,27 +56,42 @@ function SeasonalDisplay({season, weather, caughtFish, setCaughtFish}) {
 		return <div>{hour + " " + ending}</div>
 	}
 	const DisplayRow = ({fish, i}) => {
-		// row class
-		const altClass = i % 2 === 1 ? " alt " : ""
+		// check if fish caught
 		const caught = caughtFish ? caughtFish.includes(fish.id) : false
 		const checked = caught ? "checked" : null
+		
+		// row class
+		const altClass = (i % 2 === 1 ? " alt " : "") + (caught ? " caught " : "")
+		
 		return <>
 			<div className={altClass}>
 				<p className='m-0'>{fish.name}</p>
 			</div>
 			
-			<div className={altClass}>
-				<p className='m-0'>{caught}</p>
+			<div className={'checkCell d-flex align-items-center justify-content-center ' + altClass}>
 				<div className="form-check">
 					<input className="form-check-input" type="checkbox" value={caught} checked={checked} onChange={handleCheck} name={fish.id} />
 				</div>
 			</div>
 			
-			<FishTimeline 
-				fish={fish}
-				seasonWeather={seasonWeather} 
-				seasonName={name}
-				classStyle={altClass} />
+			{showBy === "Timeline" 
+				? <FishTimeline 
+					fish={fish}
+					seasonWeather={seasonWeather} 
+					seasonName={name}
+					classStyle={altClass} 
+					/>
+				: null
+			}
+			{showBy === "Location" 
+				? <FishLocation 
+					fish={fish}
+					seasonWeather={seasonWeather} 
+					seasonName={name}
+					classStyle={altClass} 
+					/>
+				: null
+			}
 		</>
 	}
 	
@@ -86,9 +103,24 @@ function SeasonalDisplay({season, weather, caughtFish, setCaughtFish}) {
 		<div className='seasonTimeline d-grid' style={{gridTemplateColumns: '100px auto repeat(' + lenBlockTimes + ', calc((100% - 100px) / ' + lenBlockTimes + '))'}}>
 			<div>Name</div>
 			<div>Caught?</div>
-			{blockTimes.map( ([blockTimeStart], i) => 
-				<DisplayHour key={i} startTime={blockTimeStart} /> 
-			)}
+			
+			
+			{showBy === "Timeline" 
+				? blockTimes.map( ([blockTimeStart], i) => 
+					<DisplayHour key={i} startTime={blockTimeStart} /> 
+				)
+				: null
+			}
+			{showBy === "Location" 
+				? Object.values(dataLocations).map( (dataLocation, i) => 
+					Object.values(dataLocation).map( (location, i) => 
+						<div>{location.name}</div>
+					)
+				)
+				: null
+			}
+			
+			
 			{dataSeasonalFish
 				.filter( thisFish => thisFish.season.includes(name) && thisFish.weather.some(w => weatherNames.includes(w)) && !thisFish.legend )
 				.map( (thisFish,i) => 

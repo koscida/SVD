@@ -21,7 +21,7 @@ const seasons = {
 		id: 4,
 		name: 'Winter',
 		image: 'Winter.png',
-		weather: ["Sun", "Snow"],
+		weather: ["Sun", "Snow", "Rain"],
 	}
 }
 exports.seasons = seasons
@@ -47,6 +47,7 @@ const weather = {
 			"Spring": "StatusRain.png",
 			"Summer": "StatusRain.png",
 			"Fall": "StatusRain.png",
+			"Winter": "StatusRain.png",
 		},
 	},
 	"Snow": {
