@@ -22,8 +22,9 @@ const useLocalStorage = (key, initState) => {
 
 function Fish() {
 	const [showBy, setShowBy] = useLocalStorage('svd-fish-showBy', "Timeline")
-	const [filterSeasons, setFilterSeasons] = useLocalStorage('svd-fish-seasons', [Object.values(dataSeasons)[0]])
-	const [filterWeather, setFilterWeather] = useLocalStorage('svd-fish-weather', [Object.values(dataWeather)[0]])
+	const [filterSeasons, setFilterSeasons] = useLocalStorage('svd-fish-filter-seasons', [Object.values(dataSeasons)[0]])
+	const [filterWeather, setFilterWeather] = useLocalStorage('svd-fish-filter-weather', [Object.values(dataWeather)[0]])
+	const [filterCaught, setFilterCaught] = useLocalStorage('svd-fish-filter-caught', [{"name": "Caught"}, {"name":"Not Caught"}])
 	const [caughtFish, setCaughtFish] = useLocalStorage('svd-fish-caught', [1,2,3])
 	
 	// Main Display
@@ -32,10 +33,12 @@ function Fish() {
 				
 			<div className='col-2'>
 				<Config 
-					seasons={filterSeasons}
-					setSeasons={setFilterSeasons}
-					weather={filterWeather}
-					setWeather={setFilterWeather}
+					filterSeasons={filterSeasons}
+					setFilterSeasons={setFilterSeasons}
+					filterWeather={filterWeather}
+					setFilterWeather={setFilterWeather}
+					filterCaught={filterCaught}
+					setFilterCaught={setFilterCaught}
 					showBy={showBy}
 					setShowBy={setShowBy}
 					/>
@@ -44,8 +47,9 @@ function Fish() {
 			<div className='col-10 seasonalDisplay'>
 				<SeasonalDisplay 
 					showBy={showBy}
-					seasons={filterSeasons} 
-					weather={filterWeather} 
+					filterSeasons={filterSeasons} 
+					filterWeather={filterWeather} 
+					filterCaught={filterCaught}
 					caughtFish={caughtFish} 
 					setCaughtFish={setCaughtFish} 
 					/>

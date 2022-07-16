@@ -1,47 +1,37 @@
 import data from '../data'
+import GridCell from './GridCell'
 
 const dataSeasons = data.seasons
 const dataWeather = data.weather
 const dataLocations = data.locations
-const dataSeasonalFish = data.seasonalFish
 
 
 
-function LocationGrid({seasonName, seasonWeather, filteredWeatherNames, caughtFish, handleCaught}) {
+function LocationGrid({displayFish, seasonName, seasonWeather, filteredWeatherNames, caughtFish, handleCaught}) {
 	const townLocations = Object.values(dataLocations.locationTown)
 	const townLocationsLen = townLocations.length
+	
+	const specialLocations = Object.values(dataLocations.locationSpecial)
+	const specialLocationsLen = specialLocations.length
+	
+	const farmLocations = Object.values(dataLocations.locationFarm)
+	const farmLocationsLen = farmLocations.length
+	
+	const allLocations = [
+		["locationTown", townLocations], 
+		["locationSpecial", specialLocations], 
+		["locationFarm", farmLocations]
+	]
+	const allLocationsLen = townLocationsLen + specialLocationsLen + farmLocationsLen
 	
 	// displays
 	const GridHeader = () => <>
 		<div>Name</div>
 		<div>Caught?</div>
-		{townLocations.map( (location, i) => <div key={i}>{location.name}</div> )}
+		{allLocations.map( ([locationName, locationGroup], i) => {
+			return locationGroup.map( (location, i) => <div key={i}>{location.name}</div> )
+		})}
 	</>
-	
-	const GridCell = ({i, fishWeather, classStyle}) => {
-		const cellClass = "fishCell " + classStyle
-		// display
-		return <div className={cellClass}>
-			
-			<div className='weather h-100 d-flex flex-column '>
-				{seasonWeather.map(weatherStatus => {
-					// if fish included for this weather cell
-					const included = fishWeather.includes(weatherStatus);
-					// what image and text is shown
-					const imgShown = true
-					const src = imgShown && dataWeather[weatherStatus].images[seasonName]; 
-					const imgName = !imgShown && dataWeather[weatherStatus].name
-					// class
-					const weatherClass =  "weatherStatus h-100 p-xl-1 " + weatherStatus + (included ? " included" : '');
-					// console.log(src)
-					return <div key={weatherStatus} className={weatherClass} style={{padding:"2px"}}>
-						{(included && imgShown) && <img src={"images/" + src} alt={weatherStatus} />}
-						{(included && !imgShown) && <p style={{fontSize: "0.8rem"}}>{imgName}</p>}
-					</div>
-				})}
-			</div>
-		</div>
-	}
 	
 	const GridRow = ({fish, caught, classStyle}) => {
 		// check if fish caught
@@ -63,39 +53,40 @@ function LocationGrid({seasonName, seasonWeather, filteredWeatherNames, caughtFi
 					<input className="form-check-input" type="checkbox" value={caught} checked={checked} onChange={handleCaught} name={fish.id} />
 				</div>
 			</div>
-			{townLocations.map( (location, i) => {
-				// console.log("blockTime",blockTime)
-				const isShown = fish.locationTown.includes(location.name)
-				
-				return <GridCell 
-					key={i} 
-					i={i}
-					fishWeather={isShown ? fishWeather : []} 
-					classStyle={classStyle}
-					/>
+			
+			{allLocations.map( ([locationName, locationGroup], i) => {
+				return locationGroup.map(location => { 
+					
+					const isShown = fish[locationName].includes(location.name)
+					
+					return <GridCell 
+						key={location.name} 
+						seasonName={seasonName}
+						seasonWeather={seasonWeather}
+						fishWeather={isShown ? fishWeather : []} 
+						classStyle={classStyle}
+						/>
+				})
 			})}
 		</>
 	}
 	
 	const GridBody = () => {
-		return dataSeasonalFish
-			.filter( thisFish => thisFish.season.includes(seasonName) && thisFish.weather.some(w => filteredWeatherNames.includes(w)) && !thisFish.legend )
-			.sort( (a,b) =>  a.id < b.id )
-			.map( (thisFish,i) => {
-				const caught = caughtFish ? caughtFish.includes(thisFish.id) : false
-				const altClass = (i % 2 === 1 ? " alt " : "") + (caught ? " caught " : "") 
-				return <GridRow 
-					key={thisFish.id}
-					fish={thisFish}
-					caught={caught}
-					classStyle={altClass} 
-					/>
-			})
+		return displayFish.map( (thisFish,i) => {
+			const caught = caughtFish ? caughtFish.includes(thisFish.id) : false
+			const altClass = (i % 2 === 1 ? " alt " : "") + (caught ? " caught " : "") 
+			return <GridRow 
+				key={thisFish.id}
+				fish={thisFish}
+				caught={caught}
+				classStyle={altClass} 
+				/>
+		})
 	}
 	
 	return <div 
 		className='seasonTimeline d-grid' 
-		style={{gridTemplateColumns: '100px auto repeat(' + townLocationsLen + ', calc((100% - 100px) / ' + townLocationsLen + '))'}}>
+		style={{gridTemplateColumns: '100px auto repeat(' + allLocationsLen + ', calc((100% - 100px) / ' + allLocationsLen + '))'}}>
 		
 		<GridHeader />
 		

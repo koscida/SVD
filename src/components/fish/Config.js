@@ -1,21 +1,22 @@
 import data from '../data'
 
-const dataSeasons = data.seasons
-const dataWeather = data.weather
 const showByOptions = ["Timeline", "Location"]
 
+const dataSeasons = data.seasons
+const dataWeather = data.weather
+const caughtOptions = [{"name": "Caught"}, {"name":"Not Caught"}]
 
 
-function Config({seasons, setSeasons, weather, setWeather, showBy, setShowBy}) {
-	const seasonsNames = seasons.map(x=>x.name)
+function Config({filterSeasons, setFilterSeasons, filterWeather, setFilterWeather, filterCaught, setFilterCaught, showBy, setShowBy}) {
+	const seasonsNames = filterSeasons.map(x=>x.name)
 	const filterOptions = [
 		{
 			"label": "Season",
 			"data": dataSeasons,
 			"shownData": dataSeasons,
-			"filterdData": seasons,
+			"filterdData": filterSeasons,
 			"filterdDataNames": seasonsNames,
-			"setfilterData": setSeasons,
+			"setfilterData": setFilterSeasons,
 		},
 		{
 			"label": "Weather",
@@ -23,10 +24,18 @@ function Config({seasons, setSeasons, weather, setWeather, showBy, setShowBy}) {
 			"shownData": Object.values(dataWeather).filter(weatherStatus =>
 				Object.keys(weatherStatus.images).some(x => seasonsNames.includes(x))
 			),
-			"filterdData": weather,
-			"filterdDataNames": weather.map(x=>x.name),
-			"setfilterData": setWeather,
+			"filterdData": filterWeather,
+			"filterdDataNames": filterWeather.map(x=>x.name),
+			"setfilterData": setFilterWeather,
 		},
+		{
+			"label": "Caught",
+			"data": caughtOptions,
+			"shownData": caughtOptions,
+			"filterdData": filterCaught,
+			"filterdDataNames": filterCaught.map(x=>x.name),
+			"setfilterData": setFilterCaught,
+		}
 	]
 	
 	/* Configuration */
