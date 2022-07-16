@@ -1,7 +1,7 @@
 import React from 'react'
 import SeasonalDisplay from './SeasonalDisplay'
 import data from '../data'
-import FishConfig from './FishConfig'
+import Config from './Config'
 
 // get data from data file
 const dataSeasons = data.seasons
@@ -31,7 +31,7 @@ function Fish() {
 		<div className='row'>
 				
 			<div className='col-2'>
-				<FishConfig 
+				<Config 
 					seasons={seasons}
 					setSeasons={setSeasons}
 					weather={weather}

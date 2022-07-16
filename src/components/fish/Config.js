@@ -4,7 +4,7 @@ const dataSeasons = data.seasons
 const dataWeather = data.weather
 const showByOptions = ["Timeline", "Location"]
 
-function FishConfig({seasons, setSeasons, weather, setWeather, showBy, setShowBy}) {
+function Config({seasons, setSeasons, weather, setWeather, showBy, setShowBy}) {
 	const seasonsNames = seasons.map(x => x.name)
 	const weatherNames = weather.map(x => x.name)
 	
@@ -94,4 +94,4 @@ function FishConfig({seasons, setSeasons, weather, setWeather, showBy, setShowBy
 	</>;
 }
 
-export default FishConfig;
+export default Config;

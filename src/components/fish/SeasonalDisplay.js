@@ -74,24 +74,12 @@ function SeasonalDisplay({season, weather, showBy, caughtFish, setCaughtFish}) {
 				</div>
 			</div>
 			
-			{showBy === "Timeline" 
-				? <FishTimeline 
-					fish={fish}
-					seasonWeather={seasonWeather} 
-					seasonName={name}
-					classStyle={altClass} 
-					/>
-				: null
-			}
-			{showBy === "Location" 
-				? <FishLocation 
-					fish={fish}
-					seasonWeather={seasonWeather} 
-					seasonName={name}
-					classStyle={altClass} 
-					/>
-				: null
-			}
+			<FishTimeline 
+				fish={fish}
+				seasonWeather={seasonWeather} 
+				seasonName={name}
+				classStyle={altClass} 
+				/>
 		</>
 	}
 	
@@ -104,22 +92,9 @@ function SeasonalDisplay({season, weather, showBy, caughtFish, setCaughtFish}) {
 			<div>Name</div>
 			<div>Caught?</div>
 			
-			
-			{showBy === "Timeline" 
-				? blockTimes.map( ([blockTimeStart], i) => 
-					<DisplayHour key={i} startTime={blockTimeStart} /> 
-				)
-				: null
-			}
-			{showBy === "Location" 
-				? Object.values(dataLocations).map( (dataLocation, i) => 
-					Object.values(dataLocation).map( (location, i) => 
-						<div>{location.name}</div>
-					)
-				)
-				: null
-			}
-			
+			{blockTimes.map( ([blockTimeStart], i) => 
+				<DisplayHour key={i} startTime={blockTimeStart} /> 
+			)}
 			
 			{dataSeasonalFish
 				.filter( thisFish => thisFish.season.includes(name) && thisFish.weather.some(w => weatherNames.includes(w)) && !thisFish.legend )
