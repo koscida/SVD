@@ -9,8 +9,10 @@ function Config({seasons, setSeasons, weather, setWeather, showBy, setShowBy}) {
 	const weatherNames = weather.map(x => x.name)
 	
 	/* Configuration */
-	
-	const handleFilterChange = (searchName, group, setGroup, groupData) => {
+	const handleFilterChange = (newOption, setFunction) => {
+		setFunction(newOption)
+	}
+	const handleFilterClick = (searchName, group, setGroup, groupData) => {
 		const filterNames = group.map(x => x.name)
 		// if id in group
 		if(filterNames.includes(searchName)) {
@@ -44,7 +46,7 @@ function Config({seasons, setSeasons, weather, setWeather, showBy, setShowBy}) {
 								type="radio" 
 								name={"showBy" + showByOption} 
 								id={"showBy" + showByOption} 
-								onChange={(e) => {setShowBy(showByOption)}}
+								onChange={(e) => {handleFilterChange(showByOption, setShowBy)}}
 								checked={showBy === showByOption}
 								value={showByOption} />
 							<label className="form-check-label" htmlFor={"showBy" + showByOption}>
@@ -60,14 +62,27 @@ function Config({seasons, setSeasons, weather, setWeather, showBy, setShowBy}) {
 					<h6>Season</h6>
 					<div className='d-flex flex-wrap'>
 						{Object.values(dataSeasons).map(season => {
-							const className = 'filterOption p-2 ms-1 ' + season.name + (seasonsNames.includes(season.name)?" shown":"")
+							const included = seasonsNames.includes(season.name)
+							const className = 'filterOption p-2 me-1 mb-1 text-center ' + season.name + (included ? " shown" : "")
 							return <div 
 								key={season.name} 
 								className={className} 
-								onChange={(e) => {handleFilterChange(season.name, seasons, setSeasons, dataSeasons)}}
+								onClick={(e) => {handleFilterClick(season.name, seasons, setSeasons, dataSeasons)}}
 								>
 								<img src={"images/" + season.image} alt={season.name} />
-								<p>{season.name}</p> 
+								<div className="form-check mt-1">
+									<input 
+										className="form-check-input" 
+										type="checkbox" 
+										name={"showBy" + season.name} 
+										id={"filterSeason" + season.name} 
+										onChange={(e) => {handleFilterClick(season.name, seasons, setSeasons, dataSeasons)}}
+										checked={included && season.name}
+										value={season.name} />
+									<label className="form-check-label" htmlFor={"filterSeason" + season.name}>
+										<p>{season.name}</p>
+									</label>
+								</div>
 							</div>
 						})}
 					</div>
@@ -80,7 +95,7 @@ function Config({seasons, setSeasons, weather, setWeather, showBy, setShowBy}) {
 							return <div 
 								key={weatherStatus.name}
 								className={className} 
-								onChange={(e) => {handleFilterChange(weatherStatus.name, weather, setWeather, dataWeather)}}
+								onClick={(e) => {handleFilterClick(weatherStatus.name, weather, setWeather, dataWeather)}}
 								>
 								<img src={"images/" + Object.values(weatherStatus.images)[0]} alt={weatherStatus.name} />
 								<p>{weatherStatus.name}</p> 
