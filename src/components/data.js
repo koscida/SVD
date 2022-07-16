@@ -80,14 +80,6 @@ const locationTown = {
 		waterStillness: "Ocean",
 		legendLocation: "North of JojaMart"
 	},
-	"Mountain Lake" : {
-		name: "Mountain Lake",
-		locationGroup: "Town",
-		mapLocation: "Mountain",
-		waterSalinity: "Fresh",
-		waterStillness: "Lake",
-		legendLocation : "On Island near Log"
-	},
 	"Town River" : {
 		name: "Town River",
 		locationGroup: "Town",
@@ -95,6 +87,14 @@ const locationTown = {
 		waterSalinity: "Fresh",
 		waterStillness: "River",
 		legendLocation : "North of JojaMart"
+	},
+	"Mountain Lake" : {
+		name: "Mountain Lake",
+		locationGroup: "Town",
+		mapLocation: "Mountain",
+		waterSalinity: "Fresh",
+		waterStillness: "Lake",
+		legendLocation : "On Island near Log"
 	},
 	"Forrest River" : {
 		name: "Forrest River",

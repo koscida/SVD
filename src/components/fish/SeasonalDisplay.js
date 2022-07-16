@@ -1,5 +1,6 @@
 import data from '../data'
 import TimelineGrid from './TimelineGrid'
+import LocationGrid from './LocationGrid'
 
 const dataSeasons = data.seasons
 const dataWeather = data.weather
@@ -8,7 +9,7 @@ const dataSeasonalFish = data.seasonalFish
 
 
 
-function SeasonalDisplay({seasons, weather, caughtFish, setCaughtFish}) {
+function SeasonalDisplay({showBy, seasons, weather, caughtFish, setCaughtFish}) {
 	const weatherNames = weather.map(x => x.name)
 	
 	// click
@@ -39,13 +40,22 @@ function SeasonalDisplay({seasons, weather, caughtFish, setCaughtFish}) {
 				{name} 
 			</h3>
 				
-			<TimelineGrid 
-				seasonName={name}
-				filteredWeatherNames={weatherNames}
-				seasonWeather={seasonWeather}
-				caughtFish={caughtFish}
-				handleCaught={handleCaught}
-				/>
+			{showBy === "Location"
+				? <LocationGrid 
+					seasonName={name}
+					filteredWeatherNames={weatherNames}
+					seasonWeather={seasonWeather}
+					caughtFish={caughtFish}
+					handleCaught={handleCaught}
+					/>
+				: <TimelineGrid 
+					seasonName={name}
+					filteredWeatherNames={weatherNames}
+					seasonWeather={seasonWeather}
+					caughtFish={caughtFish}
+					handleCaught={handleCaught}
+					/>
+			}
 		</div>
 	})
 }

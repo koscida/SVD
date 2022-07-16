@@ -72,10 +72,10 @@ function Config({seasons, setSeasons, weather, setWeather, showBy, setShowBy}) {
 							onChange={(e) => {handleFilterClick(name, filterdData, filterdDataNames, setfilterData, data)}}
 							checked={included && name}
 							value={name} />
-						<label className="form-check-label m-1 text-center" htmlFor={label + name}>
+						<label className="form-check-label m-1 d-flex flex-row" htmlFor={label + name}>
 							{image && <img src={"images/" + image} alt={name} />}
 							{images && <img src={"images/" + Object.values(images)[0]} alt={name} />}
-							<p>{name}</p>
+							<p className='ms-1'>{name}</p>
 						</label>
 					</div>
 				</div>

@@ -43,6 +43,7 @@ function Fish() {
 				
 			<div className='col-10 seasonalDisplay'>
 				<SeasonalDisplay 
+					showBy={showBy}
 					seasons={filterSeasons} 
 					weather={filterWeather} 
 					caughtFish={caughtFish} 
