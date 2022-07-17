@@ -1,13 +1,20 @@
 import data from '../data'
 
-const showByOptions = ["Timeline", "Location"]
+const dataShowGridOptions = ["Timeline", "Location"]
+const dataShowTypeOptions = ["Regular", "Special", "Legendary"]
 
 const dataSeasons = data.seasons
 const dataWeather = data.weather
 const caughtOptions = [{"name": "Caught"}, {"name":"Not Caught"}]
 
 
-function Config({filterSeasons, setFilterSeasons, filterWeather, setFilterWeather, filterCaught, setFilterCaught, showBy, setShowBy}) {
+function Config({
+	filterSeasons, setFilterSeasons, 
+	filterWeather, setFilterWeather, 
+	filterCaught, setFilterCaught, 
+	showGridDisplay, setShowGridDisplay,
+	showType, setShowType,
+}) {
 	const seasonsNames = filterSeasons.map(x=>x.name)
 	const filterOptions = [
 		{
@@ -39,8 +46,17 @@ function Config({filterSeasons, setFilterSeasons, filterWeather, setFilterWeathe
 	]
 	
 	/* Configuration */
-	const handleFilterChange = (newOption, setFunction) => {
-		setFunction(newOption)
+	const handleRadioChange = (newOption, setGroup) => {
+		setGroup(newOption)
+	}
+	const handleCheckboxChange = (newOption, group, setGroup) => {
+		if(group.includes(newOption)) {
+			const newGroup = group.filter( x => x !== newOption )
+			setGroup(newGroup)
+		} else {
+			const newGroup = [...group, newOption]
+			setGroup(newGroup)
+		}
 	}
 	const handleFilterClick = (searchName, group, groupNames, setGroup, groupData) => {
 		// if id in group
@@ -81,7 +97,7 @@ function Config({filterSeasons, setFilterSeasons, filterWeather, setFilterWeathe
 							onChange={(e) => {handleFilterClick(name, filterdData, filterdDataNames, setfilterData, data)}}
 							checked={included && name}
 							value={name} />
-						<label className="form-check-label m-1 d-flex flex-row" htmlFor={label + name}>
+						<label className={"form-check-label m-1 d-flex flex-row" + name} htmlFor={label + name}>
 							{image && <img src={"images/" + image} alt={name} />}
 							{images && <img src={"images/" + Object.values(images)[0]} alt={name} />}
 							<p className='ms-1'>{name}</p>
@@ -101,18 +117,36 @@ function Config({filterSeasons, setFilterSeasons, filterWeather, setFilterWeathe
 				<h4>View</h4>
 				<div className='filterOptions mb-3'>
 					<h6>Show by</h6>
-					{showByOptions.map(showByOption => {
-						return <div className="form-check" key={"showBy" + showByOption}>
+					{dataShowGridOptions.map(showGridOption => {
+						return <div className="form-check" key={"showGridDisplay" + showGridOption}>
 							<input 
 								className="form-check-input" 
 								type="radio" 
-								name={"showBy" + showByOption} 
-								id={"showBy" + showByOption} 
-								onChange={(e) => {handleFilterChange(showByOption, setShowBy)}}
-								checked={showBy === showByOption}
-								value={showByOption} />
-							<label className="form-check-label" htmlFor={"showBy" + showByOption}>
-								{showByOption}
+								name={"showGridDisplay" + showGridOption} 
+								id={"showGridDisplay" + showGridOption} 
+								onChange={(e) => {handleRadioChange(showGridOption, setShowGridDisplay)}}
+								checked={showGridDisplay === showGridOption}
+								value={showGridOption} />
+							<label className="form-check-label" htmlFor={"showGridDisplay" + showGridOption}>
+								{showGridOption}
+							</label>
+						</div>
+					})}
+				</div>
+				<div className='filterOptions mb-3'>
+					<h6>Type</h6>
+					{dataShowTypeOptions.map(showTypeOption => {
+						return <div className="form-check" key={"showType" + showTypeOption}>
+							<input 
+								className="form-check-input" 
+								type="checkbox" 
+								name={"showType" + showTypeOption} 
+								id={"showType" + showTypeOption} 
+								onChange={(e) => {handleCheckboxChange(showTypeOption, showType, setShowType)}}
+								checked={showType.includes(showTypeOption)}
+								value={showTypeOption} />
+							<label className="form-check-label" htmlFor={"showType" + showTypeOption}>
+								{showTypeOption}
 							</label>
 						</div>
 					})}

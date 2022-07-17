@@ -7,7 +7,7 @@ const dataLocations = data.locations
 
 
 
-function LocationGrid({displayFish, seasonName, seasonWeather, filteredWeatherNames, caughtFish, handleCaught}) {
+function GridLocation({displayFish, seasonName, seasonWeather, filteredWeatherNames, caughtFish, handleCaught}) {
 	const townLocations = Object.values(dataLocations.locationTown)
 	const townLocationsLen = townLocations.length
 	
@@ -30,7 +30,7 @@ function LocationGrid({displayFish, seasonName, seasonWeather, filteredWeatherNa
 		return <>
 			<div className={cellClasses} style={{gridRowStart: 1, gridRowEnd: 3}}><p>Name</p></div>
 			<div className={cellClasses} style={{gridRowStart: 1, gridRowEnd: 3}}><p>Caught?</p></div>
-			{allLocations.map( ([locationName, locationGroup], i) => {
+			{allLocations.map( ([locationGroupKey, locationGroup], i) => {
 				return Object.entries(locationGroup
 					.reduce( (prev, curr) => {
 						if(!prev[curr.locationGroup]) prev[curr.locationGroup] = 0
@@ -39,7 +39,7 @@ function LocationGrid({displayFish, seasonName, seasonWeather, filteredWeatherNa
 					},{}))
 					.map( ([location, val], i) => <div key={i} className={cellClasses} style={{gridColumnStart: "auto", gridColumnEnd: "span " + val}}>{location}</div> )
 			})}
-			{allLocations.map( ([locationName, locationGroup], i) => {
+			{allLocations.map( ([locationGroupKey, locationGroup], i) => {
 				return locationGroup.map( (location, i) => <div key={i} className={cellClasses}>{location.name}</div> )
 			})}
 		</>
@@ -66,10 +66,10 @@ function LocationGrid({displayFish, seasonName, seasonWeather, filteredWeatherNa
 				</div>
 			</div>
 			
-			{allLocations.map( ([locationName, locationGroup], i) => {
+			{allLocations.map( ([locationGroupKey, locationGroup], i) => {
 				return locationGroup.map(location => { 
 					
-					const isShown = fish[locationName].includes(location.name)
+					const isShown = fish[locationGroupKey].includes(location.name)
 					
 					return <GridCell 
 						key={location.name} 
@@ -106,4 +106,4 @@ function LocationGrid({displayFish, seasonName, seasonWeather, filteredWeatherNa
 	</div>
 }
 
-export default LocationGrid;
+export default GridLocation;

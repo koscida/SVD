@@ -21,7 +21,8 @@ const useLocalStorage = (key, initState) => {
 };
 
 function Fish() {
-	const [showBy, setShowBy] = useLocalStorage('svd-fish-showBy', "Timeline")
+	const [showGridDisplay, setShowGridDisplay] = useLocalStorage('svd-fish-show-gridDisplay', "Timeline")
+	const [showType, setShowType] = useLocalStorage('svd-fish-show-type', ["Regular"])
 	const [filterSeasons, setFilterSeasons] = useLocalStorage('svd-fish-filter-seasons', [Object.values(dataSeasons)[0]])
 	const [filterWeather, setFilterWeather] = useLocalStorage('svd-fish-filter-weather', [Object.values(dataWeather)[0]])
 	const [filterCaught, setFilterCaught] = useLocalStorage('svd-fish-filter-caught', [{"name": "Caught"}, {"name":"Not Caught"}])
@@ -39,14 +40,17 @@ function Fish() {
 					setFilterWeather={setFilterWeather}
 					filterCaught={filterCaught}
 					setFilterCaught={setFilterCaught}
-					showBy={showBy}
-					setShowBy={setShowBy}
+					showGridDisplay={showGridDisplay}
+					setShowGridDisplay={setShowGridDisplay}
+					showType={showType}
+					setShowType={setShowType}
 					/>
 			</div>
 				
 			<div className='col-10 seasonalDisplay'>
 				<SeasonalDisplay 
-					showBy={showBy}
+					showGridDisplay={showGridDisplay}
+					showType={showType}
 					filterSeasons={filterSeasons} 
 					filterWeather={filterWeather} 
 					filterCaught={filterCaught}

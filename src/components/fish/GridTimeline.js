@@ -19,7 +19,7 @@ const blockTimes = [...Array(lenBlockTimes).keys()].map( i => {
 
 
 
-function TimelineGrid({displayFish, seasonName, seasonWeather, filteredWeatherNames, caughtFish, handleCaught}) {
+function GridTimeline({displayFish, seasonName, seasonWeather, filteredWeatherNames, caughtFish, handleCaught}) {
 
 	// displays
 	const GridHeader = () => {
@@ -27,6 +27,8 @@ function TimelineGrid({displayFish, seasonName, seasonWeather, filteredWeatherNa
 		return <>
 			<div className={cellClasses}>Name</div>
 			<div className={cellClasses}>Caught?</div>
+			<div className={cellClasses}>Type</div>
+			<div className={cellClasses}>Tool</div>
 			{blockTimes.map( ([blockTimeStart], i) => {
 				// get hour
 				let hour = blockTimeStart.getHours() % 12
@@ -58,6 +60,14 @@ function TimelineGrid({displayFish, seasonName, seasonWeather, filteredWeatherNa
 					<input className="form-check-input" type="checkbox" value={caught} checked={checked} onChange={handleCaught} name={fish.id} />
 				</div>
 			</div>
+			
+			<div className={'cell fishCell ' + classStyle}>
+				<p className='m-0'>{fish.type}</p>
+			</div>
+			<div className={'cell fishCell ' + classStyle}>
+				<p className='m-0'>{fish.tool}</p>
+			</div>
+			
 			{blockTimes.map( ([blockTimeStart, blockTimeEnd], i) => {
 				// console.log("blockTime",blockTime)
 				
@@ -100,7 +110,7 @@ function TimelineGrid({displayFish, seasonName, seasonWeather, filteredWeatherNa
 	
 	return <div 
 		className='seasonTimeline d-grid' 
-		style={{gridTemplateColumns: '100px auto repeat(' + lenBlockTimes + ', calc((100% - 100px) / ' + lenBlockTimes + '))'}}>
+		style={{gridTemplateColumns: '100px auto auto auto repeat(' + lenBlockTimes + ', calc((100% - 100px) / ' + lenBlockTimes + '))'}}>
 		
 		<GridHeader />
 		
@@ -108,4 +118,4 @@ function TimelineGrid({displayFish, seasonName, seasonWeather, filteredWeatherNa
 	</div>
 }
 
-export default TimelineGrid;
+export default GridTimeline;

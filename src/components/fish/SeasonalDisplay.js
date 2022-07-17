@@ -1,6 +1,6 @@
 import data from '../data'
-import TimelineGrid from './TimelineGrid'
-import LocationGrid from './LocationGrid'
+import GridTimeline from './GridTimeline'
+import GridLocation from './GridLocation'
 
 const dataSeasons = data.seasons
 const dataWeather = data.weather
@@ -9,7 +9,7 @@ const dataSeasonalFish = data.seasonalFish
 
 
 
-function SeasonalDisplay({showBy, filterSeasons, filterWeather, filterCaught, caughtFish, setCaughtFish}) {
+function SeasonalDisplay({showGridDisplay, showType, filterSeasons, filterWeather, filterCaught, caughtFish, setCaughtFish}) {
 	const filteredWeatherNames = filterWeather.map(x => x.name)
 	const filteredCaughtNames = filterCaught.map(x => x.name)
 	
@@ -35,22 +35,25 @@ function SeasonalDisplay({showBy, filterSeasons, filterWeather, filterCaught, ca
 		const {name, image} = season 
 		// get viable weather statuses for the season
 		const seasonWeather = dataSeasons[name].weather.filter(w => filteredWeatherNames.includes(w))
-		// get fish to display in this season
+		
+		// Get fish to display in this season
+		const caughtFilter = (filteredCaughtNames.length !== 1)
+			? ( f => true )
+			: (filteredCaughtNames.includes("Caught"))
+				? ( f => caughtFish.includes(f.id) )
+				: ( f => !caughtFish.includes(f.id) )
+		
+		// filter season + weather 
+		//	+ caught + legend
+		// 	sort
 		let displayFish = dataSeasonalFish
 			.filter( thisFish => thisFish.season.includes(name) 
 				&& thisFish.weather.some(w => filteredWeatherNames.includes(w)) 
-				&& !thisFish.legend 
 			)
+			.filter(caughtFilter)
+			.filter( f => showType.includes(f.type) )
 			.sort( (a,b) =>  a.id < b.id )
-		if(filteredCaughtNames.length === 1)
-		{
-			if(filteredCaughtNames.includes("Caught")) {
-				displayFish = displayFish.filter( f => caughtFish.includes(f.id) )
-			}
-			else if(filteredCaughtNames.includes("Not Caught")) {
-				displayFish = displayFish.filter( f => !caughtFish.includes(f.id) )
-			}
-		} 
+			.sort( (a,b) =>  a.type === "Regular" || a.type === "Special" )
 		
 			
 		return <div className={"season mb-5 " + name} key={name}>
@@ -59,8 +62,8 @@ function SeasonalDisplay({showBy, filterSeasons, filterWeather, filterCaught, ca
 				{name} 
 			</h3>
 				
-			{showBy === "Location"
-				? <LocationGrid 
+			{showGridDisplay === "Location"
+				? <GridLocation 
 					displayFish = {displayFish}
 					seasonName={name}
 					filteredWeatherNames={filteredWeatherNames}
@@ -68,7 +71,7 @@ function SeasonalDisplay({showBy, filterSeasons, filterWeather, filterCaught, ca
 					caughtFish={caughtFish}
 					handleCaught={handleCaught}
 					/>
-				: <TimelineGrid 
+				: <GridTimeline 
 					displayFish = {displayFish}
 					seasonName={name}
 					filteredWeatherNames={filteredWeatherNames}
