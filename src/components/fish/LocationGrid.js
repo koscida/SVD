@@ -25,13 +25,25 @@ function LocationGrid({displayFish, seasonName, seasonWeather, filteredWeatherNa
 	const allLocationsLen = townLocationsLen + specialLocationsLen + farmLocationsLen
 	
 	// displays
-	const GridHeader = () => <>
-		<div>Name</div>
-		<div>Caught?</div>
-		{allLocations.map( ([locationName, locationGroup], i) => {
-			return locationGroup.map( (location, i) => <div key={i}>{location.name}</div> )
-		})}
-	</>
+	const GridHeader = () => {
+		const cellClasses = "cell cellHeader px-1"
+		return <>
+			<div className={cellClasses} style={{gridRowStart: 1, gridRowEnd: 3}}><p>Name</p></div>
+			<div className={cellClasses} style={{gridRowStart: 1, gridRowEnd: 3}}><p>Caught?</p></div>
+			{allLocations.map( ([locationName, locationGroup], i) => {
+				return Object.entries(locationGroup
+					.reduce( (prev, curr) => {
+						if(!prev[curr.locationGroup]) prev[curr.locationGroup] = 0
+						prev[curr.locationGroup]++
+						return prev
+					},{}))
+					.map( ([location, val], i) => <div key={i} className={cellClasses} style={{gridColumnStart: "auto", gridColumnEnd: "span " + val}}>{location}</div> )
+			})}
+			{allLocations.map( ([locationName, locationGroup], i) => {
+				return locationGroup.map( (location, i) => <div key={i} className={cellClasses}>{location.name}</div> )
+			})}
+		</>
+	}
 	
 	const GridRow = ({fish, caught, classStyle}) => {
 		// check if fish caught
@@ -44,11 +56,11 @@ function LocationGrid({displayFish, seasonName, seasonWeather, filteredWeatherNa
 			: []
 	
 		return <>
-			<div className={"fishCell first-child" + classStyle}>
+			<div className={"cell fishCell first-child" + classStyle}>
 				<p className='m-0'>{fish.name}</p>
 			</div>
 			
-			<div className={'fishCell checkCell d-flex align-items-center justify-content-center ' + classStyle}>
+			<div className={'cell fishCell checkCell ' + classStyle}>
 				<div className="form-check">
 					<input className="form-check-input" type="checkbox" value={caught} checked={checked} onChange={handleCaught} name={fish.id} />
 				</div>

@@ -22,18 +22,21 @@ const blockTimes = [...Array(lenBlockTimes).keys()].map( i => {
 function TimelineGrid({displayFish, seasonName, seasonWeather, filteredWeatherNames, caughtFish, handleCaught}) {
 
 	// displays
-	const GridHeader = () => <>
-		<div>Name</div>
-		<div>Caught?</div>
-		{blockTimes.map( ([blockTimeStart], i) => {
-			// get hour
-			let hour = blockTimeStart.getHours() % 12
-			hour = (hour === 0) ? 12 : hour
-			const ending = (hour > 12) ? "PM" : "AM"
-			//hour
-			return <div key={i}>{hour + " " + ending}</div>
-		})}
-	</>
+	const GridHeader = () => {
+		const cellClasses = "cell cellHeader px-1"
+		return <>
+			<div className={cellClasses}>Name</div>
+			<div className={cellClasses}>Caught?</div>
+			{blockTimes.map( ([blockTimeStart], i) => {
+				// get hour
+				let hour = blockTimeStart.getHours() % 12
+				hour = (hour === 0) ? 12 : hour
+				const ending = (hour > 12) ? "PM" : "AM"
+				//hour
+				return <div key={i} className={cellClasses}>{hour + " " + ending}</div>
+			})}
+		</>
+	}
 	
 	const GridRow = ({fish, caught, classStyle}) => {
 		// check if fish caught
@@ -46,11 +49,11 @@ function TimelineGrid({displayFish, seasonName, seasonWeather, filteredWeatherNa
 			: []
 	
 		return <>
-			<div className={"fishCell first-child " + classStyle}>
+			<div className={"cell fishCell first-child " + classStyle}>
 				<p className='m-0'>{fish.name}</p>
 			</div>
 			
-			<div className={'fishCell checkCell d-flex align-items-center justify-content-center ' + classStyle}>
+			<div className={'cell fishCell checkCell ' + classStyle}>
 				<div className="form-check">
 					<input className="form-check-input" type="checkbox" value={caught} checked={checked} onChange={handleCaught} name={fish.id} />
 				</div>

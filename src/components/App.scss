@@ -23,89 +23,114 @@ body {
 		
 		.seasonTimeline {
 			
-			> div {
-				border: 1px solid #E0E2EF;
-				text-align: center;
-			}
 		}
 	}
 }
+.cell {
+	border: 1px solid #E7EAFA;
+	
+	&.cellHeader {
+		font-weight: bold;
+		display: flex;
+		align-items: end;
+	}
+
+	&.fishCell {
+		opacity: 0.7;
+		text-align: center;
+		
+		&.first-child {
+			opacity: 1;
+			text-align: left;
+			padding: 0 2px;
+		}
+		&.checkCell {
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			
-.fishCell {
-	text-align: center;
-	opacity: 0.7;
-	
-	&.first-child {
-		opacity: 1;
-	}
-	
-	&.alt {
-		opacity: 1;
-		background: #F0F2FF;
-		border: 1px solid #BBC1ED;
-		border-left-width: 0;
-	}
-	&.alt.first-child {
-		border-left-width: 1px;
-	}
-
-	&.caught.first-child {
-		opacity: 0.5;
-	}
-	&.caught {
-		opacity: 0.3;
-	}
-	&.caught.alt {
-		opacity: 0.5;
-	}
-	
-	.weather {
-		img {
-			width: 100%;
-			margin: 0 auto;
-			max-width: 20px;
-			max-height: 20px;
-		}
-		
-		.Sun {
-			background: rgb(247, 247, 228);
-
-			&.included {
-				background: rgb(238, 232, 170); // palegoldenrod
-			}
-		}
-
-		.Rain {
-			background: rgb(224, 247, 247);
-
-			&.included {
-				background: rgb(175, 238, 238); // paleturquoise
+			.form-check {
+				min-height: auto;
+				margin: 0;
+				padding: 0;
+				
+				input {
+					margin: 0;
+					padding: 0;
+				}
 			}
 		}
 		
-		.Snow {
-			background: rgb(231, 247, 249);
-
-			&.included {
-				background: rgb(176, 224, 230); // powderblue
-			}
+		&.alt {
+			opacity: 1;
+			background: #F0F2FF;
+			border: 1px solid #D4D8EF;
+			border-left-width: 0;
+		}
+		&.alt.first-child {
+			border-left-width: 1px;
 		}
 
-		.Storm {
-			background: rgb(234, 234, 234);
-
-			&.included {
-				background: rgb(192, 192, 192); // silver
-			}
+		&.caught.first-child {
+			opacity: 0.5;
+		}
+		&.caught {
+			opacity: 0.3;
+			background: #f2f4ff;
+		}
+		&.caught.alt {
+			opacity: 0.5;
+			background: #e2e5ff;
 		}
 		
-		.Wind {
-			background: rgb(251, 235, 237);
+		.weather {
+			img {
+				width: 100%;
+				margin: 0 auto;
+				max-width: 20px;
+				max-height: 20px;
+			}
+			
+			.Sun {
+				background: rgb(247, 247, 228);
 
-			&.included {
-				background: rgb(255, 192, 203); // pink
+				&.included {
+					background: rgb(238, 232, 170); // palegoldenrod
+				}
+			}
+
+			.Rain {
+				background: rgb(224, 247, 247);
+
+				&.included {
+					background: rgb(175, 238, 238); // paleturquoise
+				}
+			}
+			
+			.Snow {
+				background: rgb(231, 247, 249);
+
+				&.included {
+					background: rgb(176, 224, 230); // powderblue
+				}
+			}
+
+			.Storm {
+				background: rgb(234, 234, 234);
+
+				&.included {
+					background: rgb(192, 192, 192); // silver
+				}
+			}
+			
+			.Wind {
+				background: rgb(251, 235, 237);
+
+				&.included {
+					background: rgb(255, 192, 203); // pink
+				}
 			}
 		}
-	}
 
+	}
 }
