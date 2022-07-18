@@ -31,57 +31,61 @@ function SeasonalDisplay({showGridDisplay, showType, filterSeasons, filterWeathe
 		}
 	}
 	
-	return filterSeasons.map(season => {
-		const {name, image} = season 
-		// get viable weather statuses for the season
-		const seasonWeather = dataSeasons[name].weather.filter(w => filteredWeatherNames.includes(w))
-		
-		// Get fish to display in this season
-		const caughtFilter = (filteredCaughtNames.length !== 1)
-			? ( f => true )
-			: (filteredCaughtNames.includes("Caught"))
-				? ( f => caughtFish.includes(f.id) )
-				: ( f => !caughtFish.includes(f.id) )
-		
-		// filter season + weather 
-		//	+ caught + legend
-		// 	sort
-		let displayFish = dataSeasonalFish
-			.filter( thisFish => thisFish.season.includes(name) 
-				&& thisFish.weather.some(w => filteredWeatherNames.includes(w)) 
-			)
-			.filter(caughtFilter)
-			.filter( f => showType.includes(f.type) )
-			.sort( (a,b) =>  a.id < b.id )
-			.sort( (a,b) =>  a.type === "Regular" || a.type === "Special" )
-		
+	return <div className='seasonalDisplay'>
+		{filterSeasons.map(season => {
+			const {name, image} = season 
+			// get viable weather statuses for the season
+			const seasonWeather = dataSeasons[name].weather.filter(w => filteredWeatherNames.includes(w))
 			
-		return <div className={"season mb-5 " + name} key={name}>
-			<h3>
-				<img src={"images/" + image} alt={name} className="me-2"/>
-				{name} 
-			</h3>
+			// Get fish to display in this season
+			const caughtFilter = (filteredCaughtNames.length !== 1)
+				? ( f => true )
+				: (filteredCaughtNames.includes("Caught"))
+					? ( f => caughtFish.includes(f.id) )
+					: ( f => !caughtFish.includes(f.id) )
+			
+			// filter season + weather 
+			//	+ caught + legend
+			// 	sort
+			let displayFish = dataSeasonalFish
+				.filter( thisFish => thisFish.season.includes(name) 
+					&& thisFish.weather.some(w => filteredWeatherNames.includes(w)) 
+				)
+				.filter(caughtFilter)
+				.filter( f => showType.includes(f.type) )
+				.sort( (a,b) =>  a.id < b.id )
+				.sort( (a,b) =>  a.type === "Regular" || a.type === "Special" )
+			
 				
-			{showGridDisplay === "Location"
-				? <GridLocation 
-					displayFish = {displayFish}
-					seasonName={name}
-					filteredWeatherNames={filteredWeatherNames}
-					seasonWeather={seasonWeather}
-					caughtFish={caughtFish}
-					handleCaught={handleCaught}
-					/>
-				: <GridTimeline 
-					displayFish = {displayFish}
-					seasonName={name}
-					filteredWeatherNames={filteredWeatherNames}
-					seasonWeather={seasonWeather}
-					caughtFish={caughtFish}
-					handleCaught={handleCaught}
-					/>
-			}
-		</div>
-	})
+			return <div className={"season mb-5 " + name} key={name}>
+				<h3>
+					<img src={"images/" + image} alt={name} className="me-2"/>
+					{name} 
+				</h3>
+					
+				{showGridDisplay === "Location"
+					? <GridLocation 
+						showGridDisplay={showGridDisplay}
+						displayFish = {displayFish}
+						seasonName={name}
+						filteredWeatherNames={filteredWeatherNames}
+						seasonWeather={seasonWeather}
+						caughtFish={caughtFish}
+						handleCaught={handleCaught}
+						/>
+					: <GridTimeline 
+						showGridDisplay={showGridDisplay}
+						displayFish = {displayFish}
+						seasonName={name}
+						filteredWeatherNames={filteredWeatherNames}
+						seasonWeather={seasonWeather}
+						caughtFish={caughtFish}
+						handleCaught={handleCaught}
+						/>
+				}
+			</div>
+		})}
+	</div>
 }
 
 export default SeasonalDisplay;

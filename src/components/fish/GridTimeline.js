@@ -1,5 +1,5 @@
 import data from '../data'
-import GridCell from './GridCell'
+import GridBody from './GridBody'
 
 const dataSeasons = data.seasons
 const dataWeather = data.weather
@@ -19,16 +19,16 @@ const blockTimes = [...Array(lenBlockTimes).keys()].map( i => {
 
 
 
-function GridTimeline({displayFish, seasonName, seasonWeather, filteredWeatherNames, caughtFish, handleCaught}) {
+function GridTimeline({showGridDisplay, displayFish, seasonName, seasonWeather, filteredWeatherNames, caughtFish, handleCaught}) {
 
 	// displays
 	const GridHeader = () => {
 		const cellClasses = "cell cellHeader px-1"
 		return <>
-			<div className={cellClasses}>Name</div>
-			<div className={cellClasses}>Caught?</div>
-			<div className={cellClasses}>Type</div>
-			<div className={cellClasses}>Tool</div>
+			<div className={cellClasses}><p>Name</p></div>
+			<div className={cellClasses}><p>Caught?</p></div>
+			<div className={cellClasses}><p>Type</p></div>
+			<div className={cellClasses}><p>Tool</p></div>
 			{blockTimes.map( ([blockTimeStart], i) => {
 				// get hour
 				let hour = blockTimeStart.getHours() % 12
@@ -40,81 +40,22 @@ function GridTimeline({displayFish, seasonName, seasonWeather, filteredWeatherNa
 		</>
 	}
 	
-	const GridRow = ({fish, caught, classStyle}) => {
-		// check if fish caught
-		const checked = caught ? "checked" : null
-		// get viable fish weather statuses
-		const fishWeather = fish
-			? fish.weather.filter(weatherStatus => {
-				return seasonWeather.includes(weatherStatus)
-			})
-			: []
-	
-		return <>
-			<div className={"cell fishCell first-child " + classStyle}>
-				<p className='m-0'>{fish.name}</p>
-			</div>
-			
-			<div className={'cell fishCell checkCell ' + classStyle}>
-				<div className="form-check">
-					<input className="form-check-input" type="checkbox" value={caught} checked={checked} onChange={handleCaught} name={fish.id} />
-				</div>
-			</div>
-			
-			<div className={'cell fishCell ' + classStyle}>
-				<p className='m-0'>{fish.type}</p>
-			</div>
-			<div className={'cell fishCell ' + classStyle}>
-				<p className='m-0'>{fish.tool}</p>
-			</div>
-			
-			{blockTimes.map( ([blockTimeStart, blockTimeEnd], i) => {
-				// console.log("blockTime",blockTime)
-				
-				let isShown = false
-				fish.times.forEach( time => {
-					const timeStart = new Date("1970-01-01 0:00:00")
-					timeStart.setHours(timeStart.getHours() + time.start)
-					const timeEnd = new Date("1970-01-01 0:00:00");
-					timeEnd.setHours(timeEnd.getHours() + time.end)
-					// console.log("timeStart",timeStart)
-					// console.log("timeEnd",timeEnd)
-					if(timeStart <= blockTimeStart && timeEnd >= blockTimeEnd) {
-						isShown = true
-					}
-				})
-				
-				return <GridCell 
-					key={i} 
-					seasonName={seasonName}
-					seasonWeather={seasonWeather}
-					fishWeather={isShown ? fishWeather : []} 
-					classStyle={classStyle}
-					/>
-			})}
-		</>
-	}
-	
-	const GridBody = () => {
-		return displayFish.map( (thisFish,i) => {
-			const caught = caughtFish ? caughtFish.includes(thisFish.id) : false
-			const altClass = (i % 2 === 1 ? " alt " : "") + (caught ? " caught " : "") 
-			return <GridRow 
-				key={thisFish.id}
-				fish={thisFish}
-				caught={caught}
-				classStyle={altClass} 
-				/>
-		})
-	}
-	
 	return <div 
 		className='seasonTimeline d-grid' 
-		style={{gridTemplateColumns: '100px auto auto auto repeat(' + lenBlockTimes + ', calc((100% - 100px) / ' + lenBlockTimes + '))'}}>
+		style={{gridTemplateColumns: '100px repeat(3, auto) repeat(' + lenBlockTimes + ', auto )'}}>
 		
 		<GridHeader />
 		
-		<GridBody />
+		<GridBody
+			key={seasonName}
+			showGridDisplay={showGridDisplay}
+			displayFish={displayFish}
+			seasonName={seasonName}
+			seasonWeather={seasonWeather}
+			displayHeaders={blockTimes}
+			caughtFish={caughtFish}
+			handleCaught={handleCaught} 
+			/>
 	</div>
 }
 

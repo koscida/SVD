@@ -47,7 +47,7 @@ function Fish() {
 					/>
 			</div>
 				
-			<div className='col-10 seasonalDisplay'>
+			<div className='col-10'>
 				<SeasonalDisplay 
 					showGridDisplay={showGridDisplay}
 					showType={showType}
