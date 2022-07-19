@@ -3,9 +3,7 @@ import GridTimeline from './GridTimeline'
 import GridLocation from './GridLocation'
 
 const dataSeasons = data.seasons
-const dataWeather = data.weather
-const dataLocations = data.locations
-const dataSeasonalFish = data.seasonalFish
+const dataFish = data.fish
 
 
 
@@ -44,15 +42,16 @@ function SeasonalDisplay({showGridDisplay, showType, filterSeasons, filterWeathe
 					? ( f => caughtFish.includes(f.id) )
 					: ( f => !caughtFish.includes(f.id) )
 			
-			// filter season + weather 
-			//	+ caught + legend
-			// 	sort
-			let displayFish = dataSeasonalFish
+			// filter season + weather + type + not crabpot
+			//	+ caught
+			// 	sort by id, type
+			const displayFish = dataFish
 				.filter( thisFish => thisFish.season.includes(name) 
 					&& thisFish.weather.some(w => filteredWeatherNames.includes(w)) 
+					&& showType.includes(thisFish.type)
+					&& thisFish.type !== "Crabpot"
 				)
 				.filter(caughtFilter)
-				.filter( f => showType.includes(f.type) )
 				.sort( (a,b) =>  a.id < b.id )
 				.sort( (a,b) =>  a.type === "Regular" || a.type === "Special" )
 			
