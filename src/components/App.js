@@ -1,11 +1,39 @@
+import {NavLink, Outlet} from 'react-router-dom'
 import './App.scss';
-import Fish from './fish/Fish'
+
 
 function App() {
+	let activeStyle = {
+		border: "1px solid #ddd",
+	};
 	return <>
-		<div className="container p-3">
-			<Fish />
+		<div>
+			<nav>
+				<ul>
+					<li>
+						<NavLink 
+							to="/"
+							style={({ isActive }) =>
+								isActive ? activeStyle : undefined
+								}
+							>
+							Home
+						</NavLink>
+					</li>
+					<li>
+						<NavLink 
+							to="fish"
+							style={({ isActive }) =>
+								isActive ? activeStyle : undefined
+								}
+							>
+							Fish
+						</NavLink>
+					</li>
+				</ul>
+			</nav>
 		</div>
+		<Outlet />
 	</>;
 }
 
