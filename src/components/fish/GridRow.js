@@ -1,4 +1,4 @@
-import data from '../data'
+import data from '../shared/data'
 import GridCell from './GridCell'
 
 

@@ -1,4 +1,4 @@
-import data from '../data'
+import data from '../shared/data'
 import GridTimeline from './GridTimeline'
 import GridLocation from './GridLocation'
 

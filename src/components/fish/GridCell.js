@@ -1,4 +1,4 @@
-import data from '../data'
+import data from '../shared/data'
 
 const dataWeather = data.weather
 

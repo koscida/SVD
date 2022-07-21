@@ -1,24 +1,13 @@
-import React from 'react'
 import SeasonalDisplay from './SeasonalDisplay'
-import data from '../data'
+import data from '../shared/data'
 import Config from './Config'
+import useLocalStorage from '../shared/useLocalStorage'
 
 // get data from data file
 const dataSeasons = data.seasons
 const dataWeather = data.weather
 
-// from: https://www.robinwieruch.de/local-storage-react/#local-storage-in-javascript
-const useLocalStorage = (key, initState) => {
-	const [value, setValue] = React.useState(
-		JSON.parse(localStorage.getItem(key)) ?? initState
-	);
 
-	React.useEffect(() => {
-		localStorage.setItem(key, JSON.stringify(value));
-	}, [value, key]);
-
-	return [value, setValue];
-};
 
 function Fish() {
 	const [showGridDisplay, setShowGridDisplay] = useLocalStorage('svd-fish-show-gridDisplay', "Timeline")

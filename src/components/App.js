@@ -6,30 +6,36 @@ function App() {
 	let activeStyle = {
 		border: "1px solid #ddd",
 	};
+	const navigationLinks = [
+		{
+			"to": "/",
+			"label": "Home",
+		},
+		{
+			"to": "fish",
+			"label": "Fish",
+		},
+		{
+			"to": "crops",
+			"label": "Crops",
+		},
+	]
 	return <>
 		<div>
 			<nav>
-				<ul>
-					<li>
-						<NavLink 
-							to="/"
-							style={({ isActive }) =>
-								isActive ? activeStyle : undefined
-								}
-							>
-							Home
-						</NavLink>
-					</li>
-					<li>
-						<NavLink 
-							to="fish"
-							style={({ isActive }) =>
-								isActive ? activeStyle : undefined
-								}
-							>
-							Fish
-						</NavLink>
-					</li>
+				<ul className='m-0 d-flex list-unstyled'>
+					{navigationLinks.map( navigationLink => 
+						<li key={navigationLink.label} className='mx-1 p-1'>
+							<NavLink 
+								to={navigationLink.to}
+								style={({ isActive }) =>
+									isActive ? activeStyle : undefined
+									}
+								>
+								{navigationLink.label}
+							</NavLink>
+						</li>
+					)}
 				</ul>
 			</nav>
 		</div>

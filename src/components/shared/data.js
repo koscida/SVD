@@ -25,6 +25,7 @@ const seasons = {
 	}
 }
 exports.seasons = seasons
+exports.seasonsNames = Object.keys(seasons)
 
 
 const weather = {
@@ -69,6 +70,7 @@ const weather = {
 	},
 }
 exports.weather = weather
+exports.weatherNames = Object.keys(weather)
 
 
 const locationTown = {
