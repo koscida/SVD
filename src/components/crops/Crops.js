@@ -3,36 +3,60 @@ import data from '../shared/data'
 
 // get data from data file
 const dataCrops = data.crops
-console.log("dataCrops", dataCrops)
+const crops = dataCrops.reduce( (cropsTmp, c) => {
+		cropsTmp[c.name] = c
+		
+		cropsTmp[c.name].growDays = [1]
+		cropsTmp[c.name].harvestDays = [c.growTime + 1]
+		
+		let day = c.growTime + 1
+		if(c.regrow) {
+			day += c.regrowTime
+		} else {
+			day += c.growTime
+		}
+		while(day <= 28) {
+			if(c.regrow) {
+				cropsTmp[c.name].harvestDays.push(day)
+				day += c.regrowTime
+			} else {
+				cropsTmp[c.name].harvestDays.push(day)
+				cropsTmp[c.name].growDays.push(day)
+				day += c.growTime
+			}
+		}
+		
+		return cropsTmp
+	}, {} )
+console.log("crops", crops)
+const cropNames = dataCrops.map(c => c.name)
 
 function Crops() {
 	const [selectedSeason, setSelectedSeason] = useLocalStorage('svd-crops-selectedseason', "Spring")
-	const [selectedCrops, setSelectedCrops] = useLocalStorage('svd-crops-selectedcrops', dataCrops)
+	const [selectedCrops, setSelectedCrops] = useLocalStorage('svd-crops-selectedcrops', Object.values(crops).filter( c => c.season.includes(selectedSeason)))
 	
-	const crops = dataCrops.reduce( (cropsTmp, c) => {
-		cropsTmp[c.name] = c
-		return cropsTmp
-	}, {} )
-	console.log("crops", crops)
-	const cropNames = dataCrops.map(c => c.name)
-	console.log("cropNames", cropNames)
-
+	
 	const handleSeasonSwitch = (e) => {
-		setSelectedSeason(e.target.value)
+		const newSeason = e.target.value
+		setSelectedSeason(newSeason)
+		setSelectedCrops(Object.values(crops).filter( c => c.season.includes(newSeason)))
 	}
 	
 	const CropCalendar = () => {
-					
+		const cols = selectedCrops.length + 1
 		return <div className='d-grid' style={{gridTemplateColumns: 'repeat(7, calc(100% / 7))', gridtemplateRows: 'repeat(4, calc(100% / 4))'}}>
-			{[...Array(28).keys()].map( i => 
-				<div className='cell' key={i}>
-					<div className='date'>{i + 1}</div>
-					{cropNames.map( cropName => {
-						const crop = crops[cropName]
-						console.log("cropName", cropName)
-						// console.log("crop", crop)
-						return <div>
-							
+			{[...Array(29).keys()].slice(1,).map( i => 
+				<div className='cell cropCell d-grid' key={i} style={{gridTemplateRows: 'repeat('+cols+', calc(100% / '+cols+'))'}}>
+					<div className='date'>{i}</div>
+					{selectedCrops.map( selectedCrop => {
+						const crop = crops[selectedCrop.name]
+						return <div key={selectedCrop.name} className="d-flex direction-row">
+							{crop.growDays.includes(i) 
+								&& <img src={"images/" + crop.seeds.replaceAll(' ','_') + ".png"} alt="" className='seed' />}
+							{crop.harvestDays.includes(i)
+								&& <img src={"images/" + crop.name.replaceAll(' ','_') + ".png"} alt="" className='crop' />}
+							<div style={{background: crop.color, height: "8px", flex: "1 0"}}>
+							</div>
 						</div>
 					})}
 				</div>
@@ -56,7 +80,7 @@ function Crops() {
 					</ul>
 				</div>
 				<div>
-					{dataCrops
+					{Object.values(crops)
 						.filter( c => c.season.includes(selectedSeason))
 						.map( c => <div key={c.name}>
 							{c.name} 
@@ -67,30 +91,6 @@ function Crops() {
 			</div>
 			<div className='col-10'>
 				<CropCalendar />
-				<div>
-					{dataCrops
-						.filter( c => c.season.includes(selectedSeason))
-						.map( (c,i) => {
-							const harvest = c.growTime + 1
-							const reharvest = []
-							if(c.regrow) {
-								let day = harvest + c.regrowTime
-								while(day <= 28) {
-									reharvest.push(day)
-									day += c.regrowTime
-								}
-							}
-							return <div key={i}>
-								<p>{c.name}</p>
-								<p>Plant: 1</p>
-								<p>
-									Harvest: {harvest} 
-									{c.regrow && ", " + reharvest.join(", ")}
-								</p>
-							</div>
-						})
-					}
-				</div>
 			</div>
 		</div>
 		
