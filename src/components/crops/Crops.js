@@ -50,7 +50,7 @@ function Crops() {
 					<div className='date'>{i}</div>
 					{selectedCrops.map( selectedCrop => {
 						const crop = crops[selectedCrop.name]
-						return <div key={selectedCrop.name} className="d-flex direction-row">
+						return <div key={selectedCrop.name} className="d-flex direction-row align-items-center" style={{"minHeight": "20px"}}>
 							{crop.growDays.includes(i) 
 								&& <img src={"images/" + crop.seeds.replaceAll(' ','_') + ".png"} alt="" className='seed' />}
 							{crop.harvestDays.includes(i)
