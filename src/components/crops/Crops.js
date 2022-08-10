@@ -6,22 +6,20 @@ const dataCrops = data.crops
 const crops = dataCrops.reduce( (cropsTmp, c) => {
 		cropsTmp[c.name] = c
 		
-		cropsTmp[c.name].growDays = [1]
-		cropsTmp[c.name].harvestDays = [c.growTime + 1]
+		let day = 1
+		cropsTmp[c.name].growDays = [day]
+		cropsTmp[c.name].harvestDays = []
 		
-		let day = c.growTime + 1
-		if(c.regrow) {
-			day += c.regrowTime
-		} else {
-			day += c.growTime
-		}
+		day += c.growTime
+		
 		while(day <= 28) {
+			cropsTmp[c.name].harvestDays.push(day)
 			if(c.regrow) {
-				cropsTmp[c.name].harvestDays.push(day)
 				day += c.regrowTime
 			} else {
-				cropsTmp[c.name].harvestDays.push(day)
-				cropsTmp[c.name].growDays.push(day)
+				if(day + c.growTime <= 28) {
+					cropsTmp[c.name].growDays.push(day)
+				}
 				day += c.growTime
 			}
 		}
@@ -31,15 +29,25 @@ const crops = dataCrops.reduce( (cropsTmp, c) => {
 console.log("crops", crops)
 const cropNames = dataCrops.map(c => c.name)
 
+const getSelectedCrops = (setSeason) => {
+	return Object.values(crops)
+		.filter( c => c.season.includes(setSeason))
+		.sort( (a,b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0 )
+		.sort( (a,b) => (a.growTime > b.growTime) )
+		.sort( (a,b) => (a.season.length < b.season.length) ? -1 : (a.season.length > b.season.length) ? 1 : 0 )
+		.sort( (a,b) => (!a.regrow && b.regrow) ? -1 : (a.regrow && !b.regrow) ? 1 : 0 )
+}
+
 function Crops() {
 	const [selectedSeason, setSelectedSeason] = useLocalStorage('svd-crops-selectedseason', "Spring")
-	const [selectedCrops, setSelectedCrops] = useLocalStorage('svd-crops-selectedcrops', Object.values(crops).filter( c => c.season.includes(selectedSeason)))
-	
+	const [cropOptions, setCropOptions] = useLocalStorage('svd-crops-cropoptions', getSelectedCrops(selectedSeason))
+	const [selectedCrops, setSelectedCrops] = useLocalStorage('svd-crops-selectedcrops', getSelectedCrops(selectedSeason))
 	
 	const handleSeasonSwitch = (e) => {
 		const newSeason = e.target.value
 		setSelectedSeason(newSeason)
-		setSelectedCrops(Object.values(crops).filter( c => c.season.includes(newSeason)))
+		setSelectedCrops(getSelectedCrops(newSeason))
+		setCropOptions(getSelectedCrops(newSeason))
 	}
 	
 	const CropCalendar = () => {
@@ -50,12 +58,24 @@ function Crops() {
 					<div className='date'>{i}</div>
 					{selectedCrops.map( selectedCrop => {
 						const crop = crops[selectedCrop.name]
+						let opacity = 1
+						// if within first growing period
+						if(i <= crop.growTime) {
+							// color porpotional to growing time
+							opacity = ((1 * i) / crop.growTime)
+						} else {
+							if(crop.regrow) {
+								opacity = ((((i - crop.growTime - 1) % crop.regrowTime) + 1) / crop.regrowTime)
+							} else {
+								opacity = ((((i - crop.growTime - 1) % crop.growTime) + 1) / crop.growTime)
+							}
+						}
 						return <div key={selectedCrop.name} className="d-flex direction-row align-items-center" style={{"minHeight": "20px"}}>
-							{crop.growDays.includes(i) 
-								&& <img src={"images/" + crop.seeds.replaceAll(' ','_') + ".png"} alt="" className='seed' />}
 							{crop.harvestDays.includes(i)
 								&& <img src={"images/" + crop.name.replaceAll(' ','_') + ".png"} alt="" className='crop' />}
-							<div style={{background: crop.color, height: "8px", flex: "1 0"}}>
+							{crop.growDays.includes(i) 
+								&& <img src={"images/" + crop.seeds.replaceAll(' ','_') + ".png"} alt="" className='seed' />}
+							<div style={{background: crop.color, opacity, height: "8px", flex: "1 0"}}>
 							</div>
 						</div>
 					})}
@@ -80,8 +100,7 @@ function Crops() {
 					</ul>
 				</div>
 				<div>
-					{Object.values(crops)
-						.filter( c => c.season.includes(selectedSeason))
+					{cropOptions
 						.map( c => <div key={c.name}>
 							{c.name} 
 							</div>
