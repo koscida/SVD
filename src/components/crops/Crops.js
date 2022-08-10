@@ -28,8 +28,13 @@ const crops = dataCrops.reduce( (cropsTmp, c) => {
 	}, {} )
 
 const getSelectedCrops = (setSeason) => {
-	return Object.values(crops)
+	return sortCrops(
+		Object.values(crops)
 		.filter( c => c.season.includes(setSeason))
+	)
+}
+const sortCrops = (crops) => {
+	return crops
 		.sort( (a,b) => (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0 )
 		.sort( (a,b) => (a.growTime > b.growTime) )
 		.sort( (a,b) => (a.season.length < b.season.length) ? -1 : (a.season.length > b.season.length) ? 1 : 0 )
@@ -53,7 +58,7 @@ function Crops() {
 			setSelectedCrops(newSelectedCrops)
 		} else {
 			const newSelectedCrop = cropOptions.filter( x => x.name === name )
-			setSelectedCrops([...selectedCrops, ...newSelectedCrop])
+			setSelectedCrops(sortCrops([...selectedCrops, ...newSelectedCrop]))
 		}
 	}
 	
@@ -65,32 +70,41 @@ function Crops() {
 					<div className='date'>{i}</div>
 					{selectedCrops.map( selectedCrop => {
 						const crop = crops[selectedCrop.name]
-						let opacity = 1
+						let seedOpacity = 1 / (crop.growTime + 1)
+						let growOpacity = 2 / (crop.growTime + 1)
+						let harvestOpacity = 1
 						// if within first growing period
-						if(i <= crop.growTime) {
-							// color porpotional to growing time
-							opacity = ((1 * i) / crop.growTime)
+						if(i <= (crop.growTime + 1)) {
+							growOpacity = ((1 * i) / (crop.growTime + 1))
 						} else {
 							if(crop.regrow) {
-								opacity = ((((i - crop.growTime - 1) % (crop.regrowTime + 1)) + 1) / (crop.regrowTime + 1))
+								seedOpacity = 1 / (crop.regrowTime + 1)
+								growOpacity = ((((i - crop.growTime - 1) % (crop.regrowTime + 1)) + 0) / (crop.regrowTime + 1))
 							} else {
-								opacity = ((((i - crop.growTime - 1) % (crop.growTime + 1)) + 1) / crop.growTime)
+								growOpacity = ((((i - crop.growTime - 1) % (crop.growTime + 1)) + 1) / (crop.growTime + 1))
 							}
 						}
 						let cropColor = crop.color
-						if(i >= crop.harvestDays[crop.harvestDays.length-1] ) {
+						if(i > crop.harvestDays[crop.harvestDays.length-1] ) {
 							if(crop.regrow)
-								opacity = (1 / crop.regrowTime)
+								growOpacity = (1 / (crop.regrowTime + 1))
 							else
 								cropColor = "transparent"
 						}
 						return <div key={selectedCrop.name} className="d-flex direction-row align-items-center" style={{"minHeight": "20px"}}>
 							{crop.harvestDays.includes(i)
-								&& <img src={"images/" + crop.name.replaceAll(' ','_') + ".png"} alt="" className='crop' />}
+								&& <>
+									<div style={{background: cropColor, opacity: harvestOpacity, height: "8px", flex: "1 0"}}></div>
+									<img src={"images/" + crop.name.replaceAll(' ','_') + ".png"} alt="" className='crop' />
+								</>}
 							{crop.growDays.includes(i) 
-								&& <img src={"images/" + crop.seeds.replaceAll(' ','_') + ".png"} alt="" className='seed' />}
-							<div style={{background: cropColor, opacity, height: "8px", flex: "1 0"}}>
-							</div>
+								&& <>
+									<img src={"images/" + crop.seeds.replaceAll(' ','_') + ".png"} alt="" className='seed' />
+									<div style={{background: cropColor, opacity: seedOpacity, height: "8px", flex: "1 0"}}></div>
+								</>}
+							{!crop.harvestDays.includes(i) && !crop.growDays.includes(i) 
+								&& <div style={{background: cropColor, opacity: growOpacity, height: "8px", flex: "1 0"}}></div>
+							}
 						</div>
 					})}
 				</div>
