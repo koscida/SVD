@@ -15,7 +15,7 @@ const crops = dataCrops.reduce( (cropsTmp, c) => {
 		while(day <= 28) {
 			cropsTmp[c.name].harvestDays.push(day)
 			if(c.regrow) {
-				day += c.regrowTime
+				day += c.regrowTime + 1
 			} else {
 				if(day + c.growTime <= 28) {
 					cropsTmp[c.name].growDays.push(day)
@@ -26,8 +26,6 @@ const crops = dataCrops.reduce( (cropsTmp, c) => {
 		
 		return cropsTmp
 	}, {} )
-console.log("crops", crops)
-const cropNames = dataCrops.map(c => c.name)
 
 const getSelectedCrops = (setSeason) => {
 	return Object.values(crops)
@@ -49,6 +47,15 @@ function Crops() {
 		setSelectedCrops(getSelectedCrops(newSeason))
 		setCropOptions(getSelectedCrops(newSeason))
 	}
+	const handleFilterClick = (name) => {
+		if(selectedCrops.map(x=>x.name).includes(name)) {
+			const newSelectedCrops = selectedCrops.filter( x => x.name !== name )
+			setSelectedCrops(newSelectedCrops)
+		} else {
+			const newSelectedCrop = crops.filter( x => x.name === name )
+			setSelectedCrops([...selectedCrops, ...newSelectedCrop])
+		}
+	}
 	
 	const CropCalendar = () => {
 		const cols = selectedCrops.length + 1
@@ -65,17 +72,24 @@ function Crops() {
 							opacity = ((1 * i) / crop.growTime)
 						} else {
 							if(crop.regrow) {
-								opacity = ((((i - crop.growTime - 1) % crop.regrowTime) + 1) / crop.regrowTime)
+								opacity = ((((i - crop.growTime - 1) % (crop.regrowTime + 1)) + 1) / (crop.regrowTime + 1))
 							} else {
-								opacity = ((((i - crop.growTime - 1) % crop.growTime) + 1) / crop.growTime)
+								opacity = ((((i - crop.growTime - 1) % (crop.growTime + 1)) + 1) / crop.growTime)
 							}
+						}
+						let cropColor = crop.color
+						if(i >= crop.harvestDays[crop.harvestDays.length-1] ) {
+							if(crop.regrow)
+								opacity = (1 / crop.regrowTime)
+							else
+								cropColor = "transparent"
 						}
 						return <div key={selectedCrop.name} className="d-flex direction-row align-items-center" style={{"minHeight": "20px"}}>
 							{crop.harvestDays.includes(i)
 								&& <img src={"images/" + crop.name.replaceAll(' ','_') + ".png"} alt="" className='crop' />}
 							{crop.growDays.includes(i) 
 								&& <img src={"images/" + crop.seeds.replaceAll(' ','_') + ".png"} alt="" className='seed' />}
-							<div style={{background: crop.color, opacity, height: "8px", flex: "1 0"}}>
+							<div style={{background: cropColor, opacity, height: "8px", flex: "1 0"}}>
 							</div>
 						</div>
 					})}
@@ -101,10 +115,24 @@ function Crops() {
 				</div>
 				<div>
 					{cropOptions
-						.map( c => <div key={c.name}>
-							{c.name} 
+						.map( c => {
+							const checked = selectedCrops.map(x=>x.name).includes(c.name)
+							return <div key={c.name}>
+								<div className="form-check m-0 p-0 d-flex align-items-center">
+									<input 
+										className="form-check-input m-1 " 
+										type="checkbox" 
+										name={c.name} 
+										id={c.name} 
+										onChange={(e) => {handleFilterClick(c.name)}}
+										checked={checked && c.name}
+										value={c.name} />
+									<label className={"form-check-label m-1 d-flex flex-row" + c.name} htmlFor={c.name}>
+										{c.name}
+									</label> 
+								</div>
 							</div>
-						)
+						})
 					}
 				</div>
 			</div>
