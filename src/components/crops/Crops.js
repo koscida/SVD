@@ -52,7 +52,7 @@ function Crops() {
 			const newSelectedCrops = selectedCrops.filter( x => x.name !== name )
 			setSelectedCrops(newSelectedCrops)
 		} else {
-			const newSelectedCrop = crops.filter( x => x.name === name )
+			const newSelectedCrop = cropOptions.filter( x => x.name === name )
 			setSelectedCrops([...selectedCrops, ...newSelectedCrop])
 		}
 	}
@@ -120,14 +120,14 @@ function Crops() {
 							return <div key={c.name}>
 								<div className="form-check m-0 p-0 d-flex align-items-center">
 									<input 
-										className="form-check-input m-1 " 
+										className="form-check-input m-0 me-1" 
 										type="checkbox" 
 										name={c.name} 
 										id={c.name} 
 										onChange={(e) => {handleFilterClick(c.name)}}
 										checked={checked && c.name}
 										value={c.name} />
-									<label className={"form-check-label m-1 d-flex flex-row" + c.name} htmlFor={c.name}>
+									<label className={"form-check-label m-0 d-flex flex-row" + c.name} htmlFor={c.name}>
 										{c.name}
 									</label> 
 								</div>
