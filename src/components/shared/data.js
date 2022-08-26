@@ -2008,3 +2008,6 @@ const crops = [
 	},
 ];
 exports.crops = crops;
+
+const cropTypes = ["Regrows", "Single harvest"];
+exports.cropTypes = cropTypes;

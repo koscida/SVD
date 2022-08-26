@@ -1,5 +1,8 @@
 import useLocalStorage from "../shared/useLocalStorage";
 import data from "../shared/data";
+import CropFilter from "./CropFilter";
+import CropYield from "./CropYield";
+import CropCalendar from "./CropCalendar";
 
 // get data from data file
 //	dataCrops list of ojects
@@ -44,7 +47,6 @@ const crops = dataCrops.reduce((crops, newCrop) => {
 
 	return crops;
 }, {});
-const cropTypes = ["Regrows", "Single harvest"];
 
 const getSelectedCrops = (selectedSeason) => {
 	return sortCrops(
@@ -77,7 +79,7 @@ function Crops() {
 	);
 	const [selectedCropType, setSelectedCropType] = useLocalStorage(
 		"svd-crops-selectedcroptype",
-		cropTypes
+		data.cropTypes
 	);
 	const [cropOptions, setCropOptions] = useLocalStorage(
 		"svd-crops-cropoptions",
@@ -120,265 +122,27 @@ function Crops() {
 		setSelectedCrops(newSelectedCrops);
 	};
 
-	const CropCalendar = () => {
-		const cols = selectedCrops.length + 1;
-		return (
-			<div
-				className="d-grid"
-				style={{
-					gridTemplateColumns: "repeat(7, calc(100% / 7))",
-					gridtemplateRows: "repeat(4, calc(100% / 4))",
-				}}
-			>
-				{[...Array(29).keys()].slice(1).map((i) => (
-					<div
-						className="cell cropCell d-grid"
-						key={i}
-						style={{
-							gridTemplateRows:
-								"repeat(" + cols + ", calc(100% / " + cols + "))",
-						}}
-					>
-						<div className="date">{i}</div>
-						{selectedCrops.map((selectedCrop) => {
-							const crop = crops[selectedCrop.name];
-							let seedOpacity = 1 / (crop.growTime + 1);
-							let growOpacity = 2 / (crop.growTime + 1);
-							let harvestOpacity = 1;
-							// if within first growing period
-							if (i <= crop.growTime + 1) {
-								growOpacity = (1 * i) / (crop.growTime + 1);
-							} else {
-								if (crop.regrow) {
-									seedOpacity = 1 / (crop.regrowTime + 1);
-									growOpacity =
-										(((i - crop.growTime - 1) % (crop.regrowTime + 1)) + 0) /
-										(crop.regrowTime + 1);
-								} else {
-									growOpacity =
-										(((i - crop.growTime - 1) % (crop.growTime + 1)) + 1) /
-										(crop.growTime + 1);
-								}
-							}
-							let cropColor = crop.color;
-							if (i > crop.harvestDays[crop.harvestDays.length - 1]) {
-								if (crop.regrow) growOpacity = 1 / (crop.regrowTime + 1);
-								else cropColor = "transparent";
-							}
-							return (
-								<div
-									key={selectedCrop.name}
-									className="d-flex direction-row align-items-center"
-									style={{ minHeight: "20px" }}
-								>
-									{crop.harvestDays.includes(i) && (
-										<>
-											<div
-												style={{
-													background: cropColor,
-													opacity: harvestOpacity,
-													height: "8px",
-													flex: "1 0",
-												}}
-											></div>
-											<img
-												src={
-													"images/" + crop.name.replaceAll(" ", "_") + ".png"
-												}
-												alt=""
-												className="crop"
-											/>
-										</>
-									)}
-									{crop.growDays.includes(i) && (
-										<>
-											<img
-												src={
-													"images/" + crop.seeds.replaceAll(" ", "_") + ".png"
-												}
-												alt=""
-												className="seed"
-											/>
-											<div
-												style={{
-													background: cropColor,
-													opacity: seedOpacity,
-													height: "8px",
-													flex: "1 0",
-												}}
-											></div>
-										</>
-									)}
-									{!crop.harvestDays.includes(i) && !crop.growDays.includes(i) && (
-										<div
-											style={{
-												background: cropColor,
-												opacity: growOpacity,
-												height: "8px",
-												flex: "1 0",
-											}}
-										></div>
-									)}
-								</div>
-							);
-						})}
-					</div>
-				))}
-			</div>
-		);
-	};
-
-	const CropList = () => {
-		return selectedCrops.map((selectedCrop, i) => {
-			return (
-				<div key={i}>
-					<p>{selectedCrop.name}</p>
-					<div style={{ display: "flex", flexWrap: "wrap" }}>
-						{selectedCrop.yields.map((thisYield, k) => {
-							return (
-								<div
-									key={k}
-									style={{
-										border: "1px solid #ddd",
-										padding: "3px 5px",
-										margin: "3px",
-									}}
-								>
-									<div>
-										<p>
-											Grow on:&nbsp;
-											<input
-												type="number"
-												value={thisYield.growDay}
-												style={{ width: "45px" }}
-											/>
-										</p>
-										<p>
-											Seeds:&nbsp;
-											<input
-												type="number"
-												value={thisYield.seeds}
-												style={{ width: "80px" }}
-											/>
-										</p>
-									</div>
-									<div>
-										<p>
-											Harvest on:&nbsp;
-											<input
-												type="number"
-												value={thisYield.harvestDay}
-												disabled="disabled"
-												style={{ width: "45px" }}
-											/>{" "}
-										</p>
-										<p>
-											Yield:&nbsp;
-											<input
-												type="number"
-												value={thisYield.yield}
-												disabled="disabled"
-												style={{ width: "80px" }}
-											/>
-										</p>
-									</div>
-								</div>
-							);
-						})}
-					</div>
-					<hr />
-				</div>
-			);
-		});
-	};
-
 	return (
 		<div className="cropsApp">
 			<div className="row">
-				<div className="col-2">
-					<div className="dropdown">
-						<button
-							className="btn btn-secondary dropdown-toggle"
-							type="button"
-							id="cropSeason"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-						>
-							{selectedSeason}
-						</button>
-						<ul className="dropdown-menu" aria-labelledby="cropSeason">
-							{data.seasonsNames.map((seasonName) => (
-								<li key={seasonName}>
-									<input
-										type="button"
-										className="dropdown-item"
-										value={seasonName}
-										onClick={handleSeasonSwitch}
-									/>
-								</li>
-							))}
-						</ul>
-					</div>
-					<div>
-						<hr />
-						{cropTypes.map((type) => (
-							<div
-								key={type}
-								className="form-check m-0 p-0 d-flex align-items-center"
-							>
-								<input
-									className="form-check-input m-0 me-1"
-									type="checkbox"
-									name={type}
-									id={type}
-									onChange={(e) => {
-										handleCropTypeSelect(type);
-									}}
-									checked={selectedCropType.includes(type) && type}
-									value={type}
-								/>
-								<label
-									className={"form-check-label m-0 d-flex flex-row " + type}
-									htmlFor={type}
-								>
-									{type}
-								</label>
-							</div>
-						))}
-						<hr />
-						{cropOptions.map((c) => {
-							const checked = selectedCrops.map((x) => x.name).includes(c.name);
-							return (
-								<div className="form-check m-0 p-0 d-flex align-items-center">
-									<input
-										className="form-check-input m-0 me-1"
-										type="checkbox"
-										name={c.name}
-										id={c.name}
-										onChange={(e) => {
-											handleCropSelect(c.name);
-										}}
-										checked={checked && c.name}
-										value={c.name}
-									/>
-									<label
-										className={"form-check-label m-0 d-flex flex-row " + c.name}
-										htmlFor={c.name}
-									>
-										{c.name}
-									</label>
-								</div>
-							);
-						})}
-					</div>
+				<div className="col-1">
+					<CropFilter
+						selectedCrops={selectedCrops}
+						selectedSeason={selectedSeason}
+						handleSeasonSwitch={handleSeasonSwitch}
+						selectedCropType={selectedCropType}
+						handleCropTypeSelect={handleCropTypeSelect}
+						cropOptions={cropOptions}
+						handleCropSelect={handleCropSelect}
+					/>
 				</div>
-				<div className="col-5">
-					<CropCalendar />
+				<div className="col-6">
+					<CropCalendar selectedCrops={selectedCrops} />
 				</div>
 				<div className="col-5">
 					<p>Harvest</p>
 					<hr />
-					<CropList />
+					<CropYield selectedCrops={selectedCrops} setCrops={null} />
 				</div>
 			</div>
 		</div>
