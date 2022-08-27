@@ -8,46 +8,6 @@ import CropYield from "./CropYield";
 const dataCrops = data.crops;
 // crops, object of objects
 const crops = dataCrops.reduce((crops, newCrop) => {
-	// init
-	let day = 1;
-
-	// add to newCrop
-	newCrop.growDays = [day];
-	newCrop.harvestDays = [];
-	newCrop.yields = [{ growDay: day, seeds: 1 }];
-
-	// grow first set of seeds
-	day += newCrop.growTime;
-
-	// while we are in the month and not a day after
-	while (day <= 28) {
-		// add day to list of harvest days
-		newCrop.harvestDays.push(day);
-		// update the yield
-		const thisYieldInd = newCrop.yields.length - 1;
-		newCrop.yields[thisYieldInd].harvestDay = day;
-		//newCrop.yields[thisYieldInd].yield = newCrop.yields[newCrop.regrow ? 0 : thisYieldInd].seeds;
-		newCrop.yields[thisYieldInd].yield = newCrop.regrow
-			? newCrop.yields[0].seeds
-			: newCrop.yields[thisYieldInd].seeds;
-		// if regrowing, only add to yield, incrament day
-		if (newCrop.regrow) {
-			// else replanting, add grow day and incrament day
-			if (day + newCrop.regrowTime + 1 <= 28) {
-				newCrop.yields.push({ regrowDay: day });
-			}
-			day += newCrop.regrowTime + 1;
-		} else {
-			// else replanting, if replanting, add grow day and incrament day
-			if (day + newCrop.growTime <= 28) {
-				// regrow
-				newCrop.growDays.push(day);
-				newCrop.yields.push({ growDay: day, seeds: 1 });
-			}
-			day += newCrop.growTime;
-		}
-	}
-
 	// add to crops
 	crops[newCrop.name] = newCrop;
 

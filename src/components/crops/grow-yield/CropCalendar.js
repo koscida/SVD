@@ -1,4 +1,4 @@
-function CropCalendar({ selectedCrops }) {
+function CropCalendar({ selectedCrops, yieldTimes }) {
 	const cols = selectedCrops.length + 1;
 	return (
 		<div
@@ -37,7 +37,7 @@ function CropCalendar({ selectedCrops }) {
 							}
 						}
 						let cropColor = crop.color;
-						if (i > crop.harvestDays[crop.harvestDays.length - 1]) {
+						if (i > yieldTimes.harvestDays[yieldTimes.harvestDays.length - 1]) {
 							if (crop.regrow) growOpacity = 1 / (crop.regrowTime + 1);
 							else cropColor = "transparent";
 						}
@@ -47,7 +47,7 @@ function CropCalendar({ selectedCrops }) {
 								className="d-flex direction-row align-items-center"
 								style={{ minHeight: "20px" }}
 							>
-								{crop.harvestDays.includes(i) && (
+								{yieldTimes.harvestDays.includes(i) && (
 									<>
 										<div
 											style={{
@@ -64,7 +64,7 @@ function CropCalendar({ selectedCrops }) {
 										/>
 									</>
 								)}
-								{crop.growDays.includes(i) && (
+								{yieldTimes.growDays.includes(i) && (
 									<>
 										<img
 											src={"images/" + crop.seeds.replaceAll(" ", "_") + ".png"}
@@ -81,16 +81,17 @@ function CropCalendar({ selectedCrops }) {
 										></div>
 									</>
 								)}
-								{!crop.harvestDays.includes(i) && !crop.growDays.includes(i) && (
-									<div
-										style={{
-											background: cropColor,
-											opacity: growOpacity,
-											height: "8px",
-											flex: "1 0",
-										}}
-									></div>
-								)}
+								{!yieldTimes.harvestDays.includes(i) &&
+									!yieldTimes.growDays.includes(i) && (
+										<div
+											style={{
+												background: cropColor,
+												opacity: growOpacity,
+												height: "8px",
+												flex: "1 0",
+											}}
+										></div>
+									)}
 							</div>
 						);
 					})}

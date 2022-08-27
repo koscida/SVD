@@ -1,13 +1,53 @@
+import { useEffect, useState } from "react";
 import CropCalendar from "./CropCalendar";
 
-function CropYield({ selectedCrop, setCrop }) {
-	const handleChange = (name, pos, value) => {
-		let newCrop = selectedCrop;
-		newCrop.yield[pos][name] = value;
-		setCrop(newCrop);
-	};
+const getInitYields = (crop) => {
+	// init
+	let day = 1;
+	let times = {};
+	let yields = [];
 
-	let totals = selectedCrop.yields.reduce(
+	// add to times and yields
+	times.growDays = [day];
+	times.harvestDays = [];
+	yields = [{ growDay: day, seeds: 1 }];
+
+	// grow first set of seeds
+	day += crop.growTime;
+
+	// while we are in the month and not a day after
+	while (day <= 28) {
+		// add day to list of harvest days
+		times.harvestDays.push(day);
+		// update the yield
+		const thisYieldInd = yields.length - 1;
+		yields[thisYieldInd].harvestDay = day;
+		yields[thisYieldInd].yield = crop.regrow
+			? yields[0].seeds
+			: yields[thisYieldInd].seeds;
+		// if regrowing, only add to yield, incrament day
+		if (crop.regrow) {
+			// else replanting, add grow day and incrament day
+			if (day + crop.regrowTime + 1 <= 28) {
+				yields.push({ regrowDay: day });
+			}
+			day += crop.regrowTime + 1;
+		} else {
+			// else replanting, if replanting, add grow day and incrament day
+			if (day + crop.growTime <= 28) {
+				// regrow
+				times.growDays.push(day);
+				yields.push({ growDay: day, seeds: 1 });
+			}
+			day += crop.growTime;
+		}
+	}
+
+	return { times, yields };
+};
+
+const calcTotals = (yields, seedCost) => {
+	let totals = yields.reduce(
 		(num, thisYield) => {
 			if (thisYield.seeds) num.totalSeeds = num.totalSeeds + thisYield.seeds;
 			num.totalYield = num.totalYield + thisYield.yield;
@@ -15,14 +55,31 @@ function CropYield({ selectedCrop, setCrop }) {
 		},
 		{ totalSeeds: 0, totalYield: 0 }
 	);
-	totals.totalSeedCost = totals.totalSeeds * Object.values(selectedCrop.buy)[0];
+	totals.totalSeedCost = totals.totalSeeds * seedCost;
+	return totals;
+};
+
+function CropYield({ selectedCrop, setCrop }) {
+	const [yields, setYields] = useState(getInitYields(selectedCrop));
+	const [totals, setTotals] = useState(
+		calcTotals(yields.yields, Object.values(selectedCrop.buy)[0])
+	);
+
+	const handleChange = (name, pos, value) => {
+		let newCrop = selectedCrop;
+		newCrop.yield[pos][name] = value;
+		setCrop(newCrop);
+	};
 
 	return (
 		<div>
 			<p>{selectedCrop.name}</p>
 			<div className="row">
 				<div className="col-6">
-					<CropCalendar selectedCrops={[selectedCrop]} />
+					<CropCalendar
+						selectedCrops={[selectedCrop]}
+						yieldTimes={yields.times}
+					/>
 				</div>
 				<div className="col-6">
 					<div
@@ -36,7 +93,7 @@ function CropYield({ selectedCrop, setCrop }) {
 						<div>Harvest on</div>
 						<div>Yield</div>
 					</div>
-					{selectedCrop.yields.map((thisYield, i) => {
+					{yields.yields.map((thisYield, i) => {
 						return (
 							<div
 								key={i}
