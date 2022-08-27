@@ -66,7 +66,10 @@ function CropFilter({
 				{cropOptions.map((c) => {
 					const checked = selectedCrops.map((x) => x.name).includes(c.name);
 					return (
-						<div className="form-check m-0 p-0 d-flex align-items-center">
+						<div
+							key={c.name}
+							className="form-check m-0 p-0 d-flex align-items-center"
+						>
 							<input
 								className="form-check-input m-0 me-1"
 								type="checkbox"

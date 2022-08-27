@@ -1,21 +1,21 @@
 import CropCalendar from "./CropCalendar";
 
 function CropYield({ selectedCrop, setCrop }) {
-	const handleChange = (name, value) => {
-		let newCrops = selectedCrop;
-		newCrops[name] = value;
-		setCrop(newCrops);
+	const handleChange = (name, pos, value) => {
+		let newCrop = selectedCrop;
+		newCrop.yield[pos][name] = value;
+		setCrop(newCrop);
 	};
 
-	const totalSeeds = selectedCrop.yields.reduce(
-		(num, thisYield) => (num += thisYield.seeds),
-		0
+	let totals = selectedCrop.yields.reduce(
+		(num, thisYield) => {
+			if (thisYield.seeds) num.totalSeeds = num.totalSeeds + thisYield.seeds;
+			num.totalYield = num.totalYield + thisYield.yield;
+			return num;
+		},
+		{ totalSeeds: 0, totalYield: 0 }
 	);
-
-	const totalYield = selectedCrop.yields.reduce(
-		(num, thisYield) => (num += thisYield.yield),
-		0
-	);
+	totals.totalSeedCost = totals.totalSeeds * Object.values(selectedCrop.buy)[0];
 
 	return (
 		<div>
@@ -31,7 +31,7 @@ function CropYield({ selectedCrop, setCrop }) {
 							gridTemplateColumns: "repeat(4, 25%)",
 						}}
 					>
-						<div>Grow on</div>
+						<div>Plant on</div>
 						<div>Seeds</div>
 						<div>Harvest on</div>
 						<div>Yield</div>
@@ -48,35 +48,64 @@ function CropYield({ selectedCrop, setCrop }) {
 								}}
 							>
 								<div>
-									<input
-										type="number"
-										value={thisYield.growDay}
-										onChange={(e) => {
-											handleChange("growDay", i, e.target.value);
-										}}
-										style={{ width: "45px" }}
-									/>
+									{thisYield.growDay && (
+										<>
+											<img
+												src={
+													"images/" +
+													selectedCrop.seeds.replaceAll(" ", "_") +
+													".png"
+												}
+												alt={selectedCrop.name}
+												className="seed"
+											/>
+											<input
+												type="number"
+												value={thisYield.growDay}
+												onChange={(e) => {
+													handleChange("growDay", i, e.target.value);
+												}}
+												style={{ width: "45px" }}
+											/>
+										</>
+									)}
+									{thisYield.regrowDay && thisYield.regrowDay}
+								</div>
+								<div>
+									{thisYield.growDay && (
+										<>
+											<img
+												src={
+													"images/" +
+													selectedCrop.seeds.replaceAll(" ", "_") +
+													".png"
+												}
+												alt={selectedCrop.name}
+												className="seed"
+											/>
+											<input
+												type="number"
+												value={thisYield.seeds}
+												onChange={(e) => {
+													handleChange("seeds", i, e.target.value);
+												}}
+												style={{ width: "80px" }}
+											/>
+										</>
+									)}
 								</div>
 								<div>
 									<img
 										src={
 											"images/" +
-											selectedCrop.seeds.replaceAll(" ", "_") +
+											selectedCrop.name.replaceAll(" ", "_") +
 											".png"
 										}
 										alt={selectedCrop.name}
-										className="seed"
+										className="crop"
 									/>
-									<input
-										type="number"
-										value={thisYield.seeds}
-										onChange={(e) => {
-											handleChange("seeds", i, e.target.value);
-										}}
-										style={{ width: "80px" }}
-									/>
+									{thisYield.harvestDay}
 								</div>
-								<div>{thisYield.harvestDay}</div>
 								<div>
 									<img
 										src={
@@ -107,7 +136,9 @@ function CropYield({ selectedCrop, setCrop }) {
 								alt={selectedCrop.name}
 								className="seed"
 							/>
-							Total: {totalSeeds}
+							Total Seeds: {totals.totalSeeds}
+							<br />
+							Total Cost: {totals.totalSeedCost}
 						</div>
 						<div></div>
 						<div>
@@ -118,7 +149,7 @@ function CropYield({ selectedCrop, setCrop }) {
 								alt={selectedCrop.name}
 								className="crop"
 							/>
-							Total: {totalYield}
+							Total Yield: {totals.totalYield}
 						</div>
 					</div>
 				</div>

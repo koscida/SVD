@@ -26,12 +26,19 @@ const crops = dataCrops.reduce((crops, newCrop) => {
 		// update the yield
 		const thisYieldInd = newCrop.yields.length - 1;
 		newCrop.yields[thisYieldInd].harvestDay = day;
-		newCrop.yields[thisYieldInd].yield = newCrop.yields[thisYieldInd].seeds;
-		// if regrowing, incrament day
+		//newCrop.yields[thisYieldInd].yield = newCrop.yields[newCrop.regrow ? 0 : thisYieldInd].seeds;
+		newCrop.yields[thisYieldInd].yield = newCrop.regrow
+			? newCrop.yields[0].seeds
+			: newCrop.yields[thisYieldInd].seeds;
+		// if regrowing, only add to yield, incrament day
 		if (newCrop.regrow) {
+			// else replanting, add grow day and incrament day
+			if (day + newCrop.regrowTime + 1 <= 28) {
+				newCrop.yields.push({ regrowDay: day });
+			}
 			day += newCrop.regrowTime + 1;
 		} else {
-			// else replanting, add grow day and incrament day
+			// else replanting, if replanting, add grow day and incrament day
 			if (day + newCrop.growTime <= 28) {
 				// regrow
 				newCrop.growDays.push(day);
@@ -120,6 +127,7 @@ function CropsGrowYield() {
 		});
 		setSelectedCrops(newSelectedCrops);
 	};
+	const handleCropUpdate = () => {};
 
 	return (
 		<div className="cropsApp">
@@ -137,7 +145,11 @@ function CropsGrowYield() {
 				</div>
 				<div className="col-11">
 					{selectedCrops.map((selectedCrop, i) => (
-						<CropYield key={i} selectedCrop={selectedCrop} setCrop={null} />
+						<CropYield
+							key={i}
+							selectedCrop={selectedCrop}
+							setCrop={(newCrop) => handleCropUpdate()}
+						/>
 					))}
 				</div>
 			</div>
