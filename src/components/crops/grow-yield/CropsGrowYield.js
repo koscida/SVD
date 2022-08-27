@@ -102,11 +102,12 @@ function CropsGrowYield() {
 						handleCropSelect={handleCropSelect}
 					/>
 				</div>
-				<div className="col-11">
+				<div className="col-6">
 					{selectedCrops.map((selectedCrop, i) => (
 						<CropYield key={i} selectedCrop={selectedCrop} />
 					))}
 				</div>
+				<div className="col-5">Plots</div>
 			</div>
 		</div>
 	);

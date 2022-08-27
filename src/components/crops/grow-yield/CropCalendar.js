@@ -1,4 +1,5 @@
 function CropCalendar({ selectedCrops, yieldTimes }) {
+	console.log("yieldTimes", yieldTimes);
 	const cols = selectedCrops.length + 1;
 	return (
 		<div
@@ -28,11 +29,14 @@ function CropCalendar({ selectedCrops, yieldTimes }) {
 							if (crop.regrow) {
 								seedOpacity = 1 / (crop.regrowTime + 1);
 								growOpacity =
-									(((i - crop.growTime - 1) % (crop.regrowTime + 1)) + 0) /
+									(((i - (crop.growTime + 1)) % (crop.regrowTime + 1)) + 0) /
 									(crop.regrowTime + 1);
 							} else {
+								// growOpacity =
+								// 	(((i - crop.growTime - 1) % (crop.growTime + 1)) + 1) /
+								// 	(crop.growTime + 1);
 								growOpacity =
-									(((i - crop.growTime - 1) % (crop.growTime + 1)) + 1) /
+									((i - (crop.growTime + 1)) % crop.growTime) /
 									(crop.growTime + 1);
 							}
 						}
