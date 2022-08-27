@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import CropCalendar from "./CropCalendar";
 
-const getInitYields = (crop) => {
+const calcInitYields = (crop) => {
 	// init
 	let day = 1;
 	let times = {};
-	let yields = [];
+	let harvests = [];
 
-	// add to times and yields
+	// add to times and harvests
 	times.growDays = [day];
 	times.harvestDays = [];
-	yields = [{ growDay: day, seeds: 1 }];
+	harvests = [{ growDay: day, seeds: 1 }];
 
 	// grow first set of seeds
 	day += crop.growTime;
@@ -20,16 +20,16 @@ const getInitYields = (crop) => {
 		// add day to list of harvest days
 		times.harvestDays.push(day);
 		// update the yield
-		const thisYieldInd = yields.length - 1;
-		yields[thisYieldInd].harvestDay = day;
-		yields[thisYieldInd].yield = crop.regrow
-			? yields[0].seeds
-			: yields[thisYieldInd].seeds;
+		const thisYieldInd = harvests.length - 1;
+		harvests[thisYieldInd].harvestDay = day;
+		harvests[thisYieldInd].yield = crop.regrow
+			? harvests[0].seeds
+			: harvests[thisYieldInd].seeds;
 		// if regrowing, only add to yield, incrament day
 		if (crop.regrow) {
 			// else replanting, add grow day and incrament day
 			if (day + crop.regrowTime + 1 <= 28) {
-				yields.push({ regrowDay: day });
+				harvests.push({ regrowDay: day });
 			}
 			day += crop.regrowTime + 1;
 		} else {
@@ -37,17 +37,26 @@ const getInitYields = (crop) => {
 			if (day + crop.growTime <= 28) {
 				// regrow
 				times.growDays.push(day);
-				yields.push({ growDay: day, seeds: 1 });
+				harvests.push({ growDay: day, seeds: 1 });
 			}
 			day += crop.growTime;
 		}
 	}
 
-	return { times, yields };
+	return { times, harvests };
 };
 
-const calcTotals = (yields, seedCost) => {
-	let totals = yields.reduce(
+const reCalcHarvest = (harvests, pos) => {
+	harvests.forEach((harvest, i) => {
+		if (i === pos) {
+		} else if (i >= pos) {
+		}
+	});
+	return harvests;
+};
+
+const calcTotals = (harvests, seedCost) => {
+	let totals = harvests.reduce(
 		(num, thisYield) => {
 			if (thisYield.seeds) num.totalSeeds = num.totalSeeds + thisYield.seeds;
 			num.totalYield = num.totalYield + thisYield.yield;
@@ -59,16 +68,23 @@ const calcTotals = (yields, seedCost) => {
 	return totals;
 };
 
-function CropYield({ selectedCrop, setCrop }) {
-	const [yields, setYields] = useState(getInitYields(selectedCrop));
-	const [totals, setTotals] = useState(
-		calcTotals(yields.yields, Object.values(selectedCrop.buy)[0])
-	);
+function CropYield({ selectedCrop }) {
+	const seedPrice = Object.values(selectedCrop.buy)[0];
+	const [yields, setYields] = useState(calcInitYields(selectedCrop));
+	const [totals, setTotals] = useState(calcTotals(yields.harvests, seedPrice));
 
 	const handleChange = (name, pos, value) => {
-		let newCrop = selectedCrop;
-		newCrop.yield[pos][name] = value;
-		setCrop(newCrop);
+		// set new value
+		let thisHarvest = yields.harvests;
+		thisHarvest[pos][name] = value;
+		// re-calc rest of the harvest
+		if (name === "growDay") {
+			thisHarvest = reCalcHarvest(thisHarvest, pos);
+		}
+
+		// set
+		setYields({ ...yields, harvests: thisHarvest });
+		setTotals(calcTotals(thisHarvest, seedPrice));
 	};
 
 	return (
@@ -93,7 +109,7 @@ function CropYield({ selectedCrop, setCrop }) {
 						<div>Harvest on</div>
 						<div>Yield</div>
 					</div>
-					{yields.yields.map((thisYield, i) => {
+					{yields.harvests.map((thisHarvest, i) => {
 						return (
 							<div
 								key={i}
@@ -105,7 +121,7 @@ function CropYield({ selectedCrop, setCrop }) {
 								}}
 							>
 								<div>
-									{thisYield.growDay && (
+									{thisHarvest.growDay && (
 										<>
 											<img
 												src={
@@ -118,7 +134,7 @@ function CropYield({ selectedCrop, setCrop }) {
 											/>
 											<input
 												type="number"
-												value={thisYield.growDay}
+												value={thisHarvest.growDay}
 												onChange={(e) => {
 													handleChange("growDay", i, e.target.value);
 												}}
@@ -126,10 +142,10 @@ function CropYield({ selectedCrop, setCrop }) {
 											/>
 										</>
 									)}
-									{thisYield.regrowDay && thisYield.regrowDay}
+									{thisHarvest.regrowDay && thisHarvest.regrowDay}
 								</div>
 								<div>
-									{thisYield.growDay && (
+									{thisHarvest.growDay && (
 										<>
 											<img
 												src={
@@ -142,7 +158,7 @@ function CropYield({ selectedCrop, setCrop }) {
 											/>
 											<input
 												type="number"
-												value={thisYield.seeds}
+												value={thisHarvest.seeds}
 												onChange={(e) => {
 													handleChange("seeds", i, e.target.value);
 												}}
@@ -161,7 +177,7 @@ function CropYield({ selectedCrop, setCrop }) {
 										alt={selectedCrop.name}
 										className="crop"
 									/>
-									{thisYield.harvestDay}
+									{thisHarvest.harvestDay}
 								</div>
 								<div>
 									<img
@@ -173,7 +189,7 @@ function CropYield({ selectedCrop, setCrop }) {
 										alt={selectedCrop.name}
 										className="crop"
 									/>
-									{thisYield.yield}
+									{thisHarvest.yield}
 								</div>
 							</div>
 						);

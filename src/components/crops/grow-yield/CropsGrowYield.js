@@ -87,7 +87,6 @@ function CropsGrowYield() {
 		});
 		setSelectedCrops(newSelectedCrops);
 	};
-	const handleCropUpdate = () => {};
 
 	return (
 		<div className="cropsApp">
@@ -105,11 +104,7 @@ function CropsGrowYield() {
 				</div>
 				<div className="col-11">
 					{selectedCrops.map((selectedCrop, i) => (
-						<CropYield
-							key={i}
-							selectedCrop={selectedCrop}
-							setCrop={(newCrop) => handleCropUpdate()}
-						/>
+						<CropYield key={i} selectedCrop={selectedCrop} />
 					))}
 				</div>
 			</div>
