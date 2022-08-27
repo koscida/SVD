@@ -6,6 +6,7 @@ import App from "./components/App";
 import Home from "./components/home/Home";
 import Fish from "./components/fish/Fish";
 import Crops from "./components/crops/Crops";
+import CropsGrowYield from "./components/crops/grow-yield/CropsGrowYield";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -16,7 +17,9 @@ root.render(
 					<Route path="/" element={<App />}>
 						<Route index element={<Home />} />
 						<Route path="fish" element={<Fish />} />
-						<Route path="crops" element={<Crops />} />
+						<Route path="/crops" element={<Crops />} />
+						<Route path="/crops-grow-yield" element={<CropsGrowYield />} />
+						<Route path="/crops-plots" element={<CropsGrowYield />} />
 					</Route>
 				</Routes>
 			</BrowserRouter>

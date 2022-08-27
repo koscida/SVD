@@ -59,7 +59,7 @@ function CropCalendar({ selectedCrops }) {
 										></div>
 										<img
 											src={"images/" + crop.name.replaceAll(" ", "_") + ".png"}
-											alt=""
+											alt={crop.name}
 											className="crop"
 										/>
 									</>
@@ -68,7 +68,7 @@ function CropCalendar({ selectedCrops }) {
 									<>
 										<img
 											src={"images/" + crop.seeds.replaceAll(" ", "_") + ".png"}
-											alt=""
+											alt={crop.name}
 											className="seed"
 										/>
 										<div

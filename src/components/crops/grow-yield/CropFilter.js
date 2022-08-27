@@ -1,4 +1,4 @@
-import data from "../shared/data";
+import data from "../../shared/data";
 
 function CropFilter({
 	selectedCrops,
