@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CropCalendar from "./CropCalendar";
 
-const calcInitYields = (crop) => {
+const calcInitHarvests = (crop) => {
 	// init
 	let day = 1;
 	let harvests = [];
@@ -40,14 +40,6 @@ const calcInitYields = (crop) => {
 	return harvests;
 };
 
-const reCalcHarvestDays = (harvests, pos) => {
-	harvests.forEach((harvest, i) => {
-		if (i === pos) {
-		} else if (i >= pos) {
-		}
-	});
-	return harvests;
-};
 const getYieldTimes = (harvests) =>
 	harvests.reduce(
 		(yieldTimes, harvest, i) => {
@@ -59,7 +51,23 @@ const getYieldTimes = (harvests) =>
 		{ growDays: [], harvestDays: [] }
 	);
 
-const reCalcHarvestYield = (harvests) => {
+const reCalcHarvestDays = (harvests, pos) => {
+	const newHarvests = [];
+	harvests.forEach((harvest, i) => {
+		// if up to to the harvest changing
+		if (i <= pos) {
+			// no re-calculation required, just push
+			newHarvests.push(harvest);
+		} else if (i + 1 === pos) {
+			// else if immeditately after changed harvest, recalculate the rest
+			// loop
+		}
+		// else any of the remaining harvests, ignore
+	});
+	return newHarvests;
+};
+
+const reCalcHarvestYields = (harvests) => {
 	harvests.forEach((harvest) => {
 		harvest.yield = harvest.seeds ? harvest.seeds : harvests[0].seeds;
 	});
@@ -87,7 +95,7 @@ const calcTotals = (selectedCrop, harvests) => {
 };
 
 function CropYield({ selectedCrop }) {
-	const initHarvests = calcInitYields(selectedCrop);
+	const initHarvests = calcInitHarvests(selectedCrop);
 	const [harvests, setHarvests] = useState(initHarvests);
 	const [yieldTimes, setYieldTimes] = useState(getYieldTimes(initHarvests));
 	const [totals, setTotals] = useState(calcTotals(selectedCrop, initHarvests));
@@ -102,9 +110,8 @@ function CropYield({ selectedCrop }) {
 		// re-calc rest of the harvest
 		if (name === "growDay") {
 			thisHarvest = reCalcHarvestDays(thisHarvest, pos);
-		} else if (name === "seeds") {
-			thisHarvest = reCalcHarvestYield(thisHarvest);
 		}
+		thisHarvest = reCalcHarvestYields(thisHarvest);
 
 		// set harvest
 		setHarvests(thisHarvest);
