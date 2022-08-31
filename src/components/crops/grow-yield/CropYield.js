@@ -5,36 +5,55 @@ const calcInitHarvests = (crop) => {
 	// init
 	let day = 1;
 	let harvests = [];
+	const initHarvest = {
+		init: true,
+		isEditingPlanting: false,
+		isEditingSeeds: false,
+	};
 
 	// add to times and harvests
-	harvests = [{ growDay: day, seeds: 1 }];
+	harvests = [{ plantDay: day, seeds: 1, ...initHarvest }];
 
 	// grow first set of seeds
 	day += crop.growTime;
+	// harvests[0].growDays = [...Array(day).keys()].slice(1);
 
 	// while we are in the month and not a day after
 	while (day <= 28) {
-		// update the yield
+		// get today
 		const thisYieldInd = harvests.length - 1;
+
+		// add days incramented as grow days
+		if (crop.regrow) {
+			harvests[thisYieldInd].growDays = [...Array(day).keys()].slice(
+				harvests[0].plantDay + 1
+			);
+		} else {
+			harvests[thisYieldInd].growDays = [...Array(day).keys()].slice(
+				harvests[thisYieldInd].plantDay + 1
+			);
+		}
+
+		// yield the harvest
 		harvests[thisYieldInd].harvestDay = day;
 		harvests[thisYieldInd].yield = crop.regrow
 			? harvests[0].seeds
 			: harvests[thisYieldInd].seeds;
-		// if regrowing, only add to yield, incrament day
-		if (crop.regrow) {
-			// else replanting, add grow day and incrament day
-			if (day + crop.regrowTime + 1 <= 28) {
-				harvests.push({});
-			}
-			day += crop.regrowTime + 1;
-		} else {
-			// else replanting, if replanting, add grow day and incrament day
-			if (day + crop.growTime <= 28) {
+
+		// get next grow period
+		const growingTime = crop.regrow ? crop.regrowTime + 1 : crop.growTime;
+		// if crop can grow in next period
+		if (day + growingTime <= 28) {
+			if (crop.regrow) {
 				// regrow
-				harvests.push({ growDay: day, seeds: 1 });
+				harvests.push(initHarvest);
+			} else {
+				// replant
+				harvests.push({ plantDay: day, seeds: 1, ...initHarvest });
 			}
-			day += crop.growTime;
 		}
+		// incrament day
+		day += growingTime;
 	}
 
 	return harvests;
@@ -43,12 +62,16 @@ const calcInitHarvests = (crop) => {
 const getYieldTimes = (harvests) =>
 	harvests.reduce(
 		(yieldTimes, harvest, i) => {
+			// add plant day
+			if (harvest.plantDay) yieldTimes.plantDays.push(harvest.plantDay);
+			// add grow days
+			yieldTimes.growDays = yieldTimes.growDays.concat(harvest.growDays);
+			// add harvest days
 			yieldTimes.harvestDays.push(harvest.harvestDay);
-			if (harvest.growDay) yieldTimes.growDays.push(harvest.growDay);
-			else yieldTimes.growDays.push(harvests[i - 1].harvestDay);
+			// return
 			return yieldTimes;
 		},
-		{ growDays: [], harvestDays: [] }
+		{ plantDays: [], growDays: [], harvestDays: [] }
 	);
 
 const reCalcHarvestDays = (harvests, pos) => {
@@ -60,6 +83,8 @@ const reCalcHarvestDays = (harvests, pos) => {
 			newHarvests.push(harvest);
 		} else if (i + 1 === pos) {
 			// else if immeditately after changed harvest, recalculate the rest
+			if (harvest.init) {
+			}
 			// loop
 		}
 		// else any of the remaining harvests, ignore
@@ -100,26 +125,54 @@ function CropYield({ selectedCrop }) {
 	const [yieldTimes, setYieldTimes] = useState(getYieldTimes(initHarvests));
 	const [totals, setTotals] = useState(calcTotals(selectedCrop, initHarvests));
 
+	useEffect(() => {
+		console.log("useeffect - recalc yield and totals");
+		// recalculate and set yield times and totals
+		setYieldTimes(getYieldTimes(harvests));
+		setTotals(calcTotals(selectedCrop, harvests));
+	}, [selectedCrop, harvests]);
+
+	const editChange = (name, pos) => {
+		console.log("editChange");
+		// copy value and update
+		let thisHarvest = harvests;
+		thisHarvest[pos][name] = !thisHarvest[pos][name];
+		// set harvest
+		setHarvests(thisHarvest);
+	};
+
 	const handleChange = (name, pos, value) => {
 		// TODO: validation
 
 		// copy value and update
 		let thisHarvest = harvests;
 		thisHarvest[pos][name] = +value;
+		thisHarvest[pos]["init"] = thisHarvest[pos].initHarvestDay
+			? thisHarvest[pos].initHarvestDay === value
+			: !thisHarvest[pos]["init"];
 
 		// re-calc rest of the harvest
-		if (name === "growDay") {
+		if (name === "plantDay") {
 			thisHarvest = reCalcHarvestDays(thisHarvest, pos);
 		}
 		thisHarvest = reCalcHarvestYields(thisHarvest);
 
 		// set harvest
 		setHarvests(thisHarvest);
-		// recalculate and set yield times and totals
-		setYieldTimes(getYieldTimes(thisHarvest));
-		setTotals(calcTotals(selectedCrop, thisHarvest));
+		// // recalculate and set yield times and totals
+		// setYieldTimes(getYieldTimes(thisHarvest));
+		// setTotals(calcTotals(selectedCrop, thisHarvest));
 	};
 
+	const boxStyles = {
+		border: "1px solid #ccc",
+		borderRadius: "1px",
+		padding: "2px 3px",
+		margin: "0",
+		width: "calc(100% - 1rem - 8px)",
+		display: "inline-block",
+		textAlign: "left",
+	};
 	return (
 		<div>
 			<div className="row">
@@ -156,26 +209,36 @@ function CropYield({ selectedCrop }) {
 								}}
 							>
 								<div>
-									{thisHarvest.growDay && (
+									{thisHarvest.plantDay && (
 										<>
 											<img
 												src={"images/Calendar.png"}
 												alt={"calendar"}
 												className="icon"
 											/>
-											<input
-												type="number"
-												value={thisHarvest.growDay}
-												onChange={(e) => {
-													handleChange("growDay", i, e.target.value);
-												}}
-												style={{ width: "calc(100% - 1rem - 6px)" }}
-											/>
+											{thisHarvest.isEditingPlanting ? (
+												<input
+													type="number"
+													value={thisHarvest.plantDay}
+													onChange={(e) => {
+														handleChange("plantDay", i, e.target.value);
+													}}
+													disabled={!thisHarvest.isEditingPlanting}
+													style={{ ...boxStyles, background: "eee" }}
+												/>
+											) : (
+												<span
+													style={{ ...boxStyles }}
+													onClick={() => editChange("isEditingPlanting", i)}
+												>
+													{thisHarvest.plantDay}
+												</span>
+											)}
 										</>
 									)}
 								</div>
 								<div>
-									{thisHarvest.growDay && (
+									{thisHarvest.plantDay && (
 										<>
 											<img
 												src={
@@ -186,14 +249,24 @@ function CropYield({ selectedCrop }) {
 												alt={selectedCrop.name}
 												className="icon"
 											/>
-											<input
-												type="number"
-												value={thisHarvest.seeds}
-												onChange={(e) => {
-													handleChange("seeds", i, e.target.value);
-												}}
-												style={{ width: "calc(100% - 1rem - 6px)" }}
-											/>
+											{thisHarvest.isEditingSeeds ? (
+												<input
+													type="number"
+													value={thisHarvest.seeds}
+													onChange={(e) => {
+														handleChange("seeds", i, e.target.value);
+													}}
+													disabled={!thisHarvest.isEditingSeeds}
+													style={boxStyles}
+												/>
+											) : (
+												<span
+													style={boxStyles}
+													onClick={() => editChange("isEditingSeeds", i)}
+												>
+													{thisHarvest.seeds}
+												</span>
+											)}
 										</>
 									)}
 								</div>

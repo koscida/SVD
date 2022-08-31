@@ -1,5 +1,5 @@
 function CropCalendar({ selectedCrops, yieldTimes }) {
-	console.log("yieldTimes", yieldTimes);
+	// console.log("yieldTimes", yieldTimes);
 	const cols = selectedCrops.length + 1;
 	return (
 		<div
@@ -68,7 +68,7 @@ function CropCalendar({ selectedCrops, yieldTimes }) {
 										/>
 									</>
 								)}
-								{yieldTimes.growDays.includes(i) && (
+								{yieldTimes.plantDays.includes(i) && (
 									<>
 										<img
 											src={"images/" + crop.seeds.replaceAll(" ", "_") + ".png"}
@@ -85,17 +85,16 @@ function CropCalendar({ selectedCrops, yieldTimes }) {
 										></div>
 									</>
 								)}
-								{!yieldTimes.harvestDays.includes(i) &&
-									!yieldTimes.growDays.includes(i) && (
-										<div
-											style={{
-												background: cropColor,
-												opacity: growOpacity,
-												height: "8px",
-												flex: "1 0",
-											}}
-										></div>
-									)}
+								{yieldTimes.growDays.includes(i) && (
+									<div
+										style={{
+											background: cropColor,
+											opacity: growOpacity,
+											height: "8px",
+											flex: "1 0",
+										}}
+									></div>
+								)}
 							</div>
 						);
 					})}
