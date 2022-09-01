@@ -1,5 +1,19 @@
-function CropCalendar({ selectedCrops, yieldTimes }) {
+function CropCalendar({ selectedCrops, harvests }) {
+	const yieldTimes = harvests.reduce(
+		(yieldTimes, harvest, i) => {
+			// add plant day
+			if (harvest.plantDay) yieldTimes.plantDays.push(harvest.plantDay);
+			// add grow days
+			yieldTimes.growDays = yieldTimes.growDays.concat(harvest.growDays);
+			// add harvest days
+			yieldTimes.harvestDays.push(harvest.harvestDay);
+			// return
+			return yieldTimes;
+		},
+		{ plantDays: [], growDays: [], harvestDays: [] }
+	);
 	// console.log("yieldTimes", yieldTimes);
+
 	const cols = selectedCrops.length + 1;
 	return (
 		<div

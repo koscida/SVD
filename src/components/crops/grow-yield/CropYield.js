@@ -1,3 +1,4 @@
+import { calculateNewValue } from "@testing-library/user-event/dist/utils";
 import { useEffect, useState } from "react";
 import CropCalendar from "./CropCalendar";
 
@@ -11,68 +12,43 @@ const calcInitHarvests = (crop) => {
 		isEditingSeeds: false,
 	};
 
-	// add to times and harvests
-	harvests = [{ plantDay: day, seeds: 1, ...initHarvest }];
-
-	// grow first set of seeds
-	day += crop.growTime;
-	// harvests[0].growDays = [...Array(day).keys()].slice(1);
-
+	console.log(crop.name);
 	// while we are in the month and not a day after
 	while (day <= 28) {
-		// get today
-		const thisYieldInd = harvests.length - 1;
+		console.log(day);
+		// create a new harvest
+		const newHarvest = initHarvest;
 
-		// add days incramented as grow days
-		if (crop.regrow) {
-			harvests[thisYieldInd].growDays = [...Array(day).keys()].slice(
-				harvests[0].plantDay + 1
-			);
+		// get next grow period
+		let growingTime = crop.growTime;
+
+		// init harvest, plant
+		if (harvests.length === 0 || !crop.regrow) {
+			// plant or replant
+			newHarvest.plantDay = day;
+			newHarvest.seeds = 1;
 		} else {
-			harvests[thisYieldInd].growDays = [...Array(day).keys()].slice(
-				harvests[thisYieldInd].plantDay + 1
-			);
+			// change growing time
+			growingTime = crop.regrowTime + 1;
 		}
 
 		// yield the harvest
-		harvests[thisYieldInd].harvestDay = day;
-		harvests[thisYieldInd].yield = crop.regrow
-			? harvests[0].seeds
-			: harvests[thisYieldInd].seeds;
+		newHarvest.harvestDay = day + growingTime;
+		newHarvest.yield = 1;
 
-		// get next grow period
-		const growingTime = crop.regrow ? crop.regrowTime + 1 : crop.growTime;
-		// if crop can grow in next period
-		if (day + growingTime <= 28) {
-			if (crop.regrow) {
-				// regrow
-				harvests.push(initHarvest);
-			} else {
-				// replant
-				harvests.push({ plantDay: day, seeds: 1, ...initHarvest });
-			}
-		}
+		// add grow days that the harvest grew
+		newHarvest.growDays = [...Array(newHarvest.harvestDay).keys()].slice(day);
+
+		// add the harvest
+		console.log(newHarvest);
+		harvests.push(newHarvest);
+
 		// incrament day
 		day += growingTime;
 	}
 
 	return harvests;
 };
-
-const getYieldTimes = (harvests) =>
-	harvests.reduce(
-		(yieldTimes, harvest, i) => {
-			// add plant day
-			if (harvest.plantDay) yieldTimes.plantDays.push(harvest.plantDay);
-			// add grow days
-			yieldTimes.growDays = yieldTimes.growDays.concat(harvest.growDays);
-			// add harvest days
-			yieldTimes.harvestDays.push(harvest.harvestDay);
-			// return
-			return yieldTimes;
-		},
-		{ plantDays: [], growDays: [], harvestDays: [] }
-	);
 
 const reCalcHarvestDays = (harvests, pos) => {
 	const newHarvests = [];
@@ -122,21 +98,19 @@ const calcTotals = (selectedCrop, harvests) => {
 function CropYield({ selectedCrop }) {
 	const initHarvests = calcInitHarvests(selectedCrop);
 	const [harvests, setHarvests] = useState(initHarvests);
-	const [yieldTimes, setYieldTimes] = useState(getYieldTimes(initHarvests));
 	const [totals, setTotals] = useState(calcTotals(selectedCrop, initHarvests));
 
 	useEffect(() => {
 		console.log("useeffect - recalc yield and totals");
 		// recalculate and set yield times and totals
-		setYieldTimes(getYieldTimes(harvests));
-		setTotals(calcTotals(selectedCrop, harvests));
+		// setTotals(calcTotals(selectedCrop, harvests));
 	}, [selectedCrop, harvests]);
 
-	const editChange = (name, pos) => {
-		console.log("editChange");
+	const handleChangeEditing = (name, pos) => {
+		console.log("editChange, name: ", name, " pos: ", pos);
 		// copy value and update
 		let thisHarvest = harvests;
-		thisHarvest[pos][name] = !thisHarvest[pos][name];
+		thisHarvest[pos][name] = true;
 		// set harvest
 		setHarvests(thisHarvest);
 	};
@@ -160,7 +134,6 @@ function CropYield({ selectedCrop }) {
 		// set harvest
 		setHarvests(thisHarvest);
 		// // recalculate and set yield times and totals
-		// setYieldTimes(getYieldTimes(thisHarvest));
 		// setTotals(calcTotals(selectedCrop, thisHarvest));
 	};
 
@@ -178,10 +151,7 @@ function CropYield({ selectedCrop }) {
 			<div className="row">
 				<div className="col-6">
 					<p>{selectedCrop.name}</p>
-					<CropCalendar
-						selectedCrops={[selectedCrop]}
-						yieldTimes={yieldTimes}
-					/>
+					<CropCalendar selectedCrops={[selectedCrop]} harvests={harvests} />
 				</div>
 				<div className="col-6">
 					<div
@@ -197,6 +167,7 @@ function CropYield({ selectedCrop }) {
 						<div>Yield</div>
 					</div>
 					{harvests.map((thisHarvest, i) => {
+						console.log(thisHarvest);
 						return (
 							<div
 								key={i}
@@ -229,7 +200,9 @@ function CropYield({ selectedCrop }) {
 											) : (
 												<span
 													style={{ ...boxStyles }}
-													onClick={() => editChange("isEditingPlanting", i)}
+													onClick={() =>
+														handleChangeEditing("isEditingPlanting", i)
+													}
 												>
 													{thisHarvest.plantDay}
 												</span>
@@ -262,7 +235,9 @@ function CropYield({ selectedCrop }) {
 											) : (
 												<span
 													style={boxStyles}
-													onClick={() => editChange("isEditingSeeds", i)}
+													onClick={() =>
+														handleChangeEditing("isEditingSeeds", i)
+													}
 												>
 													{thisHarvest.seeds}
 												</span>
