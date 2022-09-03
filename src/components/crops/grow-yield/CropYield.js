@@ -32,21 +32,28 @@ const calcInitHarvests = (crop) => {
 			growingTime = crop.regrowTime + 1;
 		}
 
-		// yield the harvest
-		newHarvest.harvestDay = day + growingTime;
-		newHarvest.yield = 1;
+		// get harvest day
+		const harvestDay = day + growingTime;
 
-		// add grow days that the harvest grew
-		newHarvest.growDays = [...Array(newHarvest.harvestDay).keys()].slice(day);
+		// check if we can grow this harvest
+		if (harvestDay <= 28) {
+			// yield the harvest
+			newHarvest.harvestDay = harvestDay;
+			newHarvest.yield = 1;
 
-		// add the harvest
-		console.log(newHarvest);
-		harvests.push(newHarvest);
+			// add grow days that the harvest grew
+			newHarvest.growDays = [...Array(newHarvest.harvestDay).keys()].slice(day);
 
+			// add the harvest
+			console.log("newHarvest", newHarvest);
+			harvests.push(newHarvest);
+			console.log("all harvests", harvests);
+		}
 		// incrament day
 		day += growingTime;
 	}
 
+	console.log("returning harvests", harvests);
 	return harvests;
 };
 
@@ -167,7 +174,7 @@ function CropYield({ selectedCrop }) {
 						<div>Yield</div>
 					</div>
 					{harvests.map((thisHarvest, i) => {
-						console.log(thisHarvest);
+						console.log("thisHarvest", thisHarvest);
 						return (
 							<div
 								key={i}
