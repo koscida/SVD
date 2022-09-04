@@ -4,7 +4,7 @@ function CropCalendar({ selectedCrops, harvests }) {
 			// add plant day
 			if (harvest.plantDay) yieldTimes.plantDays.push(harvest.plantDay);
 			// add grow days
-			yieldTimes.growDays = yieldTimes.growDays.concat(harvest.growDays);
+			yieldTimes.growDays.push(...harvest.growDays);
 			// add harvest days
 			yieldTimes.harvestDays.push(harvest.harvestDay);
 			// return

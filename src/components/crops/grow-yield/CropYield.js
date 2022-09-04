@@ -5,30 +5,30 @@ import CropCalendar from "./CropCalendar";
 const calcInitHarvests = (crop) => {
 	// init
 	let day = 1;
-	let harvests = [];
+	const harvests = [];
 	const initHarvest = {
 		init: true,
 		isEditingPlanting: false,
 		isEditingSeeds: false,
 	};
 
-	console.log(crop.name);
 	// while we are in the month and not a day after
 	while (day <= 28) {
-		console.log(day);
 		// create a new harvest
-		const newHarvest = initHarvest;
+		let newHarvest = { ...initHarvest };
 
 		// get next grow period
-		let growingTime = crop.growTime;
+		let growingTime;
 
 		// init harvest, plant
 		if (harvests.length === 0 || !crop.regrow) {
 			// plant or replant
 			newHarvest.plantDay = day;
 			newHarvest.seeds = 1;
+			// set growing time
+			growingTime = crop.growTime;
 		} else {
-			// change growing time
+			// set growing time
 			growingTime = crop.regrowTime + 1;
 		}
 
@@ -45,15 +45,12 @@ const calcInitHarvests = (crop) => {
 			newHarvest.growDays = [...Array(newHarvest.harvestDay).keys()].slice(day);
 
 			// add the harvest
-			console.log("newHarvest", newHarvest);
 			harvests.push(newHarvest);
-			console.log("all harvests", harvests);
 		}
 		// incrament day
 		day += growingTime;
 	}
 
-	console.log("returning harvests", harvests);
 	return harvests;
 };
 
@@ -174,7 +171,6 @@ function CropYield({ selectedCrop }) {
 						<div>Yield</div>
 					</div>
 					{harvests.map((thisHarvest, i) => {
-						console.log("thisHarvest", thisHarvest);
 						return (
 							<div
 								key={i}
