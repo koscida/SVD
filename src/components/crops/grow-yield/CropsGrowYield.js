@@ -38,21 +38,22 @@ const sortCrops = (crops) => {
 };
 
 const startingSeason = "Spring";
+
 function CropsGrowYield() {
 	const [selectedSeason, setSelectedSeason] = useLocalStorage(
-		"svd-crops-selectedseason",
+		"svd-crops-yield-filter-selectedseason",
 		startingSeason
 	);
 	const [selectedCropType, setSelectedCropType] = useLocalStorage(
-		"svd-crops-selectedcroptype",
+		"svd-crops-yield-filter-selectedcroptype",
 		data.cropTypes
 	);
 	const [cropOptions, setCropOptions] = useLocalStorage(
-		"svd-crops-cropoptions",
+		"svd-crops-yield-filter-cropoptions",
 		getSelectedCrops(startingSeason)
 	);
 	const [selectedCrops, setSelectedCrops] = useLocalStorage(
-		"svd-crops-selectedcrops",
+		"svd-crops-yield-selectedcrops",
 		getSelectedCrops(startingSeason)
 	);
 

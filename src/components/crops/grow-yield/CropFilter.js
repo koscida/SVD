@@ -1,5 +1,5 @@
 import data from "../../shared/data";
-import RenderImg from "../../shared/RenderImg";
+import RenderImg from "../../shared/Icons/RenderImg";
 
 function CropFilter({
 	selectedCrops,
