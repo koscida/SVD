@@ -1,6 +1,7 @@
 import useLocalStorage from "../../shared/useLocalStorage";
 import data from "../../shared/data";
 import CropFilter from "./CropFilter";
+import CropsPlots from "./CropPlots";
 import CropYield from "./CropYield";
 
 // get data from data file
@@ -103,12 +104,14 @@ function CropsGrowYield() {
 						handleCropSelect={handleCropSelect}
 					/>
 				</div>
+				<div className="col-5">
+					<CropsPlots selectedCrops={selectedCrops} />
+				</div>
 				<div className="col-6">
 					{selectedCrops.map((selectedCrop, i) => (
 						<CropYield key={i} selectedCrop={selectedCrop} />
 					))}
 				</div>
-				<div className="col-5">Plots</div>
 			</div>
 		</div>
 	);

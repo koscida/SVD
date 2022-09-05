@@ -50,24 +50,30 @@ function CropCalendar({ crop, harvests }) {
 				}
 
 				// set opacity
-				let seedOpacity = 1 / (crop.growTime + 1);
-				let growOpacity = 2 / (crop.growTime + 1);
+				// if planting
+				let seedOpacity =
+					harvestInd === 0 || !crop.regrow
+						? 1 / (crop.growTime + 1)
+						: 1 / (crop.regrowTime + 1);
+				let growOpacity = 1 / (crop.growTime + 1);
+				// if harvesting
 				let harvestOpacity = 1;
 				// if growing crop and no next harvest set, means this is a grow only day, so change opacity
-				if (isGrowing && !nextHarvest) {
+				if (isGrowing && !isHarvesting && !isPlanting) {
 					// if within first growing period, else, replanting or regrowing
 					if (harvestInd === 0) {
 						growOpacity =
-							(i - thisHarvest.plantDay) /
-							(thisHarvest.harvestDay - thisHarvest.plantDay - 1);
-					} else {
+							(i - thisHarvest.plantDay + 1) /
+							(thisHarvest.harvestDay - thisHarvest.plantDay + 1);
+					}
+					// else, replanting or regrowing
+					else {
+						// if regrowing
 						if (crop.regrow) {
-							// if regrowing
-							seedOpacity = 1 / (crop.regrowTime + 1);
 							growOpacity =
-								(i - thisHarvest.growDays[0] + 1) / (crop.regrowTime + 1);
-						} else {
-							// else, replanting
+								(i - thisHarvest.growDays[0] + 0) / (crop.regrowTime + 1);
+						} // else, replanting
+						else {
 							growOpacity =
 								(i - thisHarvest.plantDay + 1) / (crop.growTime + 1);
 						}
@@ -111,7 +117,9 @@ function CropCalendar({ crop, harvests }) {
 								</>
 							)}
 							{isGrowing && (
-								<RenderBand opacity={growOpacity} color={cropColor} />
+								<>
+									<RenderBand opacity={growOpacity} color={cropColor} />
+								</>
 							)}
 						</div>
 					</div>

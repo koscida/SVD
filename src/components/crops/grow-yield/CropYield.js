@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import CropCalendar from "./CropCalendar";
+import useLocalStorage from "../../shared/useLocalStorage";
 import RenderImg from "../../shared/Icons/RenderImg";
 import CalendarImg from "../../shared/Icons/CalendarImg";
 import GoldImg from "../../shared/Icons/GoldImg";
@@ -58,53 +59,41 @@ const calcInitHarvests = (crop) => {
 const reCalcHarvestDays = (crop, harvests, pos) => {
 	const newHarvests = [];
 	harvests.forEach((harvest, i) => {
-		// if up to to the harvest changing
-		if (i < pos) {
-			// no re-calculation required, just push
-			newHarvests.push(harvest);
-		}
-		// else if it is the changed one, recalculate
-		else if (i === pos) {
-			// copy to new harvest
-			const newHarvest = { ...harvest };
-			// update harvest and growing days
-			const growingTime =
-				!crop.regrow || i === 0 ? crop.growTime : crop.regrowTime;
-			newHarvest.harvestDay = newHarvest.plantDay + growingTime;
-			newHarvest.growDays = [...Array(newHarvest.harvestDay).keys()].slice(
-				newHarvest.plantDay
-			);
-			// recalculate plant offset
-			if (i > 0)
+		// copy to new harvest
+		const newHarvest = { ...harvest };
+
+		// if is on or after changed harvest, recalculate remaining harvests
+		if (i >= pos) {
+			// if changing, update offset
+			if (i === pos)
 				newHarvest.plantOffset =
-					newHarvest.plantDay - newHarvests[i - 1].harvestDay;
-			// add updated harvest
-			newHarvests.push(newHarvest);
-		}
-		// else if immeditately after changed harvest, recalculate remaining harvests
-		else {
-			const newHarvest = { ...harvest };
-			// if regrowing, auto grow
-			if (crop.regrow) {
-				newHarvest.harvestDay =
-					newHarvests[i - 1].harvestDay + harvest.plantOffset;
-				newHarvest.growDays = [...Array(newHarvest.harvestDay).keys()].slice(
-					newHarvests[i - 1].harvestDay
-				);
-			}
-			// else, replanting, change from offset
-			else {
+					i === 0
+						? newHarvest.plantDay
+						: newHarvest.plantDay - newHarvests[i - 1].harvestDay;
+
+			// update plant day if after one changing
+			if (i > pos && !crop.regrow)
 				newHarvest.plantDay =
 					newHarvests[i - 1].harvestDay + harvest.plantOffset;
-				newHarvest.harvestDay = newHarvest.plantDay + crop.growTime;
-				newHarvest.growDays = [...Array(newHarvest.harvestDay).keys()].slice(
-					newHarvest.plantDay
-				);
-			}
-			// add updated harvest
-			newHarvests.push(newHarvest);
+
+			// get harvest start
+			const harvestStartDay =
+				!crop.regrow || i === 0
+					? newHarvest.plantDay
+					: newHarvests[i - 1].harvestDay;
+			// get growing time
+			const growingTime =
+				crop.regrow && i !== 0 ? crop.regrowTime + 1 : crop.growTime;
+
+			// update harvest day, then update grow times
+			newHarvest.harvestDay = harvestStartDay + growingTime;
+			newHarvest.growDays = [...Array(newHarvest.harvestDay).keys()].slice(
+				harvestStartDay
+			);
 		}
-		// else any of the remaining harvests, ignore
+
+		// add updated harvest
+		newHarvests.push(newHarvest);
 	});
 	return newHarvests;
 };
@@ -140,7 +129,10 @@ const calcTotals = (selectedCrop, harvests) => {
 
 function CropYield({ selectedCrop }) {
 	const initHarvests = calcInitHarvests(selectedCrop);
-	const [harvests, setHarvests] = useState(initHarvests);
+	const [harvests, setHarvests] = useLocalStorage(
+		"svd-crops-yield-" + selectedCrop.name.replaceAll(" ", ""),
+		initHarvests
+	);
 	const [totals, setTotals] = useState(calcTotals(selectedCrop, initHarvests));
 
 	useEffect(() => {
@@ -226,66 +218,82 @@ function CropYield({ selectedCrop }) {
 										background: "#eee",
 								  }
 								: {};
+						const offSetDays = thisHarvest.plantOffset
+							? thisHarvest.plantOffset
+							: null;
 						return (
-							<div
-								key={i}
-								style={{
-									padding: "3px 5px",
-									display: "grid",
-									gridTemplateColumns: "30% 30% 20% 20%",
-									textAlign: "center",
-									...cssDisabled,
-								}}
-							>
-								<div>
-									{thisHarvest.plantDay && (
-										<>
-											<CalendarImg />
-											{
-												<>
+							<div key={i}>
+								{offSetDays ? (
+									<div>
+										<p>
+											Wait {offSetDays} day
+											{offSetDays > 1 ? "s" : null}
+										</p>
+									</div>
+								) : null}
+								<div
+									style={{
+										padding: "3px 5px",
+										display: "grid",
+										gridTemplateColumns: "30% 30% 20% 20%",
+										textAlign: "center",
+										...cssDisabled,
+									}}
+								>
+									<div>
+										{thisHarvest.plantDay && (
+											<>
+												<CalendarImg />
+												{
+													<>
+														<input
+															type="number"
+															value={thisHarvest.plantDay}
+															onChange={(e) => {
+																handleChangeValue(
+																	i,
+																	"plantDay",
+																	e.target.value
+																);
+															}}
+															style={editingBoxStyles}
+														/>
+													</>
+												}
+											</>
+										)}
+									</div>
+									<div>
+										{thisHarvest.plantDay && (
+											<>
+												<RenderImg label={selectedCrop.seeds} />
+												{
 													<input
 														type="number"
-														value={thisHarvest.plantDay}
+														value={thisHarvest.seeds}
 														onChange={(e) => {
-															handleChangeValue(i, "plantDay", e.target.value);
+															handleChangeValue(i, "seeds", e.target.value);
 														}}
 														style={editingBoxStyles}
 													/>
-												</>
-											}
-										</>
-									)}
-								</div>
-								<div>
-									{thisHarvest.plantDay && (
-										<>
-											<RenderImg label={selectedCrop.seeds} />
-											{
-												<input
-													type="number"
-													value={thisHarvest.seeds}
-													onChange={(e) => {
-														handleChangeValue(i, "seeds", e.target.value);
-													}}
-													style={editingBoxStyles}
-												/>
-											}
-										</>
-									)}
-								</div>
-								<div
-									style={{
-										borderLeft: "1px solid #ddd",
-										paddingLeft: "5px",
-										marginLeft: "5px",
-									}}
-								>
-									<CalendarImg />
-									{thisHarvest.harvestDay}
-								</div>
-								<div>
-									<RenderImg label={selectedCrop.name} />
-									{thisHarvest.yield}
+												}
+											</>
+										)}
+									</div>
+									<div
+										style={{
+											borderLeft: "1px solid #ddd",
+											paddingLeft: "5px",
+											marginLeft: "5px",
+										}}
+									>
+										<CalendarImg />
+										{thisHarvest.harvestDay}
+									</div>
+									<div>
+										<RenderImg label={selectedCrop.name} />
+										{thisHarvest.yield}
+									</div>
 								</div>
 							</div>
 						);
@@ -309,6 +317,14 @@ function CropYield({ selectedCrop }) {
 							Total: {totals.totalYield}
 						</div>
 					</div>
+				</div>
+				<div>
+					<button
+						onClick={() => setHarvests(calcInitHarvests(selectedCrop))}
+						className="btn"
+					>
+						Reset
+					</button>
 				</div>
 				<hr />
 			</div>
