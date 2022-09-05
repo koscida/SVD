@@ -1,4 +1,5 @@
 import data from "../../shared/data";
+import RenderImg from "../../shared/RenderImg";
 
 function CropFilter({
 	selectedCrops,
@@ -81,10 +82,12 @@ function CropFilter({
 								checked={checked && c.name}
 								value={c.name}
 							/>
+
 							<label
 								className={"form-check-label m-0 d-flex flex-row " + c.name}
 								htmlFor={c.name}
 							>
+								<RenderImg label={c.name} />
 								{c.name}
 							</label>
 						</div>

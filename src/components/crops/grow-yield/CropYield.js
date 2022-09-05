@@ -1,6 +1,9 @@
 import { calculateNewValue } from "@testing-library/user-event/dist/utils";
 import { useEffect, useState } from "react";
 import CropCalendar from "./CropCalendar";
+import RenderImg from "../../shared/RenderImg";
+import CalendarImg from "../../shared/CalendarImg";
+import GoldImg from "../../shared/GoldImg";
 
 const calcInitHarvests = (crop) => {
 	// init
@@ -113,13 +116,13 @@ function CropYield({ selectedCrop }) {
 	const handleChangeEditing = (name, pos) => {
 		console.log("editChange, name: ", name, " pos: ", pos);
 		// copy value and update
-		let thisHarvest = harvests;
+		let thisHarvest = [...harvests];
 		thisHarvest[pos][name] = true;
 		// set harvest
 		setHarvests(thisHarvest);
 	};
 
-	const handleChange = (name, pos, value) => {
+	const handleChangeValue = (name, pos, value) => {
 		// TODO: validation
 
 		// copy value and update
@@ -137,8 +140,8 @@ function CropYield({ selectedCrop }) {
 
 		// set harvest
 		setHarvests(thisHarvest);
-		// // recalculate and set yield times and totals
-		// setTotals(calcTotals(selectedCrop, thisHarvest));
+		// recalculate totals
+		setTotals(calcTotals(selectedCrop, thisHarvest));
 	};
 
 	const boxStyles = {
@@ -170,6 +173,7 @@ function CropYield({ selectedCrop }) {
 						<div>Harvest on</div>
 						<div>Yield</div>
 					</div>
+
 					{harvests.map((thisHarvest, i) => {
 						return (
 							<div
@@ -185,17 +189,13 @@ function CropYield({ selectedCrop }) {
 								<div>
 									{thisHarvest.plantDay && (
 										<>
-											<img
-												src={"images/Calendar.png"}
-												alt={"calendar"}
-												className="icon"
-											/>
+											<CalendarImg />
 											{thisHarvest.isEditingPlanting ? (
 												<input
 													type="number"
 													value={thisHarvest.plantDay}
 													onChange={(e) => {
-														handleChange("plantDay", i, e.target.value);
+														handleChangeValue("plantDay", i, e.target.value);
 													}}
 													disabled={!thisHarvest.isEditingPlanting}
 													style={{ ...boxStyles, background: "eee" }}
@@ -216,21 +216,13 @@ function CropYield({ selectedCrop }) {
 								<div>
 									{thisHarvest.plantDay && (
 										<>
-											<img
-												src={
-													"images/" +
-													selectedCrop.seeds.replaceAll(" ", "_") +
-													".png"
-												}
-												alt={selectedCrop.name}
-												className="icon"
-											/>
+											<RenderImg label={selectedCrop.seeds} />
 											{thisHarvest.isEditingSeeds ? (
 												<input
 													type="number"
 													value={thisHarvest.seeds}
 													onChange={(e) => {
-														handleChange("seeds", i, e.target.value);
+														handleChangeValue("seeds", i, e.target.value);
 													}}
 													disabled={!thisHarvest.isEditingSeeds}
 													style={boxStyles}
@@ -255,56 +247,32 @@ function CropYield({ selectedCrop }) {
 										marginLeft: "5px",
 									}}
 								>
-									<img
-										src={"images/Calendar.png"}
-										alt={"calendar"}
-										className="icon"
-									/>
+									<CalendarImg />
 									{thisHarvest.harvestDay}
 								</div>
 								<div>
-									<img
-										src={
-											"images/" +
-											selectedCrop.name.replaceAll(" ", "_") +
-											".png"
-										}
-										alt={selectedCrop.name}
-										className="icon"
-									/>
+									<RenderImg label={selectedCrop.name} />
 									{thisHarvest.yield}
 								</div>
 							</div>
 						);
 					})}
+
 					<div
 						style={{
 							display: "grid",
-							gridTemplateColumns: "repeat(4, 25%)",
+							gridTemplateColumns: "60% 40%",
+							textAlign: "center",
 						}}
 					>
-						<div></div>
 						<div>
-							<img
-								src={
-									"images/" + selectedCrop.seeds.replaceAll(" ", "_") + ".png"
-								}
-								alt={selectedCrop.name}
-								className="seed"
-							/>
+							<RenderImg label={selectedCrop.seeds} />
 							Total: {totals.totalSeeds}
-							<br />
+							<GoldImg />
 							Cost: {totals.totalSeedCost}
 						</div>
-						<div></div>
 						<div>
-							<img
-								src={
-									"images/" + selectedCrop.name.replaceAll(" ", "_") + ".png"
-								}
-								alt={selectedCrop.name}
-								className="crop"
-							/>
+							<RenderImg label={selectedCrop.name} />
 							Total: {totals.totalYield}
 						</div>
 					</div>

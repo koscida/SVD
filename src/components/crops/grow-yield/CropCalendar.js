@@ -1,7 +1,20 @@
+import RenderImg from "../../shared/RenderImg";
+
 function CropCalendar({ crop, harvests }) {
 	// console.log("crop.name", crop.name);
 
 	let harvestInd = 0;
+
+	const RenderBand = ({ opacity, color }) => {
+		// styles
+		const harvestStyles = {
+			background: color,
+			opacity: opacity,
+			height: "8px",
+			flex: "1 0",
+		};
+		return <div style={harvestStyles}></div>;
+	};
 
 	return (
 		<div
@@ -12,13 +25,13 @@ function CropCalendar({ crop, harvests }) {
 			}}
 		>
 			{[...Array(29).keys()].slice(1).map((i) => {
-				console.log("i", i);
+				// console.log("i", i);
 				// get the harvest on
 				const thisHarvest =
 					harvestInd < harvests.length
 						? harvests[harvestInd]
 						: { growDays: [], plantDay: null, harvestDay: null };
-				console.log("thisHarvest", thisHarvest);
+				// console.log("thisHarvest", thisHarvest);
 				let nextHarvest;
 
 				// day type
@@ -76,13 +89,6 @@ function CropCalendar({ crop, harvests }) {
 					}
 				}
 
-				// styles
-				const harvestStyles = {
-					background: cropColor,
-					height: "8px",
-					flex: "1 0",
-				};
-
 				return (
 					<div className="cell cropCell d-grid" key={i} style={{}}>
 						<div className="date">{i}</div>
@@ -94,38 +100,18 @@ function CropCalendar({ crop, harvests }) {
 						>
 							{isHarvesting && (
 								<>
-									<div
-										style={{ ...harvestStyles, opacity: harvestOpacity }}
-									></div>
-									<img
-										src={"images/" + crop.name.replaceAll(" ", "_") + ".png"}
-										alt={crop.name}
-										className="crop"
-									/>
+									<RenderBand opacity={harvestOpacity} color={cropColor} />
+									<RenderImg label={crop.name} />
 								</>
 							)}
 							{isPlanting && (
 								<>
-									<img
-										src={"images/" + crop.seeds.replaceAll(" ", "_") + ".png"}
-										alt={crop.seeds}
-										className="seed"
-									/>
-									<div
-										style={{
-											...harvestStyles,
-											opacity: seedOpacity,
-										}}
-									></div>
+									<RenderImg label={crop.seeds} />
+									<RenderBand opacity={seedOpacity} color={cropColor} />
 								</>
 							)}
 							{isGrowing && (
-								<div
-									style={{
-										...harvestStyles,
-										opacity: growOpacity,
-									}}
-								></div>
+								<RenderBand opacity={growOpacity} color={cropColor} />
 							)}
 						</div>
 					</div>
