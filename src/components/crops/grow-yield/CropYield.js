@@ -155,7 +155,7 @@ function CropYield({ selectedCrop }) {
 			<div className="row">
 				<div className="col-6">
 					<p>{selectedCrop.name}</p>
-					<CropCalendar selectedCrops={[selectedCrop]} harvests={harvests} />
+					<CropCalendar crop={selectedCrop} harvests={harvests} />
 				</div>
 				<div className="col-6">
 					<div
