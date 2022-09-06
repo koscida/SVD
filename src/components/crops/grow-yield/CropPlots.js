@@ -2,12 +2,15 @@ import { useState } from "react";
 import useLocalStorage from "../../shared/useLocalStorage";
 import RenderImg from "../../shared/Icons/RenderImg";
 
-function CropsPlots({ selectedCrops, selectedPlot, setSelectedPlot }) {
+function CropsPlots({ selectedPlot, setSelectedPlot, plots, setPlots }) {
 	const initPlot = { name: "", size: 0 };
-	const [plots, setPlots] = useLocalStorage("svd-crops-yield-plots", []);
+
 	const [newPlot, setNewPlot] = useState(initPlot);
 
 	// handlers
+	const handleCancel = () => {
+		setSelectedPlot(null);
+	};
 	const clearNewPlot = () => {
 		setNewPlot(initPlot);
 		handleCancel();
@@ -18,12 +21,10 @@ function CropsPlots({ selectedCrops, selectedPlot, setSelectedPlot }) {
 			if (newPlot[key] === initPlot[key]) return;
 		}
 		if (newPlot.size < 0) return;
+
 		// update
 		setPlots([...plots, newPlot]);
 		clearNewPlot();
-	};
-	const handleCancel = () => {
-		setSelectedPlot(null);
 	};
 	const handlePrevChange = (i, name, value) => {
 		const newPlots = plots.map((p, j) => {
@@ -32,6 +33,7 @@ function CropsPlots({ selectedCrops, selectedPlot, setSelectedPlot }) {
 		});
 		setPlots(newPlots);
 	};
+	// move handlers
 	const moveTop = (i) => {
 		// reset plots
 		setPlots([plots[i], ...plots.filter((x, j) => j !== i)]);

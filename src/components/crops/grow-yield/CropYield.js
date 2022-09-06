@@ -7,55 +7,6 @@ import GoldImg from "../../shared/Icons/GoldImg";
 import ConfirmImg from "../../shared/Icons/ConfirmImg";
 import CancelImg from "../../shared/Icons/CancelImg";
 
-const calcInitHarvests = (crop) => {
-	// init
-	let day = 1;
-	const harvests = [];
-
-	// while we are in the month and not a day after
-	while (day <= 28) {
-		// create a new harvest
-		let newHarvest = {};
-
-		// get next grow period
-		let growingTime;
-
-		// init harvest, or regrowing, plant
-		if (harvests.length === 0 || !crop.regrow) {
-			// plant or replant
-			newHarvest.plantDay = day;
-			newHarvest.seeds = 1;
-			// set growing time
-			growingTime = crop.growTime;
-			// set diff between growing periods
-			newHarvest.plantOffset = 0;
-		} else {
-			// set growing time
-			growingTime = crop.regrowTime + 1;
-		}
-
-		// get harvest day
-		const harvestDay = day + growingTime;
-
-		// check if we can grow this harvest
-		if (harvestDay <= 28) {
-			// yield the harvest
-			newHarvest.harvestDay = harvestDay;
-			newHarvest.yield = 1;
-
-			// add grow days that the harvest grew
-			newHarvest.growDays = [...Array(newHarvest.harvestDay).keys()].slice(day);
-
-			// add the harvest
-			harvests.push(newHarvest);
-		}
-		// incrament day
-		day += growingTime;
-	}
-
-	return harvests;
-};
-
 const reCalcHarvestDays = (crop, harvests, pos) => {
 	const newHarvests = [];
 	harvests.forEach((harvest, i) => {
@@ -105,42 +56,14 @@ const reCalcHarvestYields = (harvests) => {
 	return harvests;
 };
 
-const calcTotals = (selectedCrop, harvests) => {
-	const seedCost = Object.values(selectedCrop.buy)[0];
-
-	// seed and yield totals
-	let totals = harvests.reduce(
-		(num, thisYield) => {
-			if (thisYield.harvestDay <= 28) {
-				if (thisYield.seeds) num.totalSeeds = num.totalSeeds + thisYield.seeds;
-				num.totalYield = num.totalYield + thisYield.yield;
-			}
-			return num;
-		},
-		{ totalSeeds: 0, totalYield: 0 }
-	);
-
-	// buy and sell price
-	totals.totalSeedCost = totals.totalSeeds * seedCost;
-	totals.totalYieldSell = totals.totalYield * selectedCrop.sell;
-
-	return totals;
-};
-
-function CropYield({ selectedCrop }) {
-	const initHarvests = calcInitHarvests(selectedCrop);
-	const [harvests, setHarvests] = useLocalStorage(
-		"svd-crops-yield-" + selectedCrop.name.replaceAll(" ", ""),
-		initHarvests
-	);
-	const [totals, setTotals] = useState(calcTotals(selectedCrop, initHarvests));
-
-	useEffect(() => {
-		console.log("useeffect - recalc yield and totals");
-		// recalculate and set yield times and totals
-		// setTotals(calcTotals(selectedCrop, harvests));
-	}, [selectedCrop, harvests]);
-
+function CropYield({
+	selectedCrop,
+	harvests,
+	setHarvests,
+	resetHarvests,
+	totals,
+}) {
+	console.log("totals", totals);
 	const handleChangeValue = (pos, name, value) => {
 		// validation
 		// if not a number
@@ -172,8 +95,6 @@ function CropYield({ selectedCrop }) {
 
 		// set harvest
 		setHarvests(thisHarvest);
-		// recalculate totals
-		setTotals(calcTotals(selectedCrop, thisHarvest));
 	};
 
 	const boxStyles = {
@@ -267,16 +188,7 @@ function CropYield({ selectedCrop }) {
 										{thisHarvest.plantDay && (
 											<>
 												<RenderImg label={selectedCrop.seeds} />
-												{
-													<input
-														type="number"
-														value={thisHarvest.seeds}
-														onChange={(e) => {
-															handleChangeValue(i, "seeds", e.target.value);
-														}}
-														style={editingBoxStyles}
-													/>
-												}
+												{thisHarvest.seeds}
 											</>
 										)}
 									</div>
@@ -310,7 +222,8 @@ function CropYield({ selectedCrop }) {
 							<RenderImg label={selectedCrop.seeds} />
 							Total: {totals.totalSeeds}
 							<GoldImg />
-							Cost: {totals.totalSeedCost}
+							Cost: (@{Object.values(selectedCrop.buy)[0]}){" "}
+							{totals.totalSeedCost}
 						</div>
 						<div>
 							<RenderImg label={selectedCrop.name} />
@@ -319,10 +232,7 @@ function CropYield({ selectedCrop }) {
 					</div>
 				</div>
 				<div>
-					<button
-						onClick={() => setHarvests(calcInitHarvests(selectedCrop))}
-						className="btn"
-					>
+					<button onClick={resetHarvests} className="btn">
 						Reset
 					</button>
 				</div>

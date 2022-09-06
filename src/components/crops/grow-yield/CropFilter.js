@@ -4,10 +4,11 @@ import RenderImg from "../../shared/Icons/RenderImg";
 function CropFilter({
 	selectedSeason,
 	handleChangeSeason,
-	cropOptionList,
+	cropSeasonalList,
 	selectedCrops,
 	handleCropSelect,
 }) {
+	// console.log("selectedCrops", selectedCrops);
 	return (
 		<>
 			<div className="dropdown">
@@ -35,8 +36,8 @@ function CropFilter({
 			</div>
 			<hr />
 			<div>
-				{cropOptionList.map((crop) => {
-					const checked = selectedCrops.map((x) => x.name).includes(crop);
+				{cropSeasonalList.map((crop) => {
+					const checked = selectedCrops && selectedCrops.includes(crop);
 					return (
 						<div
 							key={crop}
