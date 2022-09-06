@@ -60,24 +60,15 @@ function CropCalendar({ crop, harvests }) {
 				let harvestOpacity = 1;
 				// if growing crop and no next harvest set, means this is a grow only day, so change opacity
 				if (isGrowing && !isHarvesting && !isPlanting) {
-					// if within first growing period, else, replanting or regrowing
-					if (harvestInd === 0) {
+					// if regrowing
+					if (crop.regrow && harvestInd !== 0) {
 						growOpacity =
-							(i - thisHarvest.plantDay + 1) /
-							(thisHarvest.harvestDay - thisHarvest.plantDay + 1);
-					}
-					// else, replanting or regrowing
+							(i - thisHarvest.growDays[0] + 0) / (crop.regrowTime + 1);
+					} // else, replanting
 					else {
-						// if regrowing
-						if (crop.regrow) {
-							growOpacity =
-								(i - thisHarvest.growDays[0] + 0) / (crop.regrowTime + 1);
-						} // else, replanting
-						else {
-							growOpacity =
-								(i - thisHarvest.plantDay + 1) / (crop.growTime + 1);
-						}
+						growOpacity = (i - thisHarvest.plantDay + 1) / (crop.growTime + 1);
 					}
+					// }
 				}
 
 				// get crop color

@@ -34,6 +34,44 @@ function CropsPlots({ selectedCrops }) {
 		});
 		setPlots(newPlots);
 	};
+	const moveTop = (i) => {
+		// reset plots
+		setPlots([plots[i], ...plots.filter((x, j) => j !== i)]);
+		// reset which editing
+		setEditingPlot(0);
+	};
+	const moveUp = (i) => {
+		// validate
+		if (i > 0) {
+			// reset plots
+			setPlots([
+				...plots.filter((x, j) => j < i - 1),
+				plots[i],
+				...plots.filter((x, j) => j !== i && j >= i - 1),
+			]);
+			// reset which editing
+			setEditingPlot(i - 1);
+		}
+	};
+	const moveDown = (i) => {
+		// validate
+		if (i < plots.length - 1) {
+			// reset plots
+			setPlots([
+				...plots.filter((x, j) => j !== i && j <= i + 1),
+				plots[i],
+				...plots.filter((x, j) => j > i + 1),
+			]);
+			// reset which editing
+			setEditingPlot(i + 1);
+		}
+	};
+	const moveBottom = (i) => {
+		// reset plots
+		setPlots([...plots.filter((x, j) => j !== i), plots[i]]);
+		// reset which editing
+		setEditingPlot(plots.length - 1);
+	};
 
 	// return
 	return (
@@ -55,9 +93,23 @@ function CropsPlots({ selectedCrops }) {
 				{plots.map((plot, i) => {
 					return (
 						<div key={i}>
-							{editingPlot === i ? (
+							<div style={{ display: "flex", justifyContent: "space-between" }}>
 								<div>
-									<div style={{ display: "flex" }}>
+									{i + 1}. {plot.name} ({plot.size})
+								</div>
+								{editingPlot === i ? (
+									<button className="btn" onClick={handleCancel}>
+										Close
+									</button>
+								) : (
+									<button className="btn" onClick={() => setEditingPlot(i)}>
+										Open
+									</button>
+								)}
+							</div>
+							{editingPlot === i && (
+								<div>
+									<div>
 										<div>
 											Name:
 											<input
@@ -70,6 +122,7 @@ function CropsPlots({ selectedCrops }) {
 											/>
 										</div>
 										<div>
+											<RenderImg label={"Marker3x2"} />
 											Size:
 											<input
 												type="number"
@@ -81,29 +134,24 @@ function CropsPlots({ selectedCrops }) {
 											/>
 										</div>
 									</div>
-									<button onClick={handleCancel} className="btn">
-										Save
-									</button>
-									<button onClick={handleCancel} className="btn">
-										Cancel
-									</button>
-								</div>
-							) : (
-								<div
-									style={{ display: "flex", justifyContent: "space-between" }}
-								>
-									<RenderImg label={"Marker3x2"} />
-									<div
-										style={{ display: "flex", justifyContent: "space-around" }}
-									>
-										<div>{i}.</div>
-										<div>{plot.name}</div>
-										<div>({plot.size})</div>
+									<div>
+										<i
+											className="fa-solid fa-angles-up"
+											onClick={() => moveTop(i)}
+										></i>
+										<i
+											className="fa-solid fa-angle-up"
+											onClick={() => moveUp(i)}
+										></i>
+										<i
+											className="fa-solid fa-angle-down"
+											onClick={() => moveDown(i)}
+										></i>
+										<i
+											className="fa-solid fa-angles-down"
+											onClick={() => moveBottom(i)}
+										></i>
 									</div>
-									<button className="btn" onClick={() => setEditingPlot(i)}>
-										<EditImg />
-										Edit
-									</button>
 								</div>
 							)}
 							<hr />
@@ -142,12 +190,14 @@ function CropsPlots({ selectedCrops }) {
 								/>
 							</div>
 						</div>
-						<button onClick={handleNewSave} className="btn">
-							Save
-						</button>
-						<button onClick={clearNewPlot} className="btn">
-							Cancel
-						</button>
+						<div style={{ display: "flex", justifyContent: "space-between" }}>
+							<button onClick={clearNewPlot} className="btn">
+								Cancel
+							</button>
+							<button onClick={handleNewSave} className="btn">
+								Add
+							</button>
+						</div>
 					</>
 				)}
 			</div>
