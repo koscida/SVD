@@ -11,11 +11,10 @@ const dataCrops = data.crops;
 const crops = dataCrops.reduce((crops, newCrop) => {
 	// add to crops
 	crops[newCrop.name] = newCrop;
-
 	return crops;
 }, {});
 
-const getSelectedCrops = (selectedSeason) => {
+const getSeasonalCrops = (selectedSeason) => {
 	return sortCrops(
 		Object.values(crops).filter(
 			(crop) => crop.season && crop.season.includes(selectedSeason)
@@ -38,56 +37,48 @@ const sortCrops = (crops) => {
 		);
 };
 
-const startingSeason = "Spring";
-
 function CropsGrowYield() {
+	// init values
+	const startingSeason = "Spring";
+	const seasonalCrops = getSeasonalCrops(startingSeason);
+	const seasonalCropNames = seasonalCrops.map((c) => c.name);
+	// init filters
 	const [selectedSeason, setSelectedSeason] = useLocalStorage(
 		"svd-crops-yield-filter-selectedseason",
 		startingSeason
 	);
-	const [selectedCropType, setSelectedCropType] = useLocalStorage(
-		"svd-crops-yield-filter-selectedcroptype",
-		data.cropTypes
-	);
-	const [cropOptions, setCropOptions] = useLocalStorage(
+	const [cropOptionList, setCropOptionList] = useLocalStorage(
 		"svd-crops-yield-filter-cropoptions",
-		getSelectedCrops(startingSeason)
+		seasonalCropNames
+	);
+	// init selections
+	const [selectedPlot, setSelectedPlot] = useLocalStorage(
+		"svd-crops-yield-selectedplot",
+		null
 	);
 	const [selectedCrops, setSelectedCrops] = useLocalStorage(
 		"svd-crops-yield-selectedcrops",
-		getSelectedCrops(startingSeason)
+		seasonalCrops
 	);
 
-	const handleSeasonSwitch = (e) => {
+	const handleChangeSeason = (e) => {
 		const newSeason = e.target.value;
 		setSelectedSeason(newSeason);
-		setSelectedCrops(getSelectedCrops(newSeason));
-		setCropOptions(getSelectedCrops(newSeason));
+		const seasonalCrops = getSeasonalCrops(newSeason);
+		const seasonalCropNames = seasonalCrops.map((c) => c.name);
+		setSelectedCrops(seasonalCrops);
+		setCropOptionList(seasonalCropNames);
 	};
 	const handleCropSelect = (name) => {
+		// if name is in list of selected crops, then filter it out
 		if (selectedCrops.map((x) => x.name).includes(name)) {
 			const newSelectedCrops = selectedCrops.filter((x) => x.name !== name);
 			setSelectedCrops(newSelectedCrops);
-		} else {
-			const newSelectedCrop = cropOptions.filter((x) => x.name === name);
-			setSelectedCrops(sortCrops([...selectedCrops, ...newSelectedCrop]));
+		} // else, name was not in selected crops, then add it
+		else {
+			const newSelectedCrop = crops[name];
+			setSelectedCrops(sortCrops([...selectedCrops, newSelectedCrop]));
 		}
-	};
-	const handleCropTypeSelect = (type) => {
-		let newCropTypes;
-		if (selectedCropType.includes(type)) {
-			newCropTypes = selectedCropType.filter((x) => x !== type);
-		} else {
-			newCropTypes = [...selectedCropType, type];
-		}
-		setSelectedCropType(newCropTypes);
-		const newSelectedCrops = selectedCrops.filter((x) => {
-			let include = false;
-			if (newCropTypes.includes("Regrows") && x.regrow) include = true;
-			if (newCropTypes.includes("Single harvest") && !x.regrow) include = true;
-			return include;
-		});
-		setSelectedCrops(newSelectedCrops);
 	};
 
 	return (
@@ -95,17 +86,19 @@ function CropsGrowYield() {
 			<div className="row">
 				<div className="col-1">
 					<CropFilter
-						selectedCrops={selectedCrops}
 						selectedSeason={selectedSeason}
-						handleSeasonSwitch={handleSeasonSwitch}
-						selectedCropType={selectedCropType}
-						handleCropTypeSelect={handleCropTypeSelect}
-						cropOptions={cropOptions}
+						handleChangeSeason={handleChangeSeason}
+						cropOptionList={cropOptionList}
+						selectedCrops={selectedCrops}
 						handleCropSelect={handleCropSelect}
 					/>
 				</div>
 				<div className="col-5">
-					<CropsPlots selectedCrops={selectedCrops} />
+					<CropsPlots
+						selectedCrops={selectedCrops}
+						selectedPlot={selectedPlot}
+						setSelectedPlot={setSelectedPlot}
+					/>
 				</div>
 				<div className="col-6">
 					{selectedCrops.map((selectedCrop, i) => (

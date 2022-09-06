@@ -2,12 +2,10 @@ import data from "../../shared/data";
 import RenderImg from "../../shared/Icons/RenderImg";
 
 function CropFilter({
-	selectedCrops,
 	selectedSeason,
-	handleSeasonSwitch,
-	selectedCropType,
-	handleCropTypeSelect,
-	cropOptions,
+	handleChangeSeason,
+	cropOptionList,
+	selectedCrops,
 	handleCropSelect,
 }) {
 	return (
@@ -29,7 +27,7 @@ function CropFilter({
 								type="button"
 								className="dropdown-item"
 								value={seasonName}
-								onClick={handleSeasonSwitch}
+								onClick={handleChangeSeason}
 							/>
 						</li>
 					))}
@@ -37,58 +35,31 @@ function CropFilter({
 			</div>
 			<hr />
 			<div>
-				{data.cropTypes.map((type) => (
-					<div
-						key={type}
-						className="form-check m-0 p-0 d-flex align-items-center"
-					>
-						<input
-							className="form-check-input m-0 me-1"
-							type="checkbox"
-							name={type}
-							id={type}
-							onChange={(e) => {
-								handleCropTypeSelect(type);
-							}}
-							checked={selectedCropType.includes(type) && type}
-							value={type}
-						/>
-						<label
-							className={"form-check-label m-0 d-flex flex-row " + type}
-							htmlFor={type}
-						>
-							{type}
-						</label>
-					</div>
-				))}
-			</div>
-			<hr />
-			<div>
-				{cropOptions.map((c) => {
-					const checked = selectedCrops.map((x) => x.name).includes(c.name);
+				{cropOptionList.map((crop) => {
+					const checked = selectedCrops.map((x) => x.name).includes(crop);
 					return (
 						<div
-							key={c.name}
+							key={crop}
 							className="form-check m-0 p-0 d-flex align-items-center"
 						>
 							<input
 								className="form-check-input m-0 me-1"
 								type="checkbox"
-								name={c.name}
-								id={c.name}
+								name={crop}
+								id={crop}
 								onChange={(e) => {
-									handleCropSelect(c.name);
+									handleCropSelect(crop);
 								}}
-								checked={checked && c.name}
-								value={c.name}
+								checked={checked && crop}
+								value={crop}
 							/>
 
 							<label
-								className={"form-check-label m-0 d-flex flex-row " + c.name}
-								htmlFor={c.name}
+								className={"form-check-label m-0 d-flex flex-row " + crop}
+								htmlFor={crop}
 							>
-								<RenderImg label={c.name} />
-								{c.name}
+								<RenderImg label={crop} />
+								{crop}
 							</label>
 						</div>
 					);

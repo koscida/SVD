@@ -1,13 +1,11 @@
 import { useState } from "react";
 import useLocalStorage from "../../shared/useLocalStorage";
-import EditImg from "../../shared/Icons/EditImg";
 import RenderImg from "../../shared/Icons/RenderImg";
 
-function CropsPlots({ selectedCrops }) {
+function CropsPlots({ selectedCrops, selectedPlot, setSelectedPlot }) {
 	const initPlot = { name: "", size: 0 };
 	const [plots, setPlots] = useLocalStorage("svd-crops-yield-plots", []);
 	const [newPlot, setNewPlot] = useState(initPlot);
-	const [editingPlot, setEditingPlot] = useState(null);
 
 	// handlers
 	const clearNewPlot = () => {
@@ -25,7 +23,7 @@ function CropsPlots({ selectedCrops }) {
 		clearNewPlot();
 	};
 	const handleCancel = () => {
-		setEditingPlot(null);
+		setSelectedPlot(null);
 	};
 	const handlePrevChange = (i, name, value) => {
 		const newPlots = plots.map((p, j) => {
@@ -38,7 +36,7 @@ function CropsPlots({ selectedCrops }) {
 		// reset plots
 		setPlots([plots[i], ...plots.filter((x, j) => j !== i)]);
 		// reset which editing
-		setEditingPlot(0);
+		setSelectedPlot(0);
 	};
 	const moveUp = (i) => {
 		// validate
@@ -50,7 +48,7 @@ function CropsPlots({ selectedCrops }) {
 				...plots.filter((x, j) => j !== i && j >= i - 1),
 			]);
 			// reset which editing
-			setEditingPlot(i - 1);
+			setSelectedPlot(i - 1);
 		}
 	};
 	const moveDown = (i) => {
@@ -63,14 +61,14 @@ function CropsPlots({ selectedCrops }) {
 				...plots.filter((x, j) => j > i + 1),
 			]);
 			// reset which editing
-			setEditingPlot(i + 1);
+			setSelectedPlot(i + 1);
 		}
 	};
 	const moveBottom = (i) => {
 		// reset plots
 		setPlots([...plots.filter((x, j) => j !== i), plots[i]]);
 		// reset which editing
-		setEditingPlot(plots.length - 1);
+		setSelectedPlot(plots.length - 1);
 	};
 
 	// return
@@ -97,17 +95,17 @@ function CropsPlots({ selectedCrops }) {
 								<div>
 									{i + 1}. {plot.name} ({plot.size})
 								</div>
-								{editingPlot === i ? (
+								{selectedPlot === i ? (
 									<button className="btn" onClick={handleCancel}>
 										Close
 									</button>
 								) : (
-									<button className="btn" onClick={() => setEditingPlot(i)}>
+									<button className="btn" onClick={() => setSelectedPlot(i)}>
 										Open
 									</button>
 								)}
 							</div>
-							{editingPlot === i && (
+							{selectedPlot === i && (
 								<div>
 									<div>
 										<div>
@@ -160,8 +158,8 @@ function CropsPlots({ selectedCrops }) {
 				})}
 			</div>
 			<div>
-				{editingPlot !== -1 ? (
-					<button onClick={() => setEditingPlot(-1)} className="btn">
+				{selectedPlot !== -1 ? (
+					<button onClick={() => setSelectedPlot(-1)} className="btn">
 						New Plot
 					</button>
 				) : (
