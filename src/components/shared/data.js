@@ -1533,7 +1533,7 @@ const fish = [
 ];
 exports.fish = fish;
 
-const crops = [
+const cropsList = [
 	{
 		name: "Blue Jazz",
 		seeds: "Jazz Seeds",
@@ -2007,6 +2007,12 @@ const crops = [
 		giant: false,
 	},
 ];
+exports.cropsList = cropsList;
+const crops = cropsList.reduce((crops, newCrop) => {
+	// add to crops
+	crops[newCrop.name] = newCrop;
+	return crops;
+}, {});
 exports.crops = crops;
 
 const cropTypes = ["Regrows", "Single harvest"];

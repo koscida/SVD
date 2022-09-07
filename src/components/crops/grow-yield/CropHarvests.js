@@ -56,14 +56,13 @@ const reCalcHarvestYields = (harvests) => {
 	return harvests;
 };
 
-function CropYield({
+function CropHarvests({
 	selectedCrop,
 	harvests,
 	setHarvests,
 	resetHarvests,
 	totals,
 }) {
-	console.log("totals", totals);
 	const handleChangeValue = (pos, name, value) => {
 		// validation
 		// if not a number
@@ -242,4 +241,4 @@ function CropYield({
 	);
 }
 
-export default CropYield;
+export default CropHarvests;

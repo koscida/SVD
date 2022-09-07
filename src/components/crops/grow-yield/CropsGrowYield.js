@@ -2,17 +2,10 @@ import useLocalStorage from "../../shared/useLocalStorage";
 import data from "../../shared/data";
 import CropFilter from "./CropFilter";
 import CropsPlots from "./CropPlots";
-import CropYield from "./CropYield";
+import CropHarvests from "./CropHarvests";
 
 // get data from data file
-//	dataCrops list of ojects
-const dataCrops = data.crops;
-// crops, object of objects
-const crops = dataCrops.reduce((crops, newCrop) => {
-	// add to crops
-	crops[newCrop.name] = newCrop;
-	return crops;
-}, {});
+const { crops } = data;
 
 const getSeasonalCrops = (selectedSeason) => {
 	return sortCrops(
@@ -184,8 +177,9 @@ function CropsGrowYield() {
 	const handleSetPlots = (newPlots) => {
 		// loop and check
 		const filteredPlots = newPlots.map((plot) => {
+			console.log("plot", plot);
 			// add selected crops
-			if (!plot.seasonalCrops) {
+			if (!plot.selectedCrops) {
 				plot.selectedCrops = [];
 			}
 			// add harvest
@@ -224,54 +218,55 @@ function CropsGrowYield() {
 	return (
 		<div className="cropsApp">
 			<div className="row">
-				<div className="col-1">
-					<CropFilter
-						selectedSeason={selectedSeason}
-						handleChangeSeason={handleChangeSeason}
-						cropSeasonalList={cropSeasonalList}
-						selectedCrops={
-							selectedPlot !== null &&
-							!(isNaN(selectedPlot) || selectedPlot < 0) &&
-							plots[selectedPlot].selectedCrops
-						}
-						handleCropSelect={handleCropSelect}
-					/>
-				</div>
 				<div className="col-5">
 					<CropsPlots
+						selectedSeason={selectedSeason}
 						selectedPlot={selectedPlot}
 						setSelectedPlot={setSelectedPlot}
 						plots={plots}
 						setPlots={handleSetPlots}
 					/>
 				</div>
-				<div className="col-6">
+
+				<div className="col-7">
+					<div>
+						<CropFilter
+							selectedSeason={selectedSeason}
+							handleChangeSeason={handleChangeSeason}
+							cropSeasonalList={cropSeasonalList}
+							selectedCrops={
+								selectedPlot !== null &&
+								!(isNaN(selectedPlot) || selectedPlot < 0) &&
+								plots[selectedPlot].selectedCrops
+							}
+							handleCropSelect={handleCropSelect}
+						/>
+					</div>
 					{selectedPlot !== null &&
 						!(isNaN(selectedPlot) || selectedPlot < 0) &&
-						plots[selectedPlot].selectedCrops.map((selectedCropName, i) => {
-							const crop = crops[selectedCropName];
-							const plot = plots[selectedPlot];
-							console.log("plots", plots);
-							console.log("plot", plot);
-							console.log("plot.totals", plot.totals);
-							return (
-								<CropYield
-									key={i}
-									selectedCrop={crop}
-									harvests={plot.harvests[selectedCropName]}
-									setHarvests={(newHarvest) =>
-										handleSetHarvest(selectedCropName, newHarvest)
-									}
-									resetHarvests={() =>
-										handleSetHarvest(
-											selectedCropName,
-											calcInitHarvests(crop, plot.size)
-										)
-									}
-									totals={plot.totals[selectedCropName]}
-								/>
-							);
-						})}
+						plots[selectedPlot].selectedCrops
+							.filter((c) => crops[c].season.includes(selectedSeason))
+							.map((selectedCropName, i) => {
+								const crop = crops[selectedCropName];
+								const plot = plots[selectedPlot];
+								return (
+									<CropHarvests
+										key={i}
+										selectedCrop={crop}
+										harvests={plot.harvests[selectedCropName]}
+										setHarvests={(newHarvest) =>
+											handleSetHarvest(selectedCropName, newHarvest)
+										}
+										resetHarvests={() =>
+											handleSetHarvest(
+												selectedCropName,
+												calcInitHarvests(crop, plot.size)
+											)
+										}
+										totals={plot.totals[selectedCropName]}
+									/>
+								);
+							})}
 				</div>
 			</div>
 		</div>

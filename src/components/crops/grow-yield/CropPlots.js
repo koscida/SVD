@@ -1,8 +1,17 @@
 import { useState } from "react";
+import data from "../../shared/data";
 import useLocalStorage from "../../shared/useLocalStorage";
 import RenderImg from "../../shared/Icons/RenderImg";
 
-function CropsPlots({ selectedPlot, setSelectedPlot, plots, setPlots }) {
+const { crops } = data;
+
+function CropsPlots({
+	selectedSeason,
+	selectedPlot,
+	setSelectedPlot,
+	plots,
+	setPlots,
+}) {
 	const initPlot = { name: "", size: 0 };
 
 	const [newPlot, setNewPlot] = useState(initPlot);
@@ -27,10 +36,11 @@ function CropsPlots({ selectedPlot, setSelectedPlot, plots, setPlots }) {
 		clearNewPlot();
 	};
 	const handlePrevChange = (i, name, value) => {
-		const newPlots = plots.map((p, j) => {
-			if (i === j) p[name] = value;
-			return p;
+		const newPlots = plots.map((plot, j) => {
+			if (i === j) plot[name] = value;
+			return plot;
 		});
+		// update
 		setPlots(newPlots);
 	};
 	// move handlers
@@ -76,89 +86,10 @@ function CropsPlots({ selectedPlot, setSelectedPlot, plots, setPlots }) {
 	// return
 	return (
 		<div>
-			<div className="d-flex">
-				<p>Plots</p>
-				<button
-					className="btn"
-					onClick={() => {
-						setPlots([]);
-						setNewPlot(initPlot);
-					}}
-				>
-					Clear
-				</button>
+			<div style={{ display: "flex", justifyContent: "space-between" }}>
+				<h2>Plots</h2>
 			</div>
 			<hr />
-			<div>
-				{plots.map((plot, i) => {
-					return (
-						<div key={i}>
-							<div style={{ display: "flex", justifyContent: "space-between" }}>
-								<div>
-									{i + 1}. {plot.name} ({plot.size})
-								</div>
-								{selectedPlot === i ? (
-									<button className="btn" onClick={handleCancel}>
-										Close
-									</button>
-								) : (
-									<button className="btn" onClick={() => setSelectedPlot(i)}>
-										Open
-									</button>
-								)}
-							</div>
-							{selectedPlot === i && (
-								<div>
-									<div>
-										<div>
-											Name:
-											<input
-												type="text"
-												name="name"
-												value={plot.name}
-												onChange={({ target: { name, value } }) =>
-													handlePrevChange(i, name, value)
-												}
-											/>
-										</div>
-										<div>
-											<RenderImg label={"Marker3x2"} />
-											Size:
-											<input
-												type="number"
-												name="size"
-												value={plot.size}
-												onChange={({ target: { name, value } }) =>
-													handlePrevChange(i, name, value)
-												}
-											/>
-										</div>
-									</div>
-									<div>
-										<i
-											className="fa-solid fa-angles-up"
-											onClick={() => moveTop(i)}
-										></i>
-										<i
-											className="fa-solid fa-angle-up"
-											onClick={() => moveUp(i)}
-										></i>
-										<i
-											className="fa-solid fa-angle-down"
-											onClick={() => moveDown(i)}
-										></i>
-										<i
-											className="fa-solid fa-angles-down"
-											onClick={() => moveBottom(i)}
-										></i>
-									</div>
-								</div>
-							)}
-							<hr />
-						</div>
-					);
-				})}
-			</div>
 			<div>
 				{selectedPlot !== -1 ? (
 					<button onClick={() => setSelectedPlot(-1)} className="btn">
@@ -166,7 +97,7 @@ function CropsPlots({ selectedPlot, setSelectedPlot, plots, setPlots }) {
 					</button>
 				) : (
 					<>
-						<div style={{ display: "flex" }}>
+						<div>
 							<div>
 								Name:
 								<input
@@ -200,6 +131,104 @@ function CropsPlots({ selectedPlot, setSelectedPlot, plots, setPlots }) {
 						</div>
 					</>
 				)}
+			</div>
+			<hr />
+			<div>
+				{plots.map((plot, i) => {
+					const isSelected = selectedPlot === i;
+					const selectedStyles = isSelected && { background: "#eeeefa" };
+					return (
+						<div key={i}>
+							<div style={{ ...selectedStyles }} className="p-2">
+								<div
+									style={{ display: "flex", justifyContent: "space-between" }}
+								>
+									<div>
+										{i + 1}. {plot.name} ({plot.size})
+									</div>
+									<div>
+										{plot.selectedCrops
+											.filter((c) => crops[c].season.includes(selectedSeason))
+											.map((selectedCropName) => (
+												<RenderImg
+													label={selectedCropName}
+													key={selectedCropName}
+												/>
+											))}
+									</div>
+									{isSelected ? (
+										<button className="btn" onClick={handleCancel}>
+											Close
+										</button>
+									) : (
+										<button className="btn" onClick={() => setSelectedPlot(i)}>
+											Open
+										</button>
+									)}
+								</div>
+								{isSelected && (
+									<div>
+										<div>
+											<div>
+												Name:
+												<input
+													type="text"
+													name="name"
+													value={plot.name}
+													onChange={({ target: { name, value } }) =>
+														handlePrevChange(i, name, value)
+													}
+												/>
+											</div>
+											<div>
+												<RenderImg label={"Marker3x2"} />
+												Size:
+												<input
+													type="number"
+													name="size"
+													value={plot.size}
+													onChange={({ target: { name, value } }) =>
+														handlePrevChange(i, name, value)
+													}
+												/>
+											</div>
+										</div>
+										<div>
+											<i
+												className="fa-solid fa-angles-up"
+												onClick={() => moveTop(i)}
+											></i>
+											<i
+												className="fa-solid fa-angle-up"
+												onClick={() => moveUp(i)}
+											></i>
+											<i
+												className="fa-solid fa-angle-down"
+												onClick={() => moveDown(i)}
+											></i>
+											<i
+												className="fa-solid fa-angles-down"
+												onClick={() => moveBottom(i)}
+											></i>
+										</div>
+									</div>
+								)}
+							</div>
+						</div>
+					);
+				})}
+			</div>
+			<hr />
+			<div>
+				<button
+					className="btn ms-auto"
+					onClick={() => {
+						setPlots([]);
+						setNewPlot(initPlot);
+					}}
+				>
+					Clear All
+				</button>
 			</div>
 		</div>
 	);
