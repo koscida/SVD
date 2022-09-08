@@ -3,10 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./components/App";
-import Home from "./components/home/Home";
-import Fish from "./components/fish/Fish";
-import Crops from "./components/crops/Crops";
-import CropsGrowYield from "./components/crops/grow-yield/CropsGrowYield";
+import navigationLinks from "./components/shared/navigationLinks";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -15,11 +12,13 @@ root.render(
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<App />}>
-						<Route index element={<Home />} />
-						<Route path="fish" element={<Fish />} />
-						<Route path="/crops" element={<Crops />} />
-						<Route path="/crops-grow-yield" element={<CropsGrowYield />} />
-						<Route path="/crops-plots" element={<CropsGrowYield />} />
+						{navigationLinks.map((navigationLink) => (
+							<Route
+								key={navigationLink.label}
+								path={navigationLink.to}
+								element={navigationLink.element}
+							/>
+						))}
 					</Route>
 				</Routes>
 			</BrowserRouter>
