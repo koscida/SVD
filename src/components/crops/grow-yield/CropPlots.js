@@ -157,60 +157,66 @@ function CropsPlots({
 											))}
 									</div>
 									{isSelected ? (
-										<button className="btn" onClick={handleCancel}>
+										<button className="btn btn-sm" onClick={handleCancel}>
 											Close
 										</button>
 									) : (
-										<button className="btn" onClick={() => setSelectedPlot(i)}>
+										<button
+											className="btn btn-sm"
+											onClick={() => setSelectedPlot(i)}
+										>
 											Open
 										</button>
 									)}
 								</div>
 								{isSelected && (
 									<div>
-										<div>
+										<div className="col">
 											<div>
-												Name:
-												<input
-													type="text"
-													name="name"
-													value={plot.name}
-													onChange={({ target: { name, value } }) =>
-														handlePrevChange(i, name, value)
-													}
-												/>
+												<div>
+													Name:
+													<input
+														type="text"
+														name="name"
+														value={plot.name}
+														onChange={({ target: { name, value } }) =>
+															handlePrevChange(i, name, value)
+														}
+													/>
+												</div>
+												<div>
+													<RenderImg label={"Marker3x2"} />
+													Size:
+													<input
+														type="number"
+														name="size"
+														value={plot.size}
+														onChange={({ target: { name, value } }) =>
+															handlePrevChange(i, name, value)
+														}
+													/>
+												</div>
 											</div>
 											<div>
-												<RenderImg label={"Marker3x2"} />
-												Size:
-												<input
-													type="number"
-													name="size"
-													value={plot.size}
-													onChange={({ target: { name, value } }) =>
-														handlePrevChange(i, name, value)
-													}
-												/>
+												<i
+													className="fa-solid fa-angles-up"
+													onClick={() => moveTop(i)}
+												></i>
+												<i
+													className="fa-solid fa-angle-up"
+													onClick={() => moveUp(i)}
+												></i>
+												<i
+													className="fa-solid fa-angle-down"
+													onClick={() => moveDown(i)}
+												></i>
+												<i
+													className="fa-solid fa-angles-down"
+													onClick={() => moveBottom(i)}
+												></i>
 											</div>
 										</div>
-										<div>
-											<i
-												className="fa-solid fa-angles-up"
-												onClick={() => moveTop(i)}
-											></i>
-											<i
-												className="fa-solid fa-angle-up"
-												onClick={() => moveUp(i)}
-											></i>
-											<i
-												className="fa-solid fa-angle-down"
-												onClick={() => moveDown(i)}
-											></i>
-											<i
-												className="fa-solid fa-angles-down"
-												onClick={() => moveBottom(i)}
-											></i>
-										</div>
+										<div className="col"></div>
 									</div>
 								)}
 							</div>
