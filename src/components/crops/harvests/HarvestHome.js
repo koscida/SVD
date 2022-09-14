@@ -1,8 +1,8 @@
 import useLocalStorage from "../../shared/useLocalStorage";
 import data from "../../shared/data";
-import CropFilter from "./CropFilter";
-import CropsPlots from "./CropPlots";
-import CropHarvests from "./CropHarvests";
+import Plots from "./Plots";
+import Harvests from "./Harvests";
+import HarvestCalendar from "./HarvestCalendar";
 
 // get data from data file
 const { crops } = data;
@@ -102,7 +102,7 @@ const calcTotals = (selectedCrop, harvests) => {
 	return totals;
 };
 
-function CropsGrowYield() {
+function HarvestHome() {
 	// init values
 	const startingSeason = "Spring";
 	// init filter data
@@ -112,11 +112,11 @@ function CropsGrowYield() {
 	);
 	// init selections
 	const [selectedSeason, setSelectedSeason] = useLocalStorage(
-		"svd-crops-yield-filter-selectedseason",
+		"svd-selectedseason",
 		startingSeason
 	);
 	const [selectedPlot, setSelectedPlot] = useLocalStorage(
-		"svd-crops-yield-selectedplot",
+		"svd-crops-selectedplot",
 		null
 	);
 	// data
@@ -130,6 +130,7 @@ function CropsGrowYield() {
 			totals: { Parsnip: calcTotals(crops["Parsnip"], initHarvest) },
 		},
 	]);
+	// console.log("plots", plots);
 
 	// Handlers
 	// CropFilter handlers
@@ -177,7 +178,7 @@ function CropsGrowYield() {
 	const handleSetPlots = (newPlots) => {
 		// loop and check
 		const filteredPlots = newPlots.map((plot) => {
-			console.log("plot", plot);
+			// console.log("plot", plot);
 			// add selected crops
 			if (!plot.selectedCrops) {
 				plot.selectedCrops = [];
@@ -218,30 +219,20 @@ function CropsGrowYield() {
 	return (
 		<div className="cropsApp">
 			<div className="row">
-				<div className="col-5">
-					<CropsPlots
+				<div className="col-4">
+					<Plots
 						selectedSeason={selectedSeason}
+						handleChangeSeason={handleChangeSeason}
 						selectedPlot={selectedPlot}
 						setSelectedPlot={setSelectedPlot}
 						plots={plots}
 						setPlots={handleSetPlots}
+						cropSeasonalList={cropSeasonalList}
+						handleCropSelect={handleCropSelect}
 					/>
 				</div>
 
-				<div className="col-7">
-					<div>
-						<CropFilter
-							selectedSeason={selectedSeason}
-							handleChangeSeason={handleChangeSeason}
-							cropSeasonalList={cropSeasonalList}
-							selectedCrops={
-								selectedPlot !== null &&
-								!(isNaN(selectedPlot) || selectedPlot < 0) &&
-								plots[selectedPlot].selectedCrops
-							}
-							handleCropSelect={handleCropSelect}
-						/>
-					</div>
+				<div className="col-5">
 					{selectedPlot !== null &&
 						!(isNaN(selectedPlot) || selectedPlot < 0) &&
 						plots[selectedPlot].selectedCrops
@@ -250,7 +241,7 @@ function CropsGrowYield() {
 								const crop = crops[selectedCropName];
 								const plot = plots[selectedPlot];
 								return (
-									<CropHarvests
+									<Harvests
 										key={i}
 										selectedCrop={crop}
 										harvests={plot.harvests[selectedCropName]}
@@ -268,9 +259,19 @@ function CropsGrowYield() {
 								);
 							})}
 				</div>
+				<div className="col-3">
+					{selectedPlot >= 0 ? (
+						<HarvestCalendar
+							plots={[plots[selectedPlot]]}
+							selectedSeason={selectedSeason}
+						/>
+					) : (
+						<HarvestCalendar plots={plots} selectedSeason={selectedSeason} />
+					)}
+				</div>
 			</div>
 		</div>
 	);
 }
 
-export default CropsGrowYield;
+export default HarvestHome;

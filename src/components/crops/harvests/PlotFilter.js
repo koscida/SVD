@@ -1,39 +1,10 @@
 import data from "../../shared/data";
 import RenderImg from "../../shared/Icons/RenderImg";
 
-function CropFilter({
-	selectedSeason,
-	handleChangeSeason,
-	cropSeasonalList,
-	selectedCrops,
-	handleCropSelect,
-}) {
+function PlotFilter({ cropSeasonalList, selectedCrops, handleCropSelect }) {
 	// console.log("selectedCrops", selectedCrops);
 	return (
 		<div style={{ display: "flex" }}>
-			<div className="dropdown me-2">
-				<button
-					className="btn btn-secondary dropdown-toggle"
-					type="button"
-					id="cropSeason"
-					data-bs-toggle="dropdown"
-					aria-expanded="false"
-				>
-					{selectedSeason}
-				</button>
-				<ul className="dropdown-menu" aria-labelledby="cropSeason">
-					{data.seasonsNames.map((seasonName) => (
-						<li key={seasonName}>
-							<input
-								type="button"
-								className="dropdown-item"
-								value={seasonName}
-								onClick={handleChangeSeason}
-							/>
-						</li>
-					))}
-				</ul>
-			</div>
 			<div>
 				{Object.entries(
 					cropSeasonalList.reduce(
@@ -46,7 +17,7 @@ function CropFilter({
 						{ "Single Harvest": [], Reproduces: [] }
 					)
 				).map(([growType, seasonalCropTypeList]) => (
-					<div key={growType} style={{ display: "flex", alignItems: "center" }}>
+					<div key={growType}>
 						<div>{growType}: </div>
 						<div
 							style={{
@@ -84,4 +55,4 @@ function CropFilter({
 	);
 }
 
-export default CropFilter;
+export default PlotFilter;

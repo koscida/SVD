@@ -1,7 +1,7 @@
 import Home from "../home/Home";
 import Fish from "../fish/Fish";
 import Crops from "../crops/Crops";
-import CropsGrowYield from "../crops/grow-yield/CropsGrowYield";
+import HarvestHome from "../crops/harvests/HarvestHome";
 
 const navigationLinks = [
 	{
@@ -21,7 +21,7 @@ const navigationLinks = [
 	{
 		to: "harvests",
 		label: "Harvests",
-		element: <CropsGrowYield />,
+		element: <HarvestHome />,
 	},
 	{
 		to: "fish",
