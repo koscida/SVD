@@ -59,6 +59,7 @@ const reCalcHarvestYields = (harvests) => {
 function Harvests({
 	selectedCrop,
 	harvests,
+	plot,
 	setHarvests,
 	resetHarvests,
 	totals,
@@ -181,10 +182,17 @@ function Harvests({
 									</div>
 									<div>
 										{thisHarvest.plantDay && (
-											<>
-												<RenderImg label={selectedCrop.seeds} />
-												{thisHarvest.seeds}
-											</>
+											<div className="d-flex">
+												<RenderImg label={selectedCrop.seeds} />({plot.size})
+												<input
+													type="number"
+													value={thisHarvest.seeds}
+													onChange={(e) => {
+														handleChangeValue(i, "seeds", e.target.value);
+													}}
+													style={editingBoxStyles}
+												/>
+											</div>
 										)}
 									</div>
 									<div

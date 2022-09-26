@@ -244,6 +244,7 @@ function HarvestHome() {
 									<Harvests
 										key={i}
 										selectedCrop={crop}
+										plot={plot}
 										harvests={plot.harvests[selectedCropName]}
 										setHarvests={(newHarvest) =>
 											handleSetHarvest(selectedCropName, newHarvest)
@@ -260,7 +261,7 @@ function HarvestHome() {
 							})}
 				</div>
 				<div className="col-3">
-					{selectedPlot >= 0 ? (
+					{selectedPlot >= 0 && selectedPlot !== null ? (
 						<HarvestCalendar
 							plots={[plots[selectedPlot]]}
 							selectedSeason={selectedSeason}
