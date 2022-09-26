@@ -2,7 +2,7 @@ import data from "../../shared/data";
 import RenderImg from "../../shared/Icons/RenderImg";
 
 function HarvestCalendar({ plots, selectedSeason }) {
-	console.log("plots", plots);
+	// console.log("plots", plots);
 
 	// reformat the harvests within the plots for easier display
 	/* days = [
@@ -39,7 +39,7 @@ function HarvestCalendar({ plots, selectedSeason }) {
 			return newPlots;
 		}, {});
 	});
-	console.log("daysInit", daysInit);
+	// console.log("daysInit", daysInit);
 	// let days = [];
 	const days = plots.reduce((days, plot, i) => {
 		// console.log("plot", plot);
@@ -67,7 +67,7 @@ function HarvestCalendar({ plots, selectedSeason }) {
 		});
 		return days;
 	}, daysInit);
-	console.log("days", days);
+	// console.log("days", days);
 
 	const RenderBand = ({ opacity, color }) => {
 		// styles
@@ -89,10 +89,10 @@ function HarvestCalendar({ plots, selectedSeason }) {
 			}}
 		>
 			{days.map((dayPlots, i) => {
-				console.log("-----i-----", i);
+				// console.log("-----i-----", i);
 				return (
 					<div className="cell cropCell d-grid" key={i} style={{}}>
-						<div className="date">{i}</div>
+						<div className="date">{i + 1}</div>
 						{Object.entries(dayPlots).map(([plotName, crops], j) => {
 							return Object.entries(crops).map(([cropName, cropData], k) => {
 								const crop = data.crops[cropName];

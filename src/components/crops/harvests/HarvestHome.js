@@ -199,15 +199,18 @@ function HarvestHome() {
 		setPlots(filteredPlots);
 	};
 	// CropYield handlers
-	const handleSetHarvest = (selectedCropName, newHarvest) => {
+	const handleSetHarvest = (selectedPlotName, selectedCropName, newHarvest) => {
 		// copy new crops
 		const newPlots = [...plots];
 
+		// get ind
+		const plotInd = newPlots.findIndex((p) => p.name === selectedPlotName);
+
 		// update harvest
-		newPlots[selectedPlot].harvests[selectedCropName] = newHarvest;
+		newPlots[plotInd].harvests[selectedCropName] = newHarvest;
 
 		// update totals
-		newPlots[selectedPlot].totals[selectedCropName] = calcTotals(
+		newPlots[plotInd].totals[selectedCropName] = calcTotals(
 			crops[selectedCropName],
 			newHarvest
 		);
@@ -233,32 +236,35 @@ function HarvestHome() {
 				</div>
 
 				<div className="col-5">
-					{selectedPlot !== null &&
-						!(isNaN(selectedPlot) || selectedPlot < 0) &&
-						plots[selectedPlot].selectedCrops
+					{(selectedPlot >= 0 && selectedPlot !== null
+						? [plots[selectedPlot]]
+						: plots
+					).map((plot) =>
+						plot.selectedCrops
 							.filter((c) => crops[c].season.includes(selectedSeason))
-							.map((selectedCropName, i) => {
-								const crop = crops[selectedCropName];
-								const plot = plots[selectedPlot];
+							.map((cropName, i) => {
+								const crop = crops[cropName];
 								return (
 									<Harvests
 										key={i}
 										selectedCrop={crop}
 										plot={plot}
-										harvests={plot.harvests[selectedCropName]}
+										harvests={plot.harvests[cropName]}
 										setHarvests={(newHarvest) =>
-											handleSetHarvest(selectedCropName, newHarvest)
+											handleSetHarvest(plot.name, cropName, newHarvest)
 										}
 										resetHarvests={() =>
 											handleSetHarvest(
-												selectedCropName,
+												plot.name,
+												cropName,
 												calcInitHarvests(crop, plot.size)
 											)
 										}
-										totals={plot.totals[selectedCropName]}
+										totals={plot.totals[cropName]}
 									/>
 								);
-							})}
+							})
+					)}
 				</div>
 				<div className="col-3">
 					{selectedPlot >= 0 && selectedPlot !== null ? (
