@@ -5,6 +5,15 @@ img {
 	max-width: 1rem;
 	max-height: 1rem;
 }
+img.icon {
+	margin: 3px;
+}
+
+img.smIcon {
+	max-width: 0.5rem;
+	max-height: 0.5rem;
+}
+
 .configuration {
 	.filterOptions {
 		.filterOption {
@@ -171,10 +180,34 @@ img {
 }
 
 
-img.icon {
-	margin: 3px;
+$border-width: 1px;
+$border-color: red;
+$border: $border-width solid $border-color;
+$vertical-padding: 1rem;
+$horizontal-padding: 0.5rem;
+$cell-padding: $vertical-padding $horizontal-padding;
+.bordered {
+	border: $border;
+	border-right: 0;
+	border-bottom: 0;
+	width: 100%;
+	border-spacing: 0px;
+	
+		th,
+		td {
+			position: relative;
+			box-sizing: border-box;
+			padding: 0;
+	
+			padding: $cell-padding;
+			white-space: normal;
+			word-break: break-word;
+			border: $border;
+			border-top: 0;
+			border-left: 0;
+			transition: box-shadow 0.3s;
+	
+		}
 }
-img.smIcon {
-	max-width: 0.5rem;
-	max-height: 0.5rem;
-}
+
+
