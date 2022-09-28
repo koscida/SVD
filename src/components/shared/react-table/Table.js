@@ -161,28 +161,24 @@ function Table({ columns, data }) {
 					{headerGroups.map((headerGroup) => (
 						<tr {...headerGroup.getHeaderGroupProps()}>
 							{headerGroup.headers.map((column) => (
-								<th {...column.getHeaderProps()}>
+								// Add the sorting props to control sorting. For this example
+								// we can add them into the header props
+								<th {...column.getHeaderProps(column.getSortByToggleProps())}>
 									{column.render("Header")}
+									{/* Add a sort direction indicator */}
+									<span>
+										{column.isSorted
+											? column.isSortedDesc
+												? " 🔽"
+												: " 🔼"
+											: ""}
+									</span>
 									{/* Render the columns filter UI */}
 									<div>{column.canFilter ? column.render("Filter") : null}</div>
 								</th>
 							))}
 						</tr>
 					))}
-					<tr>
-						<th
-							colSpan={visibleColumns.length}
-							style={{
-								textAlign: "left",
-							}}
-						>
-							<GlobalFilter
-								preGlobalFilteredRows={preGlobalFilteredRows}
-								globalFilter={state.globalFilter}
-								setGlobalFilter={setGlobalFilter}
-							/>
-						</th>
-					</tr>
 				</thead>
 				<tbody {...getTableBodyProps()}>
 					{firstPageRows.map((row, i) => {

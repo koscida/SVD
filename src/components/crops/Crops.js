@@ -80,6 +80,15 @@ function Crops() {
 				],
 			},
 			{
+				Header: "Harvest",
+				columns: [
+					{
+						Header: "Harvests",
+						accessor: "harvests",
+					},
+				],
+			},
+			{
 				Header: "Seed Cost",
 				columns: [
 					{
@@ -158,14 +167,25 @@ function Crops() {
 		newCrop.seedCostSingle =
 			Object.values(crop.buy).reduce((sum, buyPrice) => sum + buyPrice, 0) /
 			Object.values(crop.buy).length;
-		newCrop.seedCostTotal = 0;
 		// time
+		let harvests = 1;
 		newCrop.growTime = crop.growTime;
 		newCrop.reGrowTime = crop.regrow ? crop.regrowTime : "-";
-		newCrop.growTimeTotal = crop.growTime + (crop.regrow ? crop.regrowTime : 0);
+		newCrop.growTimeTotal = crop.growTime + 1;
+		let day = crop.growTime;
+		while (day < 28) {
+			newCrop.growTimeTotal = day;
+			harvests++;
+			day += crop.regrow ? crop.regrowTime : crop.growTime + 1;
+		}
+		// harvests
+		newCrop.harvests = harvests;
+		// totals
+		newCrop.seedCostTotal =
+			newCrop.seedCostSingle * (crop.regrow ? 1 : newCrop.harvests);
 		// yield
 		newCrop.yieldSingle = 1;
-		newCrop.yieldTotal = 0;
+		newCrop.yieldTotal = newCrop.yieldSingle * newCrop.harvests;
 		// sell price
 		newCrop.cropSell = crop.sell;
 		newCrop.preservesSell = 0;
