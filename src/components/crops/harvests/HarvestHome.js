@@ -107,21 +107,21 @@ function HarvestHome() {
 	const startingSeason = "Spring";
 	// init filter data
 	const [cropSeasonalList, setCropSeasonalList] = useLocalStorage(
-		"svd-crops-yield-filter-cropseasonallist",
+		"svd-harvest-cropseasonallist",
 		getSeasonalCrops(startingSeason).map((c) => c.name)
 	);
 	// init selections
 	const [selectedSeason, setSelectedSeason] = useLocalStorage(
-		"svd-selectedseason",
+		"svd-harvest-selectedseason",
 		startingSeason
 	);
 	const [selectedPlot, setSelectedPlot] = useLocalStorage(
-		"svd-crops-selectedplot",
+		"svd-harvest-selectedplot",
 		null
 	);
 	// data
 	const initHarvest = calcInitHarvests(crops["Parsnip"], 15);
-	const [plots, setPlots] = useLocalStorage("svd-crops-yield-plots", [
+	const [plots, setPlots] = useLocalStorage("svd-harvest-plots", [
 		{
 			name: "Parsnips",
 			size: 15,

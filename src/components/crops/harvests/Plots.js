@@ -3,6 +3,7 @@ import data from "../../shared/data";
 import useLocalStorage from "../../shared/useLocalStorage";
 import RenderImg from "../../shared/Icons/RenderImg";
 import PlotFilter from "./PlotFilter";
+import SeasonSelect from "../../shared/filters/SeasonSelect";
 
 const { crops } = data;
 
@@ -93,29 +94,10 @@ function Plots({
 		<div>
 			<div style={{ display: "flex", justifyContent: "space-between" }}>
 				<h2>Plots</h2>
-				<div className="dropdown me-2">
-					<button
-						className="btn btn-secondary dropdown-toggle"
-						type="button"
-						id="cropSeason"
-						data-bs-toggle="dropdown"
-						aria-expanded="false"
-					>
-						{selectedSeason}
-					</button>
-					<ul className="dropdown-menu" aria-labelledby="cropSeason">
-						{data.seasonsNames.map((seasonName) => (
-							<li key={seasonName}>
-								<input
-									type="button"
-									className="dropdown-item"
-									value={seasonName}
-									onClick={handleChangeSeason}
-								/>
-							</li>
-						))}
-					</ul>
-				</div>
+				<SeasonSelect
+					selectedSeason={selectedSeason}
+					handleChangeSeason={handleChangeSeason}
+				/>
 			</div>
 
 			<hr />

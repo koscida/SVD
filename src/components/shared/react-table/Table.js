@@ -155,46 +155,70 @@ function Table({ columns, data }) {
 	}
 
 	return (
-		<>
-			<table {...getTableProps()}>
-				<thead>
-					{headerGroups.map((headerGroup) => (
-						<tr {...headerGroup.getHeaderGroupProps()}>
-							{headerGroup.headers.map((column) => (
-								// Add the sorting props to control sorting. For this example
-								// we can add them into the header props
-								<th {...column.getHeaderProps(column.getSortByToggleProps())}>
-									{column.render("Header")}
-									{/* Add a sort direction indicator */}
-									<span>
-										{column.isSorted
-											? column.isSortedDesc
-												? " 🔽"
-												: " 🔼"
-											: ""}
-									</span>
-									{/* Render the columns filter UI */}
-									<div>{column.canFilter ? column.render("Filter") : null}</div>
-								</th>
+		<div>
+			<div
+				style={{
+					width: "100%",
+					height: "calc(100vh - 100px)",
+					overflow: "hidden",
+					position: "relative",
+					display: "flex",
+					flexDirection: "row",
+					border: "3px solid red",
+				}}
+			>
+				<div
+					style={{
+						width: "100%",
+						height: "100%",
+						overflow: "scroll",
+					}}
+				>
+					<table {...getTableProps()}>
+						<thead>
+							{headerGroups.map((headerGroup) => (
+								<tr {...headerGroup.getHeaderGroupProps()}>
+									{headerGroup.headers.map((column) => (
+										// Add the sorting props to control sorting. For this example
+										// we can add them into the header props
+										<th
+											{...column.getHeaderProps(column.getSortByToggleProps())}
+										>
+											{column.render("Header")}
+											{/* Add a sort direction indicator */}
+											<span>
+												{column.isSorted
+													? column.isSortedDesc
+														? " 🔽"
+														: " 🔼"
+													: ""}
+											</span>
+											{/* Render the columns filter UI */}
+											{/* <div>
+												{column.canFilter ? column.render("Filter") : null}
+											</div> */}
+										</th>
+									))}
+								</tr>
 							))}
-						</tr>
-					))}
-				</thead>
-				<tbody {...getTableBodyProps()}>
-					{firstPageRows.map((row, i) => {
-						prepareRow(row);
-						return (
-							<tr {...row.getRowProps()}>
-								{row.cells.map((cell) => {
-									return (
-										<td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-									);
-								})}
-							</tr>
-						);
-					})}
-				</tbody>
-			</table>
+						</thead>
+						<tbody {...getTableBodyProps()}>
+							{firstPageRows.map((row, i) => {
+								prepareRow(row);
+								return (
+									<tr {...row.getRowProps()}>
+										{row.cells.map((cell) => {
+											return (
+												<td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+											);
+										})}
+									</tr>
+								);
+							})}
+						</tbody>
+					</table>
+				</div>
+			</div>
 			<br />
 			<div>
 				Showing the first {sliceSize} results of {rows.length} rows
@@ -204,7 +228,7 @@ function Table({ columns, data }) {
 					<code>{JSON.stringify(state.filters, null, 2)}</code>
 				</pre>
 			</div>
-		</>
+		</div>
 	);
 }
 

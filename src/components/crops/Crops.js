@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { useTable, useSortBy } from "react-table";
 import Table from "../shared/react-table/Table";
 import SelectColumnFilter from "../shared/react-table/SelectColumnFilter";
+import useLocalStorage from "../shared/useLocalStorage";
 import data from "../shared/data";
+import SeasonSelect from "../shared/filters/SeasonSelect";
 
 const Styles = styled.div`
 	padding: 1rem;
@@ -35,56 +36,42 @@ const Styles = styled.div`
 `;
 
 function Crops() {
+	const [selectedSeason, setSelectedSeason] = useLocalStorage(
+		"svd-crops-selectedseason",
+		"Spring"
+	);
+	const [selectedTrellis, setSelectedTrellis] = useLocalStorage(
+		"svd-crops-selectedtrellis",
+		["Yes", "No"]
+	);
 	const columns = React.useMemo(
 		() => [
-			{
-				Header: "Crop",
-				accessor: "crop",
-			},
 			{
 				Header: "Crop Info",
 				columns: [
 					{
-						Header: "Season",
-						accessor: "season",
-						Filter: SelectColumnFilter,
-						filter: "includes",
+						Header: "Crop",
+						accessor: "crop",
 					},
-					{
-						Header: "Trellis",
-						accessor: "trellis",
-						Filter: SelectColumnFilter,
-						filter: "includes",
-					},
-					{
-						Header: "Re-Grow",
-						accessor: "regrow",
-						Filter: SelectColumnFilter,
-						filter: "includes",
-					},
-					{
-						Header: "Giant",
-						accessor: "giant",
-						Filter: SelectColumnFilter,
-						filter: "includes",
-					},
-				],
-			},
-			{
-				Header: "Seed",
-				columns: [
 					{
 						Header: "Seed",
 						accessor: "seed",
 					},
-				],
-			},
-			{
-				Header: "Harvest",
-				columns: [
 					{
-						Header: "Harvests",
-						accessor: "harvests",
+						Header: "Season",
+						accessor: "season",
+					},
+					{
+						Header: "Trellis",
+						accessor: "trellis",
+					},
+					{
+						Header: "Re-Grow",
+						accessor: "regrow",
+					},
+					{
+						Header: "Giant",
+						accessor: "giant",
 					},
 				],
 			},
@@ -98,6 +85,10 @@ function Crops() {
 					{
 						Header: "Total Seeds",
 						accessor: "seedCostTotal",
+					},
+					{
+						Header: "Total Seed Cost/Yield",
+						accessor: "seedCostPerYield",
 					},
 				],
 			},
@@ -116,6 +107,10 @@ function Crops() {
 						Header: "Total Grow Time",
 						accessor: "growTimeTotal",
 					},
+					{
+						Header: "Total Grow Time/Yield",
+						accessor: "growTimeTotalPerYield",
+					},
 				],
 			},
 
@@ -125,6 +120,10 @@ function Crops() {
 					{
 						Header: "Single Yield",
 						accessor: "yieldSingle",
+					},
+					{
+						Header: "Harvests",
+						accessor: "harvests",
 					},
 					{
 						Header: "Total Yield",
@@ -138,6 +137,22 @@ function Crops() {
 					{
 						Header: "Crop",
 						accessor: "cropSell",
+					},
+					{
+						Header: "Total Crop",
+						accessor: "cropSellTotal",
+					},
+					{
+						Header: "Total Crop Sell/Total Seed Cost",
+						accessor: "cropSellTotalPerSeedCost",
+					},
+					{
+						Header: "Profit (Total Crop Sell - Total Seed Cost)",
+						accessor: "cropSellTotalSubSeedCost",
+					},
+					{
+						Header: "Total Crop Sell/Total Grow Time",
+						accessor: "cropSellTotalPerGrowTime",
 					},
 					{
 						Header: "Preserves",
@@ -165,38 +180,89 @@ function Crops() {
 		newCrop.seed = crop.seeds;
 		// seed cost
 		newCrop.seedCostSingle =
-			Object.values(crop.buy).reduce((sum, buyPrice) => sum + buyPrice, 0) /
-			Object.values(crop.buy).length;
+			Object.values(crop.buy).length > 0
+				? Object.values(crop.buy).reduce(
+						(min, price) => (price < min ? price : min),
+						Number.MAX_SAFE_INTEGER
+				  )
+				: 0;
 		// time
-		let harvests = 1;
+		let harvests = 0;
 		newCrop.growTime = crop.growTime;
 		newCrop.reGrowTime = crop.regrow ? crop.regrowTime : "-";
-		newCrop.growTimeTotal = crop.growTime + 1;
-		let day = crop.growTime;
+		newCrop.growTimeTotal = crop.growTime;
+		let day = newCrop.growTimeTotal;
 		while (day < 28) {
 			newCrop.growTimeTotal = day;
 			harvests++;
-			day += crop.regrow ? crop.regrowTime : crop.growTime + 1;
+			day += crop.regrow ? crop.regrowTime : crop.growTime;
 		}
 		// harvests
 		newCrop.harvests = harvests;
-		// totals
+		// seed cost totals
 		newCrop.seedCostTotal =
 			newCrop.seedCostSingle * (crop.regrow ? 1 : newCrop.harvests);
+
 		// yield
 		newCrop.yieldSingle = 1;
 		newCrop.yieldTotal = newCrop.yieldSingle * newCrop.harvests;
+		// per yields
+		newCrop.seedCostPerYield = (
+			newCrop.seedCostTotal / newCrop.yieldTotal
+		).toFixed(2);
+		newCrop.growTimeTotalPerYield = (
+			newCrop.growTimeTotal / newCrop.yieldTotal
+		).toFixed(2);
 		// sell price
 		newCrop.cropSell = crop.sell;
+		newCrop.cropSellTotal = crop.sell * newCrop.yieldTotal;
+		newCrop.cropSellTotalPerSeedCost = (
+			newCrop.cropSellTotal / newCrop.seedCostTotal
+		).toFixed(2);
+		newCrop.cropSellTotalSubSeedCost =
+			newCrop.cropSellTotal - newCrop.seedCostTotal;
+		newCrop.cropSellTotalPerGrowTime = (
+			newCrop.cropSellTotal / newCrop.growTimeTotal
+		).toFixed(2);
 		newCrop.preservesSell = 0;
 		newCrop.kegSell = 0;
 		return newCrop;
 	});
 
 	return (
-		<Styles>
-			<Table columns={columns} data={tableData} />
-		</Styles>
+		<div>
+			<div className="d-flex flex-row">
+				<SeasonSelect
+					selectedSeason={selectedSeason}
+					handleChangeSeason={(newSeason) => setSelectedSeason(newSeason)}
+				/>
+				<div className="d-flex flex-row">
+					<p>Trellis:</p>
+					<div>
+						{["Yes", "No"].map((trellisOption) => {
+							const trellisLabel = "trellis" + trellisOption;
+							return (
+								<div className="form-check" key={trellisLabel}>
+									<input
+										className="form-check-input"
+										type="checkbox"
+										value={trellisOption}
+										id={trellisLabel}
+										checked={selectedTrellis.includes(trellisOption)}
+									/>
+									<label className="form-check-label" for={trellisLabel}>
+										{trellisOption}
+									</label>
+								</div>
+							);
+						})}
+					</div>
+				</div>
+			</div>
+			<Styles>
+				<Table columns={columns} data={tableData} />
+			</Styles>
+		</div>
 	);
 }
 
