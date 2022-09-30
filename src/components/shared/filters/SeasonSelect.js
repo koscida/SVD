@@ -19,7 +19,7 @@ function SeasonSelect({ selectedSeason, handleChangeSeason }) {
 							type="button"
 							className="dropdown-item"
 							value={seasonName}
-							onClick={handleChangeSeason}
+							onClick={() => handleChangeSeason(seasonName)}
 						/>
 					</li>
 				))}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Table from "../shared/react-table/Table";
 import SelectColumnFilter from "../shared/react-table/SelectColumnFilter";
@@ -35,15 +35,115 @@ const Styles = styled.div`
 	}
 `;
 
+const cropTableData = data.cropsList.map((crop) => {
+	const newCrop = {};
+	// crop
+	newCrop.crop = crop.name;
+	newCrop.seasons = crop.season;
+	newCrop.trellis = crop.trellis;
+	newCrop.regeow = crop.regrow;
+	//
+	newCrop.season = crop.season.join("/");
+	newCrop.trellis = crop.trellis ? "Yes" : "No";
+	newCrop.regrow = crop.regrow ? "Yes" : "No";
+	newCrop.giant = crop.giant ? "Yes" : "No";
+	// seed
+	newCrop.seed = crop.seeds;
+	// seed cost
+	newCrop.seedCostSingle =
+		Object.values(crop.buy).length > 0
+			? Object.values(crop.buy).reduce(
+					(min, price) => (price < min ? price : min),
+					Number.MAX_SAFE_INTEGER
+			  )
+			: 0;
+	// time
+	let harvests = 0;
+	newCrop.growTime = crop.growTime;
+	newCrop.reGrowTime = crop.regrow ? crop.regrowTime : "-";
+	newCrop.growTimeTotal = crop.growTime;
+	let day = newCrop.growTimeTotal;
+	while (day < 28) {
+		newCrop.growTimeTotal = day;
+		harvests++;
+		day += crop.regrow ? crop.regrowTime : crop.growTime;
+	}
+	// harvests
+	newCrop.harvests = harvests;
+	// seed cost totals
+	newCrop.seedCostTotal =
+		newCrop.seedCostSingle * (crop.regrow ? 1 : newCrop.harvests);
+
+	// yield
+	newCrop.yieldSingle = 1;
+	newCrop.yieldTotal = newCrop.yieldSingle * newCrop.harvests;
+	// per yields
+	newCrop.seedCostPerYield = (
+		newCrop.seedCostTotal / newCrop.yieldTotal
+	).toFixed(2);
+	newCrop.growTimeTotalPerYield = (
+		newCrop.growTimeTotal / newCrop.yieldTotal
+	).toFixed(2);
+	// sell price
+	newCrop.cropSell = crop.sell;
+	newCrop.cropSellTotal = crop.sell * newCrop.yieldTotal;
+	newCrop.cropSellTotalPerSeedCost = (
+		newCrop.cropSellTotal / newCrop.seedCostTotal
+	).toFixed(2);
+	newCrop.cropSellTotalSubSeedCost =
+		newCrop.cropSellTotal - newCrop.seedCostTotal;
+	newCrop.cropSellTotalPerGrowTime = (
+		newCrop.cropSellTotal / newCrop.growTimeTotal
+	).toFixed(2);
+	newCrop.preservesSell = 0;
+	newCrop.kegSell = 0;
+	//
+	return newCrop;
+});
+
+const initSeason = "Spring";
+const selectedTrellisOptions = ["Yes", "No"];
+const selectedRegrowOptions = ["Yes", "No"];
+
 function Crops() {
 	const [selectedSeason, setSelectedSeason] = useLocalStorage(
 		"svd-crops-selectedseason",
-		"Spring"
+		initSeason
 	);
 	const [selectedTrellis, setSelectedTrellis] = useLocalStorage(
 		"svd-crops-selectedtrellis",
-		["Yes", "No"]
+		selectedTrellisOptions
 	);
+	const [selectedRegrow, setSelectedRegrow] = useLocalStorage(
+		"svd-crops-selectedregrow",
+		selectedRegrowOptions
+	);
+	const [tableData, setTableData] = useLocalStorage(
+		"svd-crops-tabledata",
+		cropTableData.filter(
+			(crop) =>
+				crop.seasons.includes(initSeason) &&
+				selectedTrellisOptions.includes(crop.trellis) &&
+				selectedRegrowOptions.includes(crop.regrow)
+		)
+	);
+
+	useEffect(() => {
+		const newTableData = cropTableData.filter(
+			(crop) =>
+				crop.seasons.includes(selectedSeason) &&
+				selectedTrellis.includes(crop.trellis) &&
+				selectedRegrow.includes(crop.regrow)
+		);
+		setTableData(newTableData);
+	}, [
+		tableData,
+		setTableData,
+		selectedSeason,
+		selectedTrellis,
+		selectedRegrow,
+	]);
+
 	const columns = React.useMemo(
 		() => [
 			{
@@ -168,99 +268,72 @@ function Crops() {
 		[]
 	);
 
-	const tableData = data.cropsList.map((crop) => {
-		const newCrop = {};
-		// crop
-		newCrop.crop = crop.name;
-		newCrop.season = crop.season.join("/");
-		newCrop.trellis = crop.trellis ? "Yes" : "No";
-		newCrop.regrow = crop.regrow ? "Yes" : "No";
-		newCrop.giant = crop.giant ? "Yes" : "No";
-		// seed
-		newCrop.seed = crop.seeds;
-		// seed cost
-		newCrop.seedCostSingle =
-			Object.values(crop.buy).length > 0
-				? Object.values(crop.buy).reduce(
-						(min, price) => (price < min ? price : min),
-						Number.MAX_SAFE_INTEGER
-				  )
-				: 0;
-		// time
-		let harvests = 0;
-		newCrop.growTime = crop.growTime;
-		newCrop.reGrowTime = crop.regrow ? crop.regrowTime : "-";
-		newCrop.growTimeTotal = crop.growTime;
-		let day = newCrop.growTimeTotal;
-		while (day < 28) {
-			newCrop.growTimeTotal = day;
-			harvests++;
-			day += crop.regrow ? crop.regrowTime : crop.growTime;
-		}
-		// harvests
-		newCrop.harvests = harvests;
-		// seed cost totals
-		newCrop.seedCostTotal =
-			newCrop.seedCostSingle * (crop.regrow ? 1 : newCrop.harvests);
-
-		// yield
-		newCrop.yieldSingle = 1;
-		newCrop.yieldTotal = newCrop.yieldSingle * newCrop.harvests;
-		// per yields
-		newCrop.seedCostPerYield = (
-			newCrop.seedCostTotal / newCrop.yieldTotal
-		).toFixed(2);
-		newCrop.growTimeTotalPerYield = (
-			newCrop.growTimeTotal / newCrop.yieldTotal
-		).toFixed(2);
-		// sell price
-		newCrop.cropSell = crop.sell;
-		newCrop.cropSellTotal = crop.sell * newCrop.yieldTotal;
-		newCrop.cropSellTotalPerSeedCost = (
-			newCrop.cropSellTotal / newCrop.seedCostTotal
-		).toFixed(2);
-		newCrop.cropSellTotalSubSeedCost =
-			newCrop.cropSellTotal - newCrop.seedCostTotal;
-		newCrop.cropSellTotalPerGrowTime = (
-			newCrop.cropSellTotal / newCrop.growTimeTotal
-		).toFixed(2);
-		newCrop.preservesSell = 0;
-		newCrop.kegSell = 0;
-		return newCrop;
-	});
+	const handleChangeSeason = (newSeason) => {
+		// set season
+		setSelectedSeason(newSeason);
+		// update table data
+		const copy = cropTableData.filter((crop) =>
+			crop.seasons.includes(newSeason)
+		);
+		setTableData(copy);
+	};
+	const handleSelectInfo = (option, selectedOptions, setSelected) => {
+		// set option selected
+		selectedOptions.includes(option)
+			? setSelected(selectedOptions.filter((x) => x !== option))
+			: setSelected([...selectedOptions, option]);
+	};
 
 	return (
 		<div>
 			<div className="d-flex flex-row">
 				<SeasonSelect
 					selectedSeason={selectedSeason}
-					handleChangeSeason={(newSeason) => setSelectedSeason(newSeason)}
+					handleChangeSeason={handleChangeSeason}
 				/>
-				<div className="d-flex flex-row">
-					<p>Trellis:</p>
-					<div>
-						{["Yes", "No"].map((trellisOption) => {
-							const trellisLabel = "trellis" + trellisOption;
-							return (
-								<div className="form-check" key={trellisLabel}>
-									<input
-										className="form-check-input"
-										type="checkbox"
-										value={trellisOption}
-										id={trellisLabel}
-										checked={selectedTrellis.includes(trellisOption)}
-									/>
-									<label className="form-check-label" for={trellisLabel}>
-										{trellisOption}
-									</label>
-								</div>
-							);
-						})}
+				{[
+					{
+						name: "Trellis",
+						options: selectedTrellisOptions,
+						selectedOptions: selectedTrellis,
+						setSelected: setSelectedTrellis,
+					},
+					{
+						name: "Re-Grow",
+						options: selectedRegrowOptions,
+						selectedOptions: selectedRegrow,
+						setSelected: setSelectedRegrow,
+					},
+				].map(({ name, options, selectedOptions, setSelected }) => (
+					<div className="d-flex flex-row mx-2" key={name}>
+						<p className="me-1">{name}:</p>
+						<div>
+							{options.map((option) => {
+								const optionLabel = name + option;
+								return (
+									<div className="form-check" key={optionLabel}>
+										<input
+											className="form-check-input"
+											type="checkbox"
+											value={option}
+											id={optionLabel}
+											checked={selectedOptions.includes(option)}
+											onChange={() =>
+												handleSelectInfo(option, selectedOptions, setSelected)
+											}
+										/>
+										<label className="form-check-label" htmlFor={optionLabel}>
+											{option}
+										</label>
+									</div>
+								);
+							})}
+						</div>
 					</div>
-				</div>
+				))}
 			</div>
 			<Styles>
-				<Table columns={columns} data={tableData} />
+				<Table columns={columns} data={Object.values(tableData)} />
 			</Styles>
 		</div>
 	);

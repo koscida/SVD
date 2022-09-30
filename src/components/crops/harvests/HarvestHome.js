@@ -134,9 +134,8 @@ function HarvestHome() {
 
 	// Handlers
 	// CropFilter handlers
-	const handleChangeSeason = (e) => {
+	const handleChangeSeason = (newSeason) => {
 		// set season
-		const newSeason = e.target.value;
 		setSelectedSeason(newSeason);
 		// set crop filter options
 		const seasonalCrops = getSeasonalCrops(newSeason);

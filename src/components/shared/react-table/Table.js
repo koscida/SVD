@@ -159,7 +159,7 @@ function Table({ columns, data }) {
 			<div
 				style={{
 					width: "100%",
-					height: "calc(100vh - 100px)",
+					height: "calc(100vh - 120px)",
 					overflow: "hidden",
 					position: "relative",
 					display: "flex",
@@ -218,15 +218,6 @@ function Table({ columns, data }) {
 						</tbody>
 					</table>
 				</div>
-			</div>
-			<br />
-			<div>
-				Showing the first {sliceSize} results of {rows.length} rows
-			</div>
-			<div>
-				<pre>
-					<code>{JSON.stringify(state.filters, null, 2)}</code>
-				</pre>
 			</div>
 		</div>
 	);
