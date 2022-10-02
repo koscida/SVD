@@ -100,12 +100,174 @@ const cropTableData = data.cropsList.map((crop) => {
 	//
 	return newCrop;
 });
+const initColumnData = [
+	{
+		Header: "Crop Info",
+		columns: [
+			{
+				Header: "Crop",
+				accessor: "crop",
+			},
+			{
+				Header: "Seed",
+				accessor: "seed",
+			},
+			{
+				Header: "Season",
+				accessor: "season",
+			},
+			{
+				Header: "Trellis",
+				accessor: "trellis",
+			},
+			{
+				Header: "Re-Grow",
+				accessor: "regrow",
+			},
+			{
+				Header: "Giant",
+				accessor: "giant",
+			},
+		],
+	},
+	{
+		Header: "Seed Cost",
+		columns: [
+			{
+				Header: "Single Seed",
+				accessor: "seedCostSingle",
+				quantity: "Single",
+			},
+			{
+				Header: "Total Seeds",
+				accessor: "seedCostTotal",
+				quantity: "total",
+			},
+			{
+				Header: "Total Seed Cost/Yield",
+				accessor: "seedCostPerYield",
+				quantity: "total",
+			},
+		],
+	},
+	{
+		Header: "Grow Time",
+		columns: [
+			{
+				Header: "Grow Time",
+				accessor: "growTime",
+				quantity: "Single",
+			},
+			{
+				Header: "Re-Grow Time",
+				accessor: "reGrowTime",
+				quantity: "Single",
+			},
+			{
+				Header: "Total Grow Time",
+				accessor: "growTimeTotal",
+				quantity: "total",
+			},
+			{
+				Header: "Total Grow Time/Yield",
+				accessor: "growTimeTotalPerYield",
+				quantity: "total",
+			},
+		],
+	},
+	{
+		Header: "Yield",
+		columns: [
+			{
+				Header: "Single Yield",
+				accessor: "yieldSingle",
+				quantity: "Single",
+			},
+			{
+				Header: "Harvests",
+				accessor: "harvests",
+				quantity: "total",
+			},
+			{
+				Header: "Total Yield",
+				accessor: "yieldTotal",
+				quantity: "total",
+			},
+		],
+	},
+	{
+		Header: "Sell Crop Price",
+		columns: [
+			{
+				Header: "Crop",
+				accessor: "cropSell",
+				quantity: "Single",
+			},
+			{
+				Header: "Total Crop",
+				accessor: "cropSellTotal",
+				quantity: "Total",
+			},
+			{
+				Header: "Total Crop Sell/Total Seed Cost",
+				accessor: "cropSellTotalPerSeedCost",
+				quantity: "Total",
+			},
+			{
+				Header: "Profit (Total Crop Sell - Total Seed Cost)",
+				accessor: "cropSellTotalSubSeedCost",
+				quantity: "Total",
+			},
+			{
+				Header: "Total Crop Sell/Total Grow Time",
+				accessor: "cropSellTotalPerGrowTime",
+				quantity: "Total",
+			},
+		],
+	},
+	{
+		Header: "Sell Preserves Price",
+		columns: [
+			{
+				Header: "Preserves",
+				accessor: "preservesSell",
+				quantity: "Single",
+			},
+			{
+				Header: "Total Preserves",
+				accessor: "preservesSellTotal",
+				quantity: "Total",
+			},
+		],
+	},
+	{
+		Header: "Sell Keg Price",
+		columns: [
+			{
+				Header: "Keg",
+				accessor: "kegSell",
+				quantity: "Single",
+			},
+			{
+				Header: "Total Keg",
+				accessor: "kegSellTotal",
+				quantity: "Total",
+			},
+		],
+	},
+];
 
 const initSeason = "Spring";
 const selectedTrellisOptions = ["Yes", "No"];
 const selectedRegrowOptions = ["Yes", "No"];
+const selectedQuantityOptions = ["Single", "Total"];
 
 function Crops() {
+	const [tableData, setTableData] = useLocalStorage("svd-crops-tabledata", []);
+	const [columnData, setColumnData] = useLocalStorage(
+		"svd-crops-columndata",
+		initColumnData
+	);
 	const [selectedSeason, setSelectedSeason] = useLocalStorage(
 		"svd-crops-selectedseason",
 		initSeason
@@ -118,16 +280,12 @@ function Crops() {
 		"svd-crops-selectedregrow",
 		selectedRegrowOptions
 	);
-	const [tableData, setTableData] = useLocalStorage(
-		"svd-crops-tabledata",
-		cropTableData.filter(
-			(crop) =>
-				crop.seasons.includes(initSeason) &&
-				selectedTrellisOptions.includes(crop.trellis) &&
-				selectedRegrowOptions.includes(crop.regrow)
-		)
+	const [selectedQuantity, setSelectedQuantity] = useLocalStorage(
+		"svd-crops-selectedquantity",
+		selectedQuantityOptions
 	);
 
+	// set the table data
 	useEffect(() => {
 		const newTableData = cropTableData.filter(
 			(crop) =>
@@ -143,130 +301,17 @@ function Crops() {
 		selectedTrellis,
 		selectedRegrow,
 	]);
-
-	const columns = React.useMemo(
-		() => [
-			{
-				Header: "Crop Info",
-				columns: [
-					{
-						Header: "Crop",
-						accessor: "crop",
-					},
-					{
-						Header: "Seed",
-						accessor: "seed",
-					},
-					{
-						Header: "Season",
-						accessor: "season",
-					},
-					{
-						Header: "Trellis",
-						accessor: "trellis",
-					},
-					{
-						Header: "Re-Grow",
-						accessor: "regrow",
-					},
-					{
-						Header: "Giant",
-						accessor: "giant",
-					},
-				],
-			},
-			{
-				Header: "Seed Cost",
-				columns: [
-					{
-						Header: "Single Seed",
-						accessor: "seedCostSingle",
-					},
-					{
-						Header: "Total Seeds",
-						accessor: "seedCostTotal",
-					},
-					{
-						Header: "Total Seed Cost/Yield",
-						accessor: "seedCostPerYield",
-					},
-				],
-			},
-			{
-				Header: "Grow Time",
-				columns: [
-					{
-						Header: "Grow Time",
-						accessor: "growTime",
-					},
-					{
-						Header: "Re-Grow Time",
-						accessor: "reGrowTime",
-					},
-					{
-						Header: "Total Grow Time",
-						accessor: "growTimeTotal",
-					},
-					{
-						Header: "Total Grow Time/Yield",
-						accessor: "growTimeTotalPerYield",
-					},
-				],
-			},
-
-			{
-				Header: "Yield",
-				columns: [
-					{
-						Header: "Single Yield",
-						accessor: "yieldSingle",
-					},
-					{
-						Header: "Harvests",
-						accessor: "harvests",
-					},
-					{
-						Header: "Total Yield",
-						accessor: "yieldTotal",
-					},
-				],
-			},
-			{
-				Header: "Sell Price",
-				columns: [
-					{
-						Header: "Crop",
-						accessor: "cropSell",
-					},
-					{
-						Header: "Total Crop",
-						accessor: "cropSellTotal",
-					},
-					{
-						Header: "Total Crop Sell/Total Seed Cost",
-						accessor: "cropSellTotalPerSeedCost",
-					},
-					{
-						Header: "Profit (Total Crop Sell - Total Seed Cost)",
-						accessor: "cropSellTotalSubSeedCost",
-					},
-					{
-						Header: "Total Crop Sell/Total Grow Time",
-						accessor: "cropSellTotalPerGrowTime",
-					},
-					{
-						Header: "Preserves",
-						accessor: "preservesSell",
-					},
-					{
-						Header: "Keg",
-						accessor: "kegSell",
-					},
-				],
-			},
-		],
-		[]
-	);
+	// set the column data
+	useEffect(() => {
+		const newColumnData = initColumnData.map((parentSection) => {
+			const newColumns = parentSection.columns.filter((section) =>
+				section.quantity ? selectedQuantity.includes(section.quantity) : true
+			);
+			parentSection.columns = newColumns;
+			return parentSection;
+		});
+		setColumnData(newColumnData);
+	}, [columnData, setColumnData, selectedQuantity]);
 
 	const handleChangeSeason = (newSeason) => {
 		// set season
@@ -304,6 +349,12 @@ function Crops() {
 						selectedOptions: selectedRegrow,
 						setSelected: setSelectedRegrow,
 					},
+					{
+						name: "Quantity",
+						options: selectedQuantityOptions,
+						selectedOptions: selectedQuantity,
+						setSelected: setSelectedQuantity,
+					},
 				].map(({ name, options, selectedOptions, setSelected }) => (
 					<div className="d-flex flex-row mx-2" key={name}>
 						<p className="me-1">{name}:</p>
@@ -333,7 +384,7 @@ function Crops() {
 				))}
 			</div>
 			<Styles>
-				<Table columns={columns} data={Object.values(tableData)} />
+				<Table columns={columnData} data={Object.values(tableData)} />
 			</Styles>
 		</div>
 	);
