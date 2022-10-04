@@ -295,6 +295,7 @@ const initColumnData = [
 	},
 ];
 console.log("---initColumnData", initColumnData);
+console.log("---initColumnData[1]", initColumnData[1]);
 
 // table data filters and calculations
 const calcTableData = (selectedSeason, selectedTrellis, selectedRegrow) => {
@@ -308,11 +309,14 @@ const calcTableData = (selectedSeason, selectedTrellis, selectedRegrow) => {
 	return newTableData;
 };
 const calcColumnData = (selectedQuantity) => {
+	console.log("---calcColumnData");
 	console.log("initColumnData", initColumnData);
+	console.log("initColumnData[1]", initColumnData[1]);
+	console.log("selectedQuantity", selectedQuantity);
 	// set column data
 	const newColumnData = [...initColumnData].map((parentSection, i) => {
 		const newColumns = [
-			...parentSection.columns.filter((section) =>
+			...[...parentSection.columns].filter((section) =>
 				section.quantity ? selectedQuantity.includes(section.quantity) : true
 			),
 		];
@@ -320,7 +324,10 @@ const calcColumnData = (selectedQuantity) => {
 		return parentSection;
 	});
 	console.log("newColumnData", newColumnData);
-	return newColumnData;
+	console.log("newColumnData[1]", newColumnData[1]);
+	console.log("initColumnData", initColumnData);
+	console.log("initColumnData[1]", initColumnData[1]);
+	return [...newColumnData];
 };
 
 // init filters
@@ -335,10 +342,9 @@ function Crops() {
 		"svd-crops-tabledata",
 		calcTableData(initSeason, selectedTrellisOptions, selectedRegrowOptions)
 	);
-	const [columnData, setColumnData] = useLocalStorage(
-		"svd-crops-columndata",
-		initColumnData
-	);
+	const [columnData, setColumnData] = useLocalStorage("svd-crops-columndata", [
+		...initColumnData,
+	]);
 	const [selectedSeason, setSelectedSeason] = useLocalStorage(
 		"svd-crops-selectedseason",
 		initSeason
@@ -370,6 +376,7 @@ function Crops() {
 	// filter use effects
 	// table data
 	useEffect(() => {
+		console.log("-----updating table data-----");
 		// update table data
 		setTableData(
 			calcTableData(selectedSeason, selectedTrellis, selectedRegrow)
@@ -377,9 +384,11 @@ function Crops() {
 	}, [selectedSeason, selectedTrellis, selectedRegrow, setTableData]);
 	// table column data
 	useEffect(() => {
-		console.log("updating columns...");
+		console.log("-----updating columns-----");
+		console.log("initColumnData", initColumnData);
+		console.log("initColumnData[1]", initColumnData[1]);
 		// update table data
-		setColumnData(calcColumnData(selectedQuantity));
+		setColumnData([...calcColumnData(selectedQuantity)]);
 	}, [selectedQuantity, setColumnData]);
 
 	return (
