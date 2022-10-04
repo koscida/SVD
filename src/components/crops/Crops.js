@@ -294,8 +294,6 @@ const initColumnData = [
 		],
 	},
 ];
-console.log("---initColumnData", initColumnData);
-console.log("---initColumnData[1]", initColumnData[1]);
 
 // table data filters and calculations
 const calcTableData = (selectedSeason, selectedTrellis, selectedRegrow) => {
@@ -309,25 +307,14 @@ const calcTableData = (selectedSeason, selectedTrellis, selectedRegrow) => {
 	return newTableData;
 };
 const calcColumnData = (selectedQuantity) => {
-	console.log("---calcColumnData");
-	console.log("initColumnData", initColumnData);
-	console.log("initColumnData[1]", initColumnData[1]);
-	console.log("selectedQuantity", selectedQuantity);
 	// set column data
-	const newColumnData = [...initColumnData].map((parentSection, i) => {
-		const newColumns = [
-			...[...parentSection.columns].filter((section) =>
-				section.quantity ? selectedQuantity.includes(section.quantity) : true
-			),
-		];
-		parentSection.columns = newColumns;
-		return parentSection;
+	const newColumnData = initColumnData.map((parentSection, i) => {
+		const columns = parentSection.columns.filter((section) =>
+			section.quantity ? selectedQuantity.includes(section.quantity) : true
+		);
+		return { ...parentSection, columns };
 	});
-	console.log("newColumnData", newColumnData);
-	console.log("newColumnData[1]", newColumnData[1]);
-	console.log("initColumnData", initColumnData);
-	console.log("initColumnData[1]", initColumnData[1]);
-	return [...newColumnData];
+	return newColumnData;
 };
 
 // init filters
@@ -376,7 +363,6 @@ function Crops() {
 	// filter use effects
 	// table data
 	useEffect(() => {
-		console.log("-----updating table data-----");
 		// update table data
 		setTableData(
 			calcTableData(selectedSeason, selectedTrellis, selectedRegrow)
@@ -384,9 +370,6 @@ function Crops() {
 	}, [selectedSeason, selectedTrellis, selectedRegrow, setTableData]);
 	// table column data
 	useEffect(() => {
-		console.log("-----updating columns-----");
-		console.log("initColumnData", initColumnData);
-		console.log("initColumnData[1]", initColumnData[1]);
 		// update table data
 		setColumnData([...calcColumnData(selectedQuantity)]);
 	}, [selectedQuantity, setColumnData]);
