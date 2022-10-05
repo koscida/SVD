@@ -50,7 +50,7 @@ const cropTableData = data.cropsList.map((crop) => {
 	//
 	// total time
 	let harvests = 0;
-	newCrop.growTime = crop.growTime;
+	newCrop.growTimeSingle = crop.growTime;
 	newCrop.reGrowTime = crop.regrow ? crop.regrowTime : "-";
 	newCrop.growTimeTotal = crop.growTime;
 	let day = newCrop.growTimeTotal;
@@ -93,7 +93,7 @@ const cropTableData = data.cropsList.map((crop) => {
 	).toFixed(2);
 	//
 	// crop sell price - single
-	newCrop.cropSell = crop.sell;
+	newCrop.cropSellSingle = crop.sell;
 	// crop sell price - total
 	newCrop.cropSellTotal = crop.sell * newCrop.yieldTotal;
 	newCrop.cropSellTotalPerSeedCostTotal = (
@@ -106,19 +106,24 @@ const cropTableData = data.cropsList.map((crop) => {
 	newCrop.profitTotalPerSeedCostTotal = (
 		newCrop.profitTotal / newCrop.seedCostTotal
 	).toFixed(2);
-	newCrop.profitTotalPerGrowTimeTotal = (
+	newCrop.productivityTotal = (
 		newCrop.profitTotal / newCrop.growTimeTotal
 	).toFixed(2);
+	newCrop.productivityTotalPerMonth = (
+		newCrop.productivityTotal * 1600
+	).toFixed(0);
 	//
 	// preserves price
-	newCrop.preservesSell = 0;
+	newCrop.preservesSellSingle = crop.preserves ? crop.preserves : 0;
+	newCrop.preservesSellTotal = newCrop.preservesSellSingle * newCrop.yieldTotal;
 	//
 	// keg price
-	newCrop.kegSell = 0;
+	newCrop.kegSellSingle = crop.keg ? crop.keg : 0;
+	newCrop.kegSellTotal = newCrop.kegSellSingle * newCrop.yieldTotal;
 	//
 	return newCrop;
 });
-const initColumnData = [
+const cropTableColumn = [
 	{
 		Header: "Crop Info",
 		columns: [
@@ -192,7 +197,7 @@ const initColumnData = [
 				quantity: "Single",
 			},
 			{
-				Header: "Total Grow Time",
+				Header: "Grow Time",
 				accessor: "growTimeTotal",
 				quantity: "Total",
 			},
@@ -224,7 +229,7 @@ const initColumnData = [
 		],
 	},
 	{
-		Header: "Sell Crop Price",
+		Header: "Crop",
 		columns: [
 			{
 				Header: "Crop",
@@ -257,14 +262,19 @@ const initColumnData = [
 				quantity: "Total",
 			},
 			{
-				Header: "Profit/Time",
-				accessor: "profitTotalPerGrowTimeTotal",
+				Header: "Productivity (Profit/Time)",
+				accessor: "productivityTotal",
+				quantity: "Total",
+			},
+			{
+				Header: "Productivity/Month",
+				accessor: "productivityTotalPerMonth",
 				quantity: "Total",
 			},
 		],
 	},
 	{
-		Header: "Sell Preserves Price",
+		Header: "Preserves",
 		columns: [
 			{
 				Header: "Preserves",
@@ -279,7 +289,7 @@ const initColumnData = [
 		],
 	},
 	{
-		Header: "Sell Keg Price",
+		Header: "Keg",
 		columns: [
 			{
 				Header: "Keg",
@@ -308,7 +318,7 @@ const calcTableData = (selectedSeason, selectedTrellis, selectedRegrow) => {
 };
 const calcColumnData = (selectedQuantity) => {
 	// set column data
-	const newColumnData = initColumnData.map((parentSection, i) => {
+	const newColumnData = cropTableColumn.map((parentSection, i) => {
 		const columns = parentSection.columns.filter((section) =>
 			section.quantity ? selectedQuantity.includes(section.quantity) : true
 		);
@@ -329,9 +339,10 @@ function Crops() {
 		"svd-crops-tabledata",
 		calcTableData(initSeason, selectedTrellisOptions, selectedRegrowOptions)
 	);
-	const [columnData, setColumnData] = useLocalStorage("svd-crops-columndata", [
-		...initColumnData,
-	]);
+	const [columnData, setColumnData] = useLocalStorage(
+		"svd-crops-columndata",
+		calcColumnData(initQuantityOptions)
+	);
 	const [selectedSeason, setSelectedSeason] = useLocalStorage(
 		"svd-crops-selectedseason",
 		initSeason
@@ -346,7 +357,7 @@ function Crops() {
 	);
 	const [selectedQuantity, setSelectedQuantity] = useLocalStorage(
 		"svd-crops-selectedquantity",
-		selectedQuantityOptions
+		initQuantityOptions
 	);
 
 	// on change handlers
