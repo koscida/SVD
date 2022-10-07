@@ -159,12 +159,12 @@ function Table({ columns, data }) {
 			<div
 				style={{
 					width: "100%",
-					height: "calc(100vh - 120px)",
+					height: "calc(100vh - 26px - 40px - 20px - (2 * 10px))",
 					overflow: "hidden",
 					position: "relative",
 					display: "flex",
 					flexDirection: "row",
-					border: "3px solid red",
+					border: "1px solid black",
 				}}
 			>
 				<div
@@ -174,7 +174,7 @@ function Table({ columns, data }) {
 						overflow: "scroll",
 					}}
 				>
-					<table {...getTableProps()}>
+					<table {...getTableProps()} style={{ border: "0" }}>
 						<thead>
 							{headerGroups.map((headerGroup) => (
 								<tr {...headerGroup.getHeaderGroupProps()}>

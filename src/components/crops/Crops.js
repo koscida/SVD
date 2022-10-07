@@ -508,7 +508,7 @@ function Crops() {
 
 	return (
 		<div>
-			<div className="d-flex flex-row">
+			<div className="d-flex flex-row" style={{ height: "60px" }}>
 				<SeasonSelect
 					selectedSeason={selectedSeason}
 					handleChangeSeason={handleChangeSeason}
@@ -543,13 +543,24 @@ function Crops() {
 						setSelected: setSelectedQuantity,
 					},
 				].map(({ name, key, options, selectedOptions, setSelected }) => (
-					<div className="d-flex flex-row mx-2" key={name}>
+					<div
+						className="d-flex flex-row mx-2"
+						key={name}
+						style={{ border: "1px solid red" }}
+					>
 						<p className="me-1">{name}:</p>
-						<div>
+						<div
+							className="d-flex flex-column flex-wrap"
+							style={{ border: "1px solid green" }}
+						>
 							{options.map((option) => {
 								const optionLabel = name + option;
 								return (
-									<div className="form-check" key={optionLabel}>
+									<div
+										className="form-check"
+										key={optionLabel}
+										style={{ border: "1px solid blue" }}
+									>
 										<input
 											className="form-check-input"
 											type="checkbox"
