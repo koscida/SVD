@@ -513,78 +513,69 @@ function Crops() {
 					selectedSeason={selectedSeason}
 					handleChangeSeason={handleChangeSeason}
 				/>
-				{[
-					{
-						name: "Trellis",
-						key: "selectedTrellis",
-						options: selectedTrellisOptions,
-						selectedOptions: selectedTrellis,
-						setSelected: setSelectedTrellis,
-					},
-					{
-						name: "Re-Grow",
-						key: "selectedRegrow",
-						options: selectedRegrowOptions,
-						selectedOptions: selectedRegrow,
-						setSelected: setSelectedRegrow,
-					},
-					{
-						name: "Products",
-						key: "selectedProducts",
-						options: selectedProductOptions,
-						selectedOptions: selectedProducts,
-						setSelected: setSelectedProducts,
-					},
-					{
-						name: "Quantity",
-						key: "selectedQuantity",
-						options: selectedQuantityOptions,
-						selectedOptions: selectedQuantity,
-						setSelected: setSelectedQuantity,
-					},
-				].map(({ name, key, options, selectedOptions, setSelected }) => (
-					<div
-						className="d-flex flex-row mx-2"
-						key={name}
-						style={{ border: "1px solid red" }}
-					>
-						<p className="me-1">{name}:</p>
-						<div
-							className="d-flex flex-column flex-wrap"
-							style={{ border: "1px solid green" }}
-						>
-							{options.map((option) => {
-								const optionLabel = name + option;
-								return (
-									<div
-										className="form-check"
-										key={optionLabel}
-										style={{ border: "1px solid blue" }}
-									>
-										<input
-											className="form-check-input"
-											type="checkbox"
-											value={option}
-											id={optionLabel}
-											checked={selectedOptions.includes(option)}
-											onChange={() =>
-												handleSelectInfo(
-													key,
-													option,
-													selectedOptions,
-													setSelected
-												)
-											}
-										/>
-										<label className="form-check-label" htmlFor={optionLabel}>
-											{option}
-										</label>
-									</div>
-								);
-							})}
+				<div className="d-flex flex-column flex-wrap">
+					{[
+						{
+							name: "Trellis",
+							key: "selectedTrellis",
+							options: selectedTrellisOptions,
+							selectedOptions: selectedTrellis,
+							setSelected: setSelectedTrellis,
+						},
+						{
+							name: "Re-Grow",
+							key: "selectedRegrow",
+							options: selectedRegrowOptions,
+							selectedOptions: selectedRegrow,
+							setSelected: setSelectedRegrow,
+						},
+						{
+							name: "Products",
+							key: "selectedProducts",
+							options: selectedProductOptions,
+							selectedOptions: selectedProducts,
+							setSelected: setSelectedProducts,
+						},
+						{
+							name: "Quantity",
+							key: "selectedQuantity",
+							options: selectedQuantityOptions,
+							selectedOptions: selectedQuantity,
+							setSelected: setSelectedQuantity,
+						},
+					].map(({ name, key, options, selectedOptions, setSelected }) => (
+						<div key={name} className="d-flex flex-column flex-wrap me-3">
+							<p className="me-1">{name}</p>
+							<div className="d-flex flex-row">
+								{options.map((option) => {
+									const optionLabel = name + option;
+									return (
+										<div className="form-check me-2" key={optionLabel}>
+											<input
+												className="form-check-input"
+												type="checkbox"
+												value={option}
+												id={optionLabel}
+												checked={selectedOptions.includes(option)}
+												onChange={() =>
+													handleSelectInfo(
+														key,
+														option,
+														selectedOptions,
+														setSelected
+													)
+												}
+											/>
+											<label className="form-check-label" htmlFor={optionLabel}>
+												{option}
+											</label>
+										</div>
+									);
+								})}
+							</div>
 						</div>
-					</div>
-				))}
+					))}
+				</div>
 			</div>
 			<Styles>
 				<Table columns={columnData} data={Object.values(tableData)} />
