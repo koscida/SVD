@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import Table from "../shared/react-table/Table";
-import SelectColumnFilter from "../shared/react-table/SelectColumnFilter";
 import useLocalStorage from "../shared/useLocalStorage";
 import data from "../shared/data";
 import SeasonSelect from "../shared/filters/SeasonSelect";
