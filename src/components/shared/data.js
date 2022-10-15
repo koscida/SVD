@@ -2418,3 +2418,6 @@ const animals = [
 	},
 ];
 exports.animals = animals;
+
+const animalProducts = [];
+exports.animalProducts = animalProducts;
