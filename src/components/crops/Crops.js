@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import Table from "../shared/react-table/Table";
 import useLocalStorage from "../shared/useLocalStorage";
-import data from "../shared/data";
+import data from "../shared/data/dataCrops";
 import SeasonSelect from "../shared/filters/SeasonSelect";
 
 const Styles = styled.div`

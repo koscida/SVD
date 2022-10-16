@@ -1,4 +1,4 @@
-import data from "../../shared/data";
+import data from "../../shared/data/dataCrops";
 import RenderImg from "../../shared/Icons/RenderImg";
 
 function PlotFilter({ cropSeasonalList, selectedCrops, handleCropSelect }) {

@@ -1,5 +1,5 @@
 import useLocalStorage from "../../shared/useLocalStorage";
-import data from "../../shared/data";
+import data from "../../shared/data/dataCrops";
 import Plots from "./Plots";
 import Harvests from "./Harvests";
 import HarvestCalendar from "./HarvestCalendar";

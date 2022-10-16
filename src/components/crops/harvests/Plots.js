@@ -1,5 +1,5 @@
 import { useState } from "react";
-import data from "../../shared/data";
+import data from "../../shared/data/dataCrops";
 import useLocalStorage from "../../shared/useLocalStorage";
 import RenderImg from "../../shared/Icons/RenderImg";
 import PlotFilter from "./PlotFilter";

@@ -1,4 +1,4 @@
-import { seasonsNames } from "../data";
+import { seasonsNames } from "../data/dataSeasons";
 
 function SeasonSelect({ selectedSeason, handleChangeSeason }) {
 	return (
