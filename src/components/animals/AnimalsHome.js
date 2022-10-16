@@ -22,14 +22,16 @@ const allProducts = animals.reduce((products, product) => {
 	products.push(newProduct);
 	return products;
 }, []);
-console.log("allProducts", allProducts);
+// console.log("allProducts", allProducts);
 const tableData = allProducts.reduce((products, product) => {
 	const newProduct = {};
-	newProduct.anmial = product.animal;
+	newProduct.animal = product.animal;
+	newProduct.building = product.building;
+	newProduct.buildingCost = product.building;
 	products.push(newProduct);
 	return products;
 }, []);
-console.log("tableData", tableData);
+// console.log("tableData", tableData);
 
 const columnData = [
 	{
@@ -38,6 +40,19 @@ const columnData = [
 			{
 				Header: "Animal",
 				accessor: "animal",
+			},
+			{
+				Header: "Building",
+				accessor: "building",
+			},
+		],
+	},
+	{
+		Header: "Building",
+		columns: [
+			{
+				Header: "Cost",
+				accessor: "buildingCost",
 			},
 		],
 	},

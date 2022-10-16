@@ -46,20 +46,18 @@ function GridRow({
 			</div>
 
 			{showGridDisplay === "Location"
-				? displayHeaders.map(([locationGroupKey, locationGroup], i) => {
-						return locationGroup.map((location) => {
-							const isShown = fish[locationGroupKey].includes(location.name);
+				? displayHeaders.map((location) => {
+						const isShown = fish.locations.includes(location.name);
 
-							return (
-								<GridCell
-									key={location.name}
-									seasonName={seasonName}
-									seasonWeather={seasonWeather}
-									fishWeather={isShown ? fishWeather : []}
-									classStyle={classStyle}
-								/>
-							);
-						});
+						return (
+							<GridCell
+								key={location.name}
+								seasonName={seasonName}
+								seasonWeather={seasonWeather}
+								fishWeather={isShown ? fishWeather : []}
+								classStyle={classStyle}
+							/>
+						);
 				  })
 				: displayHeaders.map(([blockTimeStart, blockTimeEnd], i) => {
 						// console.log("blockTime",blockTime)

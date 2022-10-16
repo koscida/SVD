@@ -4,7 +4,7 @@ import GridTimeline from "./GridTimeline";
 import GridLocation from "./GridLocation";
 
 const dataSeasons = _dataSeasons.seasons;
-const dataFish = _dataFish.fish;
+const dataFish = Object.values(_dataFish.fish);
 
 function SeasonalDisplay({
 	showGridDisplay,

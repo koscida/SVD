@@ -2,28 +2,24 @@
 // seasons
 const seasons = {
 	Spring: {
-		id: 1,
 		name: "Spring",
-		image: "Spring.png",
+		id: 1,
 		weather: ["Sun", "Rain", "Wind"],
 	},
 	Summer: {
-		id: 2,
 		name: "Summer",
-		image: "Summer.png",
+		id: 2,
 		weather: ["Sun", "Rain"],
 	},
 	Fall: {
-		id: 3,
 		name: "Fall",
-		image: "Fall.png",
+		id: 3,
 		weather: ["Sun", "Rain", "Wind"],
 	},
 	Winter: {
+		name: "WInter",
 		id: 4,
-		name: "Winter",
-		image: "Winter.png",
-		weather: ["Sun", "Snow", "Rain"],
+		weather: ["Sun", "Rain", "Snow"],
 	},
 };
 exports.seasons = seasons;

@@ -16,22 +16,8 @@ function GridLocation({
 	caughtFish,
 	handleCaught,
 }) {
-	const townLocations = Object.values(dataLocations.locationTown);
-	const townLocationsLen = townLocations.length;
-
-	const specialLocations = Object.values(dataLocations.locationSpecial);
-	const specialLocationsLen = specialLocations.length;
-
-	const farmLocations = Object.values(dataLocations.locationFarm);
-	const farmLocationsLen = farmLocations.length;
-
-	const allLocations = [
-		["locationTown", townLocations],
-		["locationSpecial", specialLocations],
-		["locationFarm", farmLocations],
-	];
-	const allLocationsLen =
-		townLocationsLen + specialLocationsLen + farmLocationsLen;
+	const locations = Object.values(dataLocations);
+	const locationsLen = locations.length;
 
 	// displays
 	const GridHeader = () => {
@@ -50,30 +36,11 @@ function GridLocation({
 				<div className={cellClasses} style={{ gridRowStart: 1, gridRowEnd: 3 }}>
 					<p>Tool</p>
 				</div>
-				{allLocations.map(([locationGroupKey, locationGroup], i) => {
-					return Object.entries(
-						locationGroup.reduce((prev, curr) => {
-							if (!prev[curr.locationGroup]) prev[curr.locationGroup] = 0;
-							prev[curr.locationGroup]++;
-							return prev;
-						}, {})
-					).map(([location, val], i) => (
-						<div
-							key={i}
-							className={cellClasses}
-							style={{ gridColumnStart: "auto", gridColumnEnd: "span " + val }}
-						>
-							{location}
-						</div>
-					));
-				})}
-				{allLocations.map(([locationGroupKey, locationGroup], i) => {
-					return locationGroup.map((location, i) => (
-						<div key={i} className={cellClasses}>
-							{location.name}
-						</div>
-					));
-				})}
+				{locations.map((location, i) => (
+					<div key={i} className={cellClasses}>
+						{location.name}
+					</div>
+				))}
 			</>
 		);
 	};
@@ -83,7 +50,7 @@ function GridLocation({
 			className="seasonTimeline d-grid"
 			style={{
 				gridTemplateColumns:
-					"100px repeat(3, auto) repeat(" + allLocationsLen + ", auto)",
+					"100px repeat(3, auto) repeat(" + locationsLen + ", auto)",
 			}}
 		>
 			<GridHeader />
@@ -94,7 +61,7 @@ function GridLocation({
 				displayFish={displayFish}
 				seasonName={seasonName}
 				seasonWeather={seasonWeather}
-				displayHeaders={allLocations}
+				displayHeaders={locations}
 				caughtFish={caughtFish}
 				handleCaught={handleCaught}
 			/>
