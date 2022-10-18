@@ -9,17 +9,17 @@ const dataSeasons = _dataSeasons.seasons;
 const dataWeather = _dataWeather.weather;
 const caughtOptions = [{ name: "Caught" }, { name: "Not Caught" }];
 
-function Config({
+function FishConfig({
+	filterShowBy,
+	setFilterShowBy,
+	showType,
+	setShowType,
 	filterSeasons,
 	setFilterSeasons,
 	filterWeather,
 	setFilterWeather,
 	filterCaught,
 	setFilterCaught,
-	showGridDisplay,
-	setShowGridDisplay,
-	showType,
-	setShowType,
 }) {
 	const seasonsNames = filterSeasons.map((x) => x.name);
 	const filterOptions = [
@@ -168,9 +168,9 @@ function Config({
 										name={"showGridDisplay" + showGridOption}
 										id={"showGridDisplay" + showGridOption}
 										onChange={(e) => {
-											handleRadioChange(showGridOption, setShowGridDisplay);
+											handleRadioChange(showGridOption, setFilterShowBy);
 										}}
-										checked={showGridDisplay === showGridOption}
+										checked={filterShowBy === showGridOption}
 										value={showGridOption}
 									/>
 									<label
@@ -229,4 +229,4 @@ function Config({
 	);
 }
 
-export default Config;
+export default FishConfig;

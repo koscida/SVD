@@ -17,7 +17,7 @@ const seasons = {
 		weather: ["Sun", "Rain", "Wind"],
 	},
 	Winter: {
-		name: "WInter",
+		name: "Winter",
 		id: 4,
 		weather: ["Sun", "Rain", "Snow"],
 	},

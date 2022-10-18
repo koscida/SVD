@@ -1,7 +1,7 @@
-import SeasonalDisplay from "./SeasonalDisplay";
+import FishDisplay from "./FishDisplay";
 import _dataSeasons from "../shared/data/dataSeasons";
 import _dataWeather from "../shared/data/dataWeather";
-import Config from "./Config";
+import FishConfig from "./FishConfig";
 import useLocalStorage from "../shared/useLocalStorage";
 
 // get data from data file
@@ -9,11 +9,11 @@ const dataSeasons = _dataSeasons.seasons;
 const dataWeather = _dataWeather.weather;
 
 function Fish() {
-	const [showGridDisplay, setShowGridDisplay] = useLocalStorage(
-		"svd-fish-show-gridDisplay",
+	const [filterShowBy, setFilterShowBy] = useLocalStorage(
+		"svd-fish-filter-showBy",
 		"Timeline"
 	);
-	const [showType, setShowType] = useLocalStorage("svd-fish-show-type", [
+	const [showType, setShowType] = useLocalStorage("svd-fish-filter-showType", [
 		"Regular",
 	]);
 	const [filterSeasons, setFilterSeasons] = useLocalStorage(
@@ -38,23 +38,23 @@ function Fish() {
 		<div className="fishApp">
 			<div className="row">
 				<div className="col-2">
-					<Config
+					<FishConfig
+						filterShowBy={filterShowBy}
+						setFilterShowBy={setFilterShowBy}
+						showType={showType}
+						setShowType={setShowType}
 						filterSeasons={filterSeasons}
 						setFilterSeasons={setFilterSeasons}
 						filterWeather={filterWeather}
 						setFilterWeather={setFilterWeather}
 						filterCaught={filterCaught}
 						setFilterCaught={setFilterCaught}
-						showGridDisplay={showGridDisplay}
-						setShowGridDisplay={setShowGridDisplay}
-						showType={showType}
-						setShowType={setShowType}
 					/>
 				</div>
 
 				<div className="col-10">
-					<SeasonalDisplay
-						showGridDisplay={showGridDisplay}
+					<FishDisplay
+						filterShowBy={filterShowBy}
 						showType={showType}
 						filterSeasons={filterSeasons}
 						filterWeather={filterWeather}
