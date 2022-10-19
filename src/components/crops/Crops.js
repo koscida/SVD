@@ -5,35 +5,6 @@ import useLocalStorage from "../shared/useLocalStorage";
 import data from "../shared/data/dataCrops";
 import SeasonSelect from "../shared/filters/SeasonSelect";
 
-const Styles = styled.div`
-	padding: 1rem;
-
-	table {
-		border-spacing: 0;
-		border: 1px solid black;
-
-		tr {
-			:last-child {
-				td {
-					border-bottom: 0;
-				}
-			}
-		}
-
-		th,
-		td {
-			margin: 0;
-			padding: 0.5rem;
-			border-bottom: 1px solid black;
-			border-right: 1px solid black;
-
-			:last-child {
-				border-right: 0;
-			}
-		}
-	}
-`;
-
 const cropTableData = data.cropsList.map((crop) => {
 	const newCrop = {};
 	// crop info
@@ -576,9 +547,7 @@ function Crops() {
 					))}
 				</div>
 			</div>
-			<Styles>
-				<Table columns={columnData} data={Object.values(tableData)} />
-			</Styles>
+			<Table columns={columnData} data={Object.values(tableData)} />
 		</div>
 	);
 }
