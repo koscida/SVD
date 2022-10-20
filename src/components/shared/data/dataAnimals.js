@@ -685,3 +685,50 @@ const animalProducts = {
 	},
 };
 exports.animalProducts = animalProducts;
+
+const buildings = {
+	Barn: {
+		name: "Barn",
+		footprint: { width: 7, height: 4 },
+		size: "Regular",
+		cost: { gold: 6000, wood: 350, stone: 150 },
+		Big: {
+			name: "Big Barn",
+			size: "Big",
+			cost: { gold: 12000, wood: 450, stone: 200 },
+		},
+		Deluxe: {
+			name: "Deluxe Barn",
+			size: "Deluxe",
+			cost: { gold: 25000, wood: 550, stone: 300 },
+		},
+	},
+	Coop: {
+		name: "Coop",
+		footprint: { width: 6, height: 3 },
+		size: "Regular",
+		cost: { gold: 4000, wood: 300, stone: 100 },
+		Big: {
+			name: "Big Coop",
+			size: "Big",
+			cost: { gold: 10000, wood: 400, stone: 150 },
+		},
+		Deluxe: {
+			name: "Deluxe Coop",
+			size: "Deluxe",
+			cost: { gold: 20000, wood: 500, stone: 200 },
+		},
+	},
+	Shed: {
+		name: "Shed",
+		footprint: { width: 7, height: 3 },
+		size: "Regular",
+		cost: { gold: 1500, wood: 300 },
+		Big: {
+			name: "Big Shed",
+			size: "Big",
+			cost: { gold: 20000, wood: 550, stone: 300 },
+		},
+	},
+};
+exports.buildings = buildings;

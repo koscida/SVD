@@ -10,8 +10,6 @@ import {
 import { matchSorter } from "match-sorter";
 
 const Styles = styled.div`
-	padding: 1rem;
-
 	table {
 		border-spacing: 0;
 		border: 1px solid black;
@@ -94,7 +92,7 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 fuzzyTextFilterFn.autoRemove = (val) => !val;
 
 // Our table component
-function Table({ columns, data }) {
+function Table({ columns, data, filterLocation }) {
 	const filterTypes = React.useMemo(
 		() => ({
 			// Add a new fuzzyTextFilterFn filter type.
@@ -154,75 +152,81 @@ function Table({ columns, data }) {
 		sliceSize = firstPageRows.length;
 	}
 
+	const xFilter =
+		0 +
+		(filterLocation.top ? filterLocation.top : 0) +
+		(filterLocation.bottom ? filterLocation.bottom : 0);
+	const yFilter =
+		0 +
+		(filterLocation.left ? filterLocation.left : 0) +
+		(filterLocation.right ? filterLocation.right : 0);
+
 	return (
 		<Styles>
-			<div>
+			<div
+				style={{
+					width: "calc(100vw - (2 * 0.5rem) - " + yFilter + "px )",
+					height: "calc(100vh - (2 * 0.5rem) - 26px - " + xFilter + "px )",
+					overflow: "hidden",
+					position: "relative",
+					display: "flex",
+					flexDirection: "row",
+					border: "1px solid black",
+				}}
+			>
 				<div
 					style={{
 						width: "100%",
-						height: "calc(100vh - 26px - 40px - 20px - (2 * 10px))",
-						overflow: "hidden",
-						position: "relative",
-						display: "flex",
-						flexDirection: "row",
-						border: "1px solid black",
+						height: "100%",
+						overflow: "scroll",
 					}}
 				>
-					<div
-						style={{
-							width: "100%",
-							height: "100%",
-							overflow: "scroll",
-						}}
+					<table
+						{...getTableProps()}
+						style={{ border: "0", width: "100%", height: "100%" }}
 					>
-						<table {...getTableProps()} style={{ border: "0" }}>
-							<thead>
-								{headerGroups.map((headerGroup) => (
-									<tr {...headerGroup.getHeaderGroupProps()}>
-										{headerGroup.headers.map((column) => (
-											// Add the sorting props to control sorting. For this example
-											// we can add them into the header props
-											<th
-												{...column.getHeaderProps(
-													column.getSortByToggleProps()
-												)}
-											>
-												{column.render("Header")}
-												{/* Add a sort direction indicator */}
-												<span>
-													{column.isSorted
-														? column.isSortedDesc
-															? " 🔽"
-															: " 🔼"
-														: ""}
-												</span>
-												{/* Render the columns filter UI */}
-												{/* <div>
+						<thead>
+							{headerGroups.map((headerGroup) => (
+								<tr {...headerGroup.getHeaderGroupProps()}>
+									{headerGroup.headers.map((column) => (
+										// Add the sorting props to control sorting. For this example
+										// we can add them into the header props
+										<th
+											{...column.getHeaderProps(column.getSortByToggleProps())}
+										>
+											{column.render("Header")}
+											{/* Add a sort direction indicator */}
+											<span>
+												{column.isSorted
+													? column.isSortedDesc
+														? " 🔽"
+														: " 🔼"
+													: ""}
+											</span>
+											{/* Render the columns filter UI */}
+											{/* <div>
 												{column.canFilter ? column.render("Filter") : null}
 											</div> */}
-											</th>
-										))}
+										</th>
+									))}
+								</tr>
+							))}
+						</thead>
+						<tbody {...getTableBodyProps()}>
+							{firstPageRows.map((row, i) => {
+								prepareRow(row);
+								return (
+									<tr {...row.getRowProps()}>
+										{row.cells.map((cell) => {
+											return (
+												<td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+											);
+										})}
 									</tr>
-								))}
-							</thead>
-							<tbody {...getTableBodyProps()}>
-								{firstPageRows.map((row, i) => {
-									prepareRow(row);
-									return (
-										<tr {...row.getRowProps()}>
-											{row.cells.map((cell) => {
-												return (
-													<td {...cell.getCellProps()}>
-														{cell.render("Cell")}
-													</td>
-												);
-											})}
-										</tr>
-									);
-								})}
-							</tbody>
-						</table>
-					</div>
+								);
+							})}
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</Styles>

@@ -242,7 +242,7 @@ const filterDataProduction = {
 const initFilterHearts = "5hearts";
 const initFilterQuality = "iridium";
 const initFilterQuantity = "monthly";
-const initFilterProduction = "all";
+const initFilterProduction = "single";
 
 // ////
 // AnimalsHome()
@@ -277,55 +277,55 @@ function AnimalsHome() {
 	};
 
 	return (
-		<div>
-			<div>
-				<div className="d-flex flex-row">
-					{[
-						{
-							label: "Hearts",
-							name: "hearts",
-							filterData: filterDataHearts,
-						},
-						{
-							label: "Quality",
-							name: "quality",
-							filterData: filterDataQuality,
-						},
-						{
-							label: "Production",
-							name: "production",
-							filterData: filterDataProduction,
-						},
-					].map(({ label, name, filterData, selected, setFilter }) => {
-						return (
-							<div key={label} className="m-2">
-								{label}
-								{Object.entries(filterData).map(
-									([filterKey, filterValue], i) => {
-										return (
-											<div className="form-check" key={i}>
-												<input
-													className="form-check-input"
-													type="radio"
-													name={label}
-													id={label + i}
-													value={filterKey}
-													checked={filterKey === filters[name] && "checked"}
-													onChange={(e) => handleClick(name, e.target.value)}
-												/>
-												<label className="form-check-label" htmlFor={label + i}>
-													{filterValue}
-												</label>
-											</div>
-										);
-									}
-								)}
-							</div>
-						);
-					})}
-				</div>
+		<div className="d-flex flex-row">
+			<div className="d-flex flex-column" style={{ width: "150px" }}>
+				{[
+					{
+						label: "Hearts",
+						name: "hearts",
+						filterData: filterDataHearts,
+					},
+					{
+						label: "Quality",
+						name: "quality",
+						filterData: filterDataQuality,
+					},
+					{
+						label: "Production",
+						name: "production",
+						filterData: filterDataProduction,
+					},
+				].map(({ label, name, filterData, selected, setFilter }) => {
+					return (
+						<div key={label} className="m-2">
+							{label}
+							{Object.entries(filterData).map(([filterKey, filterValue], i) => {
+								return (
+									<div className="form-check" key={i}>
+										<input
+											className="form-check-input"
+											type="radio"
+											name={label}
+											id={label + i}
+											value={filterKey}
+											checked={filterKey === filters[name] && "checked"}
+											onChange={(e) => handleClick(name, e.target.value)}
+										/>
+										<label className="form-check-label" htmlFor={label + i}>
+											{filterValue}
+										</label>
+									</div>
+								);
+							})}
+						</div>
+					);
+				})}
 			</div>
-			<Table columns={columnData} data={tableData} />
+			<Table
+				columns={columnData}
+				data={tableData}
+				filterLocation={{ left: 150 }}
+			/>
 		</div>
 	);
 }

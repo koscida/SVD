@@ -547,7 +547,11 @@ function Crops() {
 					))}
 				</div>
 			</div>
-			<Table columns={columnData} data={Object.values(tableData)} />
+			<Table
+				columns={columnData}
+				data={Object.values(tableData)}
+				filterLocation={{ top: 40 }}
+			/>
 		</div>
 	);
 }
