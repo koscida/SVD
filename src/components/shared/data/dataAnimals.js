@@ -396,27 +396,6 @@ const animals = {
 exports.animals = animals;
 
 const animalProducts = {
-	"Brown Egg": {
-		name: "Brown Egg",
-		animals: ["White Chicken", "Brown Chicken", "Blue Chicken"],
-		productType: "Egg",
-		productSize: "Regular",
-		sellPrice: { regular: 50, silver: 62, gold: 75, iridium: 100 },
-		machineProcessing: {
-			"Mayonnaise Machine": {
-				name: "Mayonnaise Machine",
-				processingTime: 3,
-				productName: "Mayonnaise",
-				productQuality: {
-					regular: "regular",
-					silver: "regular",
-					gold: "regular",
-					iridium: "regular",
-				},
-				productSellPrice: { regular: 190, gold: 285 },
-			},
-		},
-	},
 	"Dinosaur Egg": {
 		name: "Dinosaur Egg",
 		animals: ["Dinosaur"],
@@ -466,6 +445,90 @@ const animalProducts = {
 		productSize: "Regular",
 		sellPrice: { regular: 250, silver: 312, gold: 375, iridium: 500 },
 	},
+	"Brown Egg": {
+		name: "Brown Egg",
+		animals: ["Brown Chicken"],
+		productType: "Egg",
+		productSize: "Regular",
+		sellPrice: { regular: 50, silver: 62, gold: 75, iridium: 100 },
+		machineProcessing: {
+			"Mayonnaise Machine": {
+				name: "Mayonnaise Machine",
+				processingTime: 3,
+				productName: "Mayonnaise",
+				productQuality: {
+					regular: "regular",
+					silver: "regular",
+					gold: "regular",
+					iridium: "regular",
+				},
+				productSellPrice: { regular: 190, gold: 285 },
+			},
+		},
+	},
+	"Large Brown Egg": {
+		name: "Large Brown Egg",
+		animals: ["Brown Chicken"],
+		productType: "Egg",
+		productSize: "Large",
+		sellPrice: { regular: 95, silver: 118, gold: 142, iridium: 190 },
+		machineProcessing: {
+			"Mayonnaise Machine": {
+				name: "Mayonnaise Machine",
+				processingTime: 3,
+				productName: "Mayonnaise",
+				productQuality: {
+					regular: "gold",
+					silver: "gold",
+					gold: "gold",
+					iridium: "gold",
+				},
+				productSellPrice: { regular: 190, gold: 285 },
+			},
+		},
+	},
+	"Large White Egg": {
+		name: "Large White Egg",
+		animals: ["White Chicken", "Blue Chicken"],
+		productType: "Egg",
+		productSize: "Large",
+		sellPrice: { regular: 95, silver: 118, gold: 142, iridium: 190 },
+		machineProcessing: {
+			"Mayonnaise Machine": {
+				name: "Mayonnaise Machine",
+				processingTime: 3,
+				productName: "Mayonnaise",
+				productQuality: {
+					regular: "gold",
+					silver: "gold",
+					gold: "gold",
+					iridium: "gold",
+				},
+				productSellPrice: { regular: 190, gold: 285 },
+			},
+		},
+	},
+	"White Egg": {
+		name: "White Egg",
+		animals: ["White Chicken", "Blue Chicken"],
+		productType: "Egg",
+		productSize: "Regular",
+		sellPrice: { regular: 50, silver: 62, gold: 75, iridium: 100 },
+		machineProcessing: {
+			"Mayonnaise Machine": {
+				name: "Mayonnaise Machine",
+				processingTime: 3,
+				productName: "Mayonnaise",
+				productQuality: {
+					regular: "regular",
+					silver: "regular",
+					gold: "regular",
+					iridium: "regular",
+				},
+				productSellPrice: { regular: 190, gold: 285 },
+			},
+		},
+	},
 	"Goat Milk": {
 		name: "Goat Milk",
 		animals: ["Goat"],
@@ -484,27 +547,6 @@ const animalProducts = {
 					iridium: "regular",
 				},
 				productSellPrice: { regular: 400 },
-			},
-		},
-	},
-	"Large Brown Egg": {
-		name: "Large Brown Egg",
-		animals: ["White Chicken", "Brown Chicken", "Blue Chicken"],
-		productType: "Egg",
-		productSize: "Large",
-		sellPrice: { regular: 95, silver: 118, gold: 142, iridium: 190 },
-		machineProcessing: {
-			"Mayonnaise Machine": {
-				name: "Mayonnaise Machine",
-				processingTime: 3,
-				productName: "Mayonnaise",
-				productQuality: {
-					regular: "gold",
-					silver: "gold",
-					gold: "gold",
-					iridium: "gold",
-				},
-				productSellPrice: { regular: 190, gold: 285 },
 			},
 		},
 	},
@@ -547,27 +589,6 @@ const animalProducts = {
 					iridium: "gold",
 				},
 				productSellPrice: { gold: 345 },
-			},
-		},
-	},
-	"Large White Egg": {
-		name: "Large White Egg",
-		animals: ["White Chicken", "Brown Chicken", "Blue Chicken"],
-		productType: "Egg",
-		productSize: "Large",
-		sellPrice: { regular: 95, silver: 118, gold: 142, iridium: 190 },
-		machineProcessing: {
-			"Mayonnaise Machine": {
-				name: "Mayonnaise Machine",
-				processingTime: 3,
-				productName: "Mayonnaise",
-				productQuality: {
-					regular: "gold",
-					silver: "gold",
-					gold: "gold",
-					iridium: "gold",
-				},
-				productSellPrice: { regular: 190, gold: 285 },
 			},
 		},
 	},
@@ -638,27 +659,6 @@ const animalProducts = {
 					iridium: "regular",
 				},
 				productSellPrice: { regular: 275 },
-			},
-		},
-	},
-	"White Egg": {
-		name: "White Egg",
-		animals: ["White Chicken", "Brown Chicken", "Blue Chicken"],
-		productType: "Egg",
-		productSize: "Regular",
-		sellPrice: { regular: 50, silver: 62, gold: 75, iridium: 100 },
-		machineProcessing: {
-			"Mayonnaise Machine": {
-				name: "Mayonnaise Machine",
-				processingTime: 3,
-				productName: "Mayonnaise",
-				productQuality: {
-					regular: "regular",
-					silver: "regular",
-					gold: "regular",
-					iridium: "regular",
-				},
-				productSellPrice: { regular: 190, gold: 285 },
 			},
 		},
 	},

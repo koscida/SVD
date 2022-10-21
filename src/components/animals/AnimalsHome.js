@@ -5,72 +5,6 @@ import useLocalStorage from "../shared/useLocalStorage";
 // ////
 // Helpers
 
-// process table data
-const getTableData = (filterHearts, filterQuality) => {
-	return Object.values(animalProducts).reduce((tableData, product) => {
-		product.animals.forEach((animalName) => {
-			// get animal
-			const animal = animals[animalName];
-			// create new object
-			const newProduct = {};
-
-			// animal
-			newProduct.animalName = animalName;
-			newProduct.building = animal.building;
-
-			// product
-			newProduct.productName = product.name;
-			newProduct.productTime = animal.time[filterHearts];
-			newProduct.productQuantity = animal.produces[filterHearts];
-			newProduct.productProfit = product.sellPrice[filterQuality];
-			newProduct.monthlyProductQuantity = Math.round(
-				(newProduct.productQuantity / newProduct.productTime) * 28
-			);
-			newProduct.monthlyProductProfit =
-				newProduct.productProfit * newProduct.monthlyProductQuantity;
-
-			// if machine processing
-			if (product.machineProcessing) {
-				const processing = Object.values(product.machineProcessing)[0];
-				// machine processing
-				newProduct.processingMachine = processing.name;
-				newProduct.processingProductName = processing.productName;
-				// single
-				newProduct.processingTime = processing.processingTime;
-				newProduct.processingQuantity = 1;
-				newProduct.processingSell =
-					processing.productSellPrice[processing.productQuality[filterQuality]];
-				newProduct.processingProfit =
-					newProduct.processingSell - newProduct.productProfit;
-				// monthly
-				newProduct.monthlyProcessingTime = 28;
-				newProduct.monthlyProcessingQuantity = Math.round(
-					(newProduct.processingQuantity / newProduct.processingTime) * 28
-				);
-				newProduct.monthlyProcessingSell =
-					newProduct.processingSell * newProduct.monthlyProcessingQuantity;
-				newProduct.monthlyProcessingProfit =
-					newProduct.processingProfit * newProduct.monthlyProcessingQuantity;
-				// all
-				newProduct.allProcessingTime =
-					newProduct.processingTime * newProduct.productQuantity;
-				newProduct.allProcessingQuantity = newProduct.productQuantity;
-				newProduct.allProcessingSell =
-					newProduct.processingSell * newProduct.allProcessingQuantity;
-				newProduct.allProcessingProfit =
-					newProduct.allProcessingSell - newProduct.productProfit;
-			}
-
-			// push
-			tableData.push(newProduct);
-		});
-
-		// return
-		return tableData;
-	}, []);
-};
-// console.log("tableData", tableData);
-
 // process column data
 const getColumnData = (filterQuantity, filterProduction) => {
 	return [
@@ -94,6 +28,7 @@ const getColumnData = (filterQuantity, filterProduction) => {
 					Header: "Product",
 					accessor: "productName",
 				},
+				// single
 				{
 					Header: "Days",
 					accessor: "productTime",
@@ -105,13 +40,24 @@ const getColumnData = (filterQuantity, filterProduction) => {
 					production: ["single"],
 				},
 				{
-					Header: "Profit",
-					accessor: "productProfit",
+					Header: "Sell",
+					accessor: "productSell",
 					production: ["single"],
+				},
+				// monthly
+				{
+					Header: "Product/Month",
+					accessor: "monthlyProductProduces",
+					production: ["monthly", "all"],
 				},
 				{
 					Header: "Quantity/Month",
 					accessor: "monthlyProductQuantity",
+					production: ["monthly", "all"],
+				},
+				{
+					Header: "Sell/Month",
+					accessor: "monthlyProductSell",
 					production: ["monthly", "all"],
 				},
 				{
@@ -136,11 +82,6 @@ const getColumnData = (filterQuantity, filterProduction) => {
 				{
 					Header: "Days",
 					accessor: "processingTime",
-					production: ["single"],
-				},
-				{
-					Header: "Quantity",
-					accessor: "processingQuantity",
 					production: ["single"],
 				},
 				{
@@ -197,6 +138,37 @@ const getColumnData = (filterQuantity, filterProduction) => {
 				},
 			],
 		},
+		{
+			Header: "Profit",
+			columns: [
+				// total
+				{
+					Header: "Days",
+					accessor: "totalTime",
+					production: ["single"],
+				},
+				{
+					Header: "Sell",
+					accessor: "totalSell",
+					production: ["single"],
+				},
+				{
+					Header: "Sell/Days",
+					accessor: "totalSellDays",
+					production: ["single"],
+				},
+				{
+					Header: "Profit",
+					accessor: "totalProfit",
+					production: ["single"],
+				},
+				{
+					Header: "Profit/Days",
+					accessor: "totalProfitDays",
+					production: ["single"],
+				},
+			],
+		},
 	].reduce((dataColumns, headerParent) => {
 		const columns = [...headerParent.columns].filter((column) => {
 			let include = true;
@@ -212,6 +184,109 @@ const getColumnData = (filterQuantity, filterProduction) => {
 		return dataColumns;
 	}, []);
 };
+
+// process table data
+const getTableData = (filterHearts, filterQuality) => {
+	return Object.values(animalProducts)
+		.reduce((tableData, product) => {
+			product.animals.forEach((animalName) => {
+				// get animal
+				const animal = animals[animalName];
+				// create new object
+				const newProduct = {};
+
+				// ////
+				// animal
+				newProduct.animalName = animalName;
+				newProduct.building = animal.building;
+
+				// ////
+				// product
+				newProduct.productName = product.name;
+
+				// single
+				newProduct.productTime = animal.time[filterHearts];
+				newProduct.productQuantity = animal.produces[filterHearts];
+				newProduct.productSell = product.sellPrice[filterQuality];
+
+				// monthly
+				newProduct.monthlyProductProduces = Math.round(
+					28 / newProduct.productTime
+				);
+				newProduct.monthlyProductQuantity =
+					newProduct.monthlyProductProduces * newProduct.productQuantity;
+				newProduct.monthlyProductSell =
+					newProduct.productSell * newProduct.monthlyProductQuantity;
+				newProduct.monthlyProductProfit =
+					newProduct.productProfit * newProduct.monthlyProductQuantity;
+
+				// all
+				newProduct.allProductProduces = newProduct.monthlyProductProduces;
+				newProduct.allProductQuantity = newProduct.monthlyProductQuantity;
+				newProduct.allProductSell = newProduct.monthlyProductSell;
+				newProduct.allProductProfit = newProduct.monthlyProductProfit;
+
+				// if machine processing
+				if (product.machineProcessing) {
+					// get processing
+					const processing = Object.values(product.machineProcessing)[0];
+
+					// ////
+					// machine processing
+					newProduct.processingMachine = processing.name;
+					newProduct.processingProductName = processing.productName;
+
+					// single
+					newProduct.processingTime = processing.processingTime;
+					newProduct.processingSell =
+						processing.productSellPrice[
+							processing.productQuality[filterQuality]
+						];
+					newProduct.processingProfit =
+						newProduct.processingSell - newProduct.productSell;
+
+					// monthly
+					newProduct.monthlyProcessingTime = 28;
+					newProduct.monthlyProcessingQuantity = Math.round(
+						(newProduct.processingQuantity / newProduct.processingTime) * 28
+					);
+					newProduct.monthlyProcessingSell =
+						newProduct.processingSell * newProduct.monthlyProcessingQuantity;
+					newProduct.monthlyProcessingProfit =
+						newProduct.processingProfit * newProduct.monthlyProcessingQuantity;
+
+					// all
+					newProduct.allProcessingTime =
+						newProduct.processingTime * newProduct.monthlyProcessingQuantity;
+					newProduct.allProcessingQuantity =
+						newProduct.monthlyProcessingQuantity;
+					newProduct.allProcessingSell = newProduct.monthlyProcessingSell;
+					newProduct.allProcessingProfit = newProduct.monthlyProcessingProfit;
+
+					// ////
+					// totals
+					newProduct.totalTime =
+						newProduct.productTime + newProduct.processingTime;
+					newProduct.totalSell = newProduct.processingSell;
+					newProduct.totalSellDays = Math.round(
+						newProduct.totalSell / newProduct.totalTime
+					);
+					newProduct.totalProfit = newProduct.processingProfit;
+					newProduct.totalProfitDays = Math.round(
+						newProduct.totalProfit / newProduct.totalTime
+					);
+				}
+
+				// push
+				tableData.push(newProduct);
+			});
+
+			// return
+			return tableData;
+		}, [])
+		.sort((a, b) => b.animalName < a.animalName);
+};
+// console.log("tableData", tableData);
 
 // ////
 // Options
@@ -256,7 +331,7 @@ function AnimalsHome() {
 	});
 	const [tableData, setTableData] = useLocalStorage(
 		"svd-animals-tableData",
-		getTableData(initFilterHearts, initFilterQuantity)
+		getTableData(initFilterHearts, initFilterQuality)
 	);
 	const [columnData, setColumnData] = useLocalStorage(
 		"svd-animals-setColumnData",
