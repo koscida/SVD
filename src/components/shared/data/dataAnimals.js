@@ -404,7 +404,7 @@ const animalProducts = {
 		sellPrice: { regular: 350, silver: 437, gold: 525, iridium: 700 },
 		machineProcessing: {
 			"Mayonnaise Machine": {
-				name: "Mayonnaise Machine",
+				machineName: "Mayonnaise Machine",
 				processingTime: 3,
 				productName: "Dinosaur Mayonnaise",
 				productQuality: {
@@ -425,7 +425,7 @@ const animalProducts = {
 		sellPrice: { regular: 95, silver: 118, gold: 142, iridium: 190 },
 		machineProcessing: {
 			"Mayonnaise Machine": {
-				name: "Mayonnaise Machine",
+				machineName: "Mayonnaise Machine",
 				processingTime: 3,
 				productName: "Duck Mayonnaise",
 				productQuality: {
@@ -453,7 +453,7 @@ const animalProducts = {
 		sellPrice: { regular: 50, silver: 62, gold: 75, iridium: 100 },
 		machineProcessing: {
 			"Mayonnaise Machine": {
-				name: "Mayonnaise Machine",
+				machineName: "Mayonnaise Machine",
 				processingTime: 3,
 				productName: "Mayonnaise",
 				productQuality: {
@@ -474,7 +474,7 @@ const animalProducts = {
 		sellPrice: { regular: 95, silver: 118, gold: 142, iridium: 190 },
 		machineProcessing: {
 			"Mayonnaise Machine": {
-				name: "Mayonnaise Machine",
+				machineName: "Mayonnaise Machine",
 				processingTime: 3,
 				productName: "Mayonnaise",
 				productQuality: {
@@ -495,7 +495,7 @@ const animalProducts = {
 		sellPrice: { regular: 95, silver: 118, gold: 142, iridium: 190 },
 		machineProcessing: {
 			"Mayonnaise Machine": {
-				name: "Mayonnaise Machine",
+				machineName: "Mayonnaise Machine",
 				processingTime: 3,
 				productName: "Mayonnaise",
 				productQuality: {
@@ -516,7 +516,7 @@ const animalProducts = {
 		sellPrice: { regular: 50, silver: 62, gold: 75, iridium: 100 },
 		machineProcessing: {
 			"Mayonnaise Machine": {
-				name: "Mayonnaise Machine",
+				machineName: "Mayonnaise Machine",
 				processingTime: 3,
 				productName: "Mayonnaise",
 				productQuality: {
@@ -537,7 +537,7 @@ const animalProducts = {
 		sellPrice: { regular: 225, silver: 281, gold: 337, iridium: 450 },
 		machineProcessing: {
 			"Cheese Press": {
-				name: "Cheese Press",
+				machineName: "Cheese Press",
 				processingTime: 3,
 				productName: "Goat Cheese",
 				productQuality: {
@@ -549,6 +549,13 @@ const animalProducts = {
 				productSellPrice: { regular: 400 },
 			},
 		},
+		aging: {
+			Cask: {
+				machineName: "Cask",
+				time: { silver: 3, gold: 4, iridium: 7 },
+				sell: 800,
+			},
+		},
 	},
 	"Large Goat Milk": {
 		name: "Large Goat Milk",
@@ -558,7 +565,7 @@ const animalProducts = {
 		sellPrice: { regular: 345, silver: 431, gold: 517, iridium: 690 },
 		machineProcessing: {
 			"Cheese Press": {
-				name: "Cheese Press",
+				machineName: "Cheese Press",
 				processingTime: 3,
 				productName: "Goat Cheese",
 				productQuality: {
@@ -570,6 +577,13 @@ const animalProducts = {
 				productSellPrice: { gold: 600 },
 			},
 		},
+		aging: {
+			Cask: {
+				machineName: "Cask",
+				time: { silver: 3, gold: 4, iridium: 7 },
+				sell: 800,
+			},
+		},
 	},
 	"Large Milk": {
 		name: "Large Milk",
@@ -579,7 +593,7 @@ const animalProducts = {
 		sellPrice: { regular: 190, silver: 237, gold: 285, iridium: 380 },
 		machineProcessing: {
 			"Cheese Press": {
-				name: "Cheese Press",
+				machineName: "Cheese Press",
 				processingTime: 3.3,
 				productName: "Cheese",
 				productQuality: {
@@ -591,6 +605,13 @@ const animalProducts = {
 				productSellPrice: { gold: 345 },
 			},
 		},
+		aging: {
+			Cask: {
+				machineName: "Cask",
+				time: { silver: 3, gold: 4, iridium: 7 },
+				sell: 460,
+			},
+		},
 	},
 	Milk: {
 		name: "Milk",
@@ -600,7 +621,7 @@ const animalProducts = {
 		sellPrice: { regular: 125, silver: 156, gold: 187, iridium: 250 },
 		machineProcessing: {
 			"Cheese Press": {
-				name: "Cheese Press",
+				machineName: "Cheese Press",
 				processingTime: 3.3,
 				productName: "Cheese",
 				productQuality: {
@@ -610,6 +631,13 @@ const animalProducts = {
 					iridium: "regular",
 				},
 				productSellPrice: { regular: 230 },
+			},
+		},
+		aging: {
+			Cask: {
+				machineName: "Cask",
+				time: { silver: 3, gold: 4, iridium: 7 },
+				sell: 460,
 			},
 		},
 	},
@@ -628,7 +656,7 @@ const animalProducts = {
 		sellPrice: { regular: 625, silver: 781, gold: 937, iridium: 1250 },
 		machineProcessing: {
 			"Oil Maker": {
-				name: "Oil Maker",
+				machineName: "Oil Maker",
 				processingTime: 6,
 				productName: "Truffle Oil",
 				productQuality: {
@@ -649,7 +677,7 @@ const animalProducts = {
 		sellPrice: { regular: 65, silver: 81, gold: 97, iridium: 130 },
 		machineProcessing: {
 			"Mayonnaise Machine": {
-				name: "Mayonnaise Machine",
+				machineName: "Mayonnaise Machine",
 				processingTime: 3,
 				productName: "Void Mayonnaise",
 				productQuality: {
@@ -670,7 +698,7 @@ const animalProducts = {
 		sellPrice: { regular: 340, silver: 425, gold: 510, iridium: 680 },
 		machineProcessing: {
 			Loom: {
-				name: "Loom",
+				machineName: "Loom",
 				processingTime: 4,
 				productName: "Cloth",
 				productQuality: {

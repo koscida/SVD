@@ -40,8 +40,28 @@ const getColumnData = (filterQuantity, filterProduction) => {
 					production: ["single"],
 				},
 				{
+					Header: "Cost",
+					accessor: "productCost",
+					production: ["single"],
+				},
+				{
 					Header: "Sell",
 					accessor: "productSell",
+					production: ["single"],
+				},
+				{
+					Header: "Sell/Day",
+					accessor: "productSellDay",
+					production: ["single"],
+				},
+				{
+					Header: "Profit (Sell - Cost)",
+					accessor: "productProfit",
+					production: ["single"],
+				},
+				{
+					Header: "Profit/Day",
+					accessor: "productProfitDay",
 					production: ["single"],
 				},
 				// monthly
@@ -90,8 +110,28 @@ const getColumnData = (filterQuantity, filterProduction) => {
 					production: ["single"],
 				},
 				{
-					Header: "Profit",
+					Header: "Sell/Day",
+					accessor: "processingSellDay",
+					production: ["single"],
+				},
+				{
+					Header: "Diff (Sell - Sell)",
+					accessor: "processingDiff",
+					production: ["single"],
+				},
+				{
+					Header: "Diff/Day",
+					accessor: "processingDiffDay",
+					production: ["single"],
+				},
+				{
+					Header: "Profit (Sell - Cost)",
 					accessor: "processingProfit",
+					production: ["single"],
+				},
+				{
+					Header: "Profit/Day",
+					accessor: "processingProfitDay",
 					production: ["single"],
 				},
 				// monthly
@@ -139,9 +179,25 @@ const getColumnData = (filterQuantity, filterProduction) => {
 			],
 		},
 		{
-			Header: "Profit",
+			Header: "Keg",
 			columns: [
-				// total
+				// single
+				{
+					Header: "Days",
+					accessor: "kegTime",
+					production: ["single"],
+				},
+				{
+					Header: "Sell",
+					accessor: "kegSell",
+					production: ["single"],
+				},
+			],
+		},
+		{
+			Header: "Final",
+			columns: [
+				// single
 				{
 					Header: "Days",
 					accessor: "totalTime",
@@ -155,6 +211,16 @@ const getColumnData = (filterQuantity, filterProduction) => {
 				{
 					Header: "Sell/Days",
 					accessor: "totalSellDays",
+					production: ["single"],
+				},
+				{
+					Header: "Diff",
+					accessor: "totalDiff",
+					production: ["single"],
+				},
+				{
+					Header: "Diff/Days",
+					accessor: "totalDiffDays",
 					production: ["single"],
 				},
 				{
@@ -207,7 +273,16 @@ const getTableData = (filterHearts, filterQuality) => {
 				// single
 				newProduct.productTime = animal.time[filterHearts];
 				newProduct.productQuantity = animal.produces[filterHearts];
+				newProduct.productCost = 50 * newProduct.productTime;
 				newProduct.productSell = product.sellPrice[filterQuality];
+				newProduct.productSellDay = Math.round(
+					newProduct.productSell / newProduct.productTime
+				);
+				newProduct.productProfit =
+					newProduct.productSell - newProduct.productCost;
+				newProduct.productProfitDay = Math.round(
+					newProduct.productProfit / newProduct.productTime
+				);
 
 				// monthly
 				newProduct.monthlyProductProduces = Math.round(
@@ -226,24 +301,34 @@ const getTableData = (filterHearts, filterQuality) => {
 				newProduct.allProductSell = newProduct.monthlyProductSell;
 				newProduct.allProductProfit = newProduct.monthlyProductProfit;
 
+				// ////
+				// machine processing
+				//
 				// if machine processing
 				if (product.machineProcessing) {
-					// get processing
+					// get machine processing
 					const processing = Object.values(product.machineProcessing)[0];
-
-					// ////
-					// machine processing
-					newProduct.processingMachine = processing.name;
+					newProduct.processingMachine = processing.machineName;
 					newProduct.processingProductName = processing.productName;
 
 					// single
+					const productQuality = processing.productQuality[filterQuality];
 					newProduct.processingTime = processing.processingTime;
 					newProduct.processingSell =
-						processing.productSellPrice[
-							processing.productQuality[filterQuality]
-						];
-					newProduct.processingProfit =
+						processing.productSellPrice[productQuality];
+					newProduct.processingSellDay = Math.round(
+						newProduct.processingSell / newProduct.processingTime
+					);
+					newProduct.processingDiff =
 						newProduct.processingSell - newProduct.productSell;
+					newProduct.processingDiffDay = Math.round(
+						newProduct.processingDiff / newProduct.processingTime
+					);
+					newProduct.processingProfit =
+						newProduct.processingSell - newProduct.productCost;
+					newProduct.processingProfitDay = Math.round(
+						newProduct.processingProfit / newProduct.processingTime
+					);
 
 					// monthly
 					newProduct.monthlyProcessingTime = 28;
@@ -264,18 +349,39 @@ const getTableData = (filterHearts, filterQuality) => {
 					newProduct.allProcessingProfit = newProduct.monthlyProcessingProfit;
 
 					// ////
-					// totals
-					newProduct.totalTime =
-						newProduct.productTime + newProduct.processingTime;
-					newProduct.totalSell = newProduct.processingSell;
-					newProduct.totalSellDays = Math.round(
-						newProduct.totalSell / newProduct.totalTime
-					);
-					newProduct.totalProfit = newProduct.processingProfit;
-					newProduct.totalProfitDays = Math.round(
-						newProduct.totalProfit / newProduct.totalTime
-					);
+					// aging
+					// if aging
+					if (product.aging) {
+						// get processing
+						const aging = Object.values(product.aging)[0];
+						newProduct.kegTime = aging.time["iridium"];
+						if (productQuality === "regular")
+							newProduct.kegTime += aging.time["silver"] + aging.time["gold"];
+						newProduct.kegSell = aging.sell;
+					}
 				}
+
+				// ////
+				// totals
+				newProduct.totalTime =
+					newProduct.productTime +
+					(newProduct.processingTime ?? 0) +
+					(newProduct.kegTime ?? 0);
+				newProduct.totalSell =
+					newProduct.kegSell ??
+					newProduct.processingSell ??
+					newProduct.productSell;
+				newProduct.totalSellDays = Math.round(
+					newProduct.totalSell / newProduct.totalTime
+				);
+				newProduct.totalDiff = newProduct.totalSell - newProduct.productSell;
+				newProduct.totalDiffDays = Math.round(
+					newProduct.totalDiff / newProduct.totalTime
+				);
+				newProduct.totalProfit = newProduct.totalSell - newProduct.productCost;
+				newProduct.totalProfitDays = Math.round(
+					newProduct.totalProfit / newProduct.totalTime
+				);
 
 				// push
 				tableData.push(newProduct);
