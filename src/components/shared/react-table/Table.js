@@ -152,11 +152,11 @@ function Table({ columns, data, filterLocation }) {
 		sliceSize = firstPageRows.length;
 	}
 
-	const xFilter =
+	const xFilterPadding =
 		0 +
 		(filterLocation.top ? filterLocation.top : 0) +
 		(filterLocation.bottom ? filterLocation.bottom : 0);
-	const yFilter =
+	const yFilterPadding =
 		0 +
 		(filterLocation.left ? filterLocation.left : 0) +
 		(filterLocation.right ? filterLocation.right : 0);
@@ -165,8 +165,9 @@ function Table({ columns, data, filterLocation }) {
 		<Styles>
 			<div
 				style={{
-					width: "calc(100vw - (2 * 0.5rem) - " + yFilter + "px )",
-					height: "calc(100vh - (2 * 0.5rem) - 26px - " + xFilter + "px )",
+					width: "calc(100vw - (2 * 0.5rem) - " + yFilterPadding + "px )",
+					height:
+						"calc(100vh - (2 * 0.5rem) - 26px - " + xFilterPadding + "px )",
 					overflow: "hidden",
 					position: "relative",
 					display: "flex",

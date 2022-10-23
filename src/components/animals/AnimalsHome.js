@@ -5,6 +5,46 @@ import useLocalStorage from "../shared/useLocalStorage";
 // ////
 // Helpers
 
+const formatGold = (value) => {
+	let formatted;
+	if (value) {
+		formatted = `${value}g`;
+	} else {
+		formatted = "-";
+	}
+	return formatted;
+};
+
+const formatPerDay = (value) => {
+	let formatted;
+	if (value) {
+		formatted = `${value}g/day`;
+	} else {
+		formatted = "-";
+	}
+	return formatted;
+};
+const formatDay = (value) => {
+	let formatted;
+	if (value) {
+		formatted = `${value} day` + (value > 1 ? "s" : "");
+	} else {
+		formatted = "-";
+	}
+	return formatted;
+};
+
+const formatPercentage = (value) => {
+	let formatted;
+	if (value) {
+		let converted = Math.round(value * 100);
+		formatted = converted === 0 ? "-" : `${converted}%`;
+	} else {
+		formatted = "-";
+	}
+	return formatted;
+};
+
 // process column data
 const getColumnData = (filterQuantity, filterProduction) => {
 	return [
@@ -28,41 +68,57 @@ const getColumnData = (filterQuantity, filterProduction) => {
 					Header: "Product",
 					accessor: "productName",
 				},
-				// single
 				{
-					Header: "Days",
-					accessor: "productTime",
-					production: ["single"],
+					Header: "Quality",
+					accessor: "productQuality",
 				},
+				// single
 				{
 					Header: "Quantity",
 					accessor: "productQuantity",
 					production: ["single"],
 				},
 				{
+					Header: "Days",
+					accessor: "productTime",
+					production: ["single"],
+					Cell: ({ value }) => formatDay(value),
+				},
+				{
+					Header: "Quantity/Day",
+					accessor: "productQuantityDay",
+					production: ["single"],
+					Cell: ({ value }) => formatPerDay(value),
+				},
+				{
 					Header: "Cost",
 					accessor: "productCost",
 					production: ["single"],
+					Cell: ({ value }) => formatGold(value),
 				},
 				{
 					Header: "Sell",
 					accessor: "productSell",
 					production: ["single"],
+					Cell: ({ value }) => formatGold(value),
 				},
 				{
 					Header: "Sell/Day",
 					accessor: "productSellDay",
 					production: ["single"],
+					Cell: ({ value }) => formatPerDay(value),
 				},
 				{
 					Header: "Profit (Sell - Cost)",
 					accessor: "productProfit",
 					production: ["single"],
+					Cell: ({ value }) => formatGold(value),
 				},
 				{
 					Header: "Profit/Day",
 					accessor: "productProfitDay",
 					production: ["single"],
+					Cell: ({ value }) => formatPerDay(value),
 				},
 				// monthly
 				{
@@ -98,41 +154,52 @@ const getColumnData = (filterQuantity, filterProduction) => {
 					Header: "Product",
 					accessor: "processingProductName",
 				},
+				{
+					Header: "Quality",
+					accessor: "processingProductQuality",
+				},
 				// single
 				{
 					Header: "Days",
 					accessor: "processingTime",
 					production: ["single"],
+					Cell: ({ value }) => formatDay(value),
 				},
 				{
 					Header: "Sell",
 					accessor: "processingSell",
 					production: ["single"],
+					Cell: ({ value }) => formatGold(value),
 				},
 				{
 					Header: "Sell/Day",
 					accessor: "processingSellDay",
 					production: ["single"],
+					Cell: ({ value }) => formatPerDay(value),
 				},
 				{
 					Header: "Diff (Sell - Sell)",
 					accessor: "processingDiff",
 					production: ["single"],
+					Cell: ({ value }) => formatGold(value),
 				},
 				{
 					Header: "Diff/Day",
 					accessor: "processingDiffDay",
 					production: ["single"],
+					Cell: ({ value }) => formatPerDay(value),
 				},
 				{
 					Header: "Profit (Sell - Cost)",
 					accessor: "processingProfit",
 					production: ["single"],
+					Cell: ({ value }) => formatGold(value),
 				},
 				{
 					Header: "Profit/Day",
 					accessor: "processingProfitDay",
 					production: ["single"],
+					Cell: ({ value }) => formatPerDay(value),
 				},
 				// monthly
 				{
@@ -170,68 +237,91 @@ const getColumnData = (filterQuantity, filterProduction) => {
 					Header: "Sell",
 					accessor: "allProcessingSell",
 					production: ["all"],
+					Cell: ({ value }) => formatGold(value),
 				},
 				{
 					Header: "Profit",
 					accessor: "allProcessingProfit",
 					production: ["all"],
+					Cell: ({ value }) => formatGold(value),
 				},
 			],
 		},
 		{
-			Header: "Keg",
+			Header: "Cask",
 			columns: [
+				{
+					Header: "Machine",
+					accessor: "agingMachine",
+				},
+				{
+					Header: "Product",
+					accessor: "agingProduct",
+				},
+				{
+					Header: "Quality",
+					accessor: "agingProductQuality",
+				},
 				// single
 				{
 					Header: "Days",
-					accessor: "kegTime",
+					accessor: "agingTime",
 					production: ["single"],
+					Cell: ({ value }) => formatDay(value),
 				},
 				{
 					Header: "Sell",
-					accessor: "kegSell",
+					accessor: "agingSell",
 					production: ["single"],
+					Cell: ({ value }) => formatGold(value),
 				},
 			],
 		},
 		{
-			Header: "Final",
+			Header: "Totals",
 			columns: [
 				// single
 				{
 					Header: "Days",
 					accessor: "totalTime",
 					production: ["single"],
+					Cell: ({ value }) => formatDay(value),
 				},
 				{
 					Header: "Sell",
 					accessor: "totalSell",
 					production: ["single"],
+					Cell: ({ value }) => formatGold(value),
 				},
 				{
 					Header: "Sell/Days",
 					accessor: "totalSellDays",
 					production: ["single"],
+					Cell: ({ value }) => formatPerDay(value),
 				},
 				{
 					Header: "Diff",
 					accessor: "totalDiff",
 					production: ["single"],
+					Cell: ({ value }) => formatGold(value),
 				},
 				{
 					Header: "Diff/Days",
 					accessor: "totalDiffDays",
 					production: ["single"],
+					Cell: ({ value }) => formatPerDay(value),
 				},
 				{
 					Header: "Profit",
 					accessor: "totalProfit",
 					production: ["single"],
+					Cell: ({ value }) => formatGold(value),
 				},
 				{
 					Header: "Profit/Days",
 					accessor: "totalProfitDays",
 					production: ["single"],
+					Cell: ({ value }) => formatPerDay(value),
 				},
 			],
 		},
@@ -269,10 +359,14 @@ const getTableData = (filterHearts, filterQuality) => {
 				// ////
 				// product
 				newProduct.productName = product.name;
+				newProduct.productQuality = filterQuality;
 
 				// single
 				newProduct.productTime = animal.time[filterHearts];
 				newProduct.productQuantity = animal.produces[filterHearts];
+				newProduct.productQuantityDay = Math.round(
+					newProduct.productQuantity / newProduct.productTime
+				);
 				newProduct.productCost = 50 * newProduct.productTime;
 				newProduct.productSell = product.sellPrice[filterQuality];
 				newProduct.productSellDay = Math.round(
@@ -310,12 +404,13 @@ const getTableData = (filterHearts, filterQuality) => {
 					const processing = Object.values(product.machineProcessing)[0];
 					newProduct.processingMachine = processing.machineName;
 					newProduct.processingProductName = processing.productName;
+					newProduct.processingProductQuality =
+						processing.productQuality[filterQuality];
 
 					// single
-					const productQuality = processing.productQuality[filterQuality];
 					newProduct.processingTime = processing.processingTime;
 					newProduct.processingSell =
-						processing.productSellPrice[productQuality];
+						processing.productSellPrice[newProduct.processingProductQuality];
 					newProduct.processingSellDay = Math.round(
 						newProduct.processingSell / newProduct.processingTime
 					);
@@ -352,12 +447,16 @@ const getTableData = (filterHearts, filterQuality) => {
 					// aging
 					// if aging
 					if (product.aging) {
-						// get processing
+						// get aging
 						const aging = Object.values(product.aging)[0];
-						newProduct.kegTime = aging.time["iridium"];
-						if (productQuality === "regular")
-							newProduct.kegTime += aging.time["silver"] + aging.time["gold"];
-						newProduct.kegSell = aging.sell;
+						newProduct.agingMachine = aging.machineName;
+						newProduct.agingProduct = newProduct.processingProductName;
+						newProduct.agingProductQuality = "iridium";
+						// single
+						newProduct.agingTime = aging.time["iridium"];
+						if (newProduct.processingProductQuality === "regular")
+							newProduct.agingTime += aging.time["silver"] + aging.time["gold"];
+						newProduct.agingSell = aging.sell;
 					}
 				}
 
@@ -366,9 +465,9 @@ const getTableData = (filterHearts, filterQuality) => {
 				newProduct.totalTime =
 					newProduct.productTime +
 					(newProduct.processingTime ?? 0) +
-					(newProduct.kegTime ?? 0);
+					(newProduct.agingTime ?? 0);
 				newProduct.totalSell =
-					newProduct.kegSell ??
+					newProduct.agingSell ??
 					newProduct.processingSell ??
 					newProduct.productSell;
 				newProduct.totalSellDays = Math.round(
