@@ -23,13 +23,14 @@ const getTableData = (filterHearts, filterQuality) => {
 				newProduct.productQuality = filterQuality;
 
 				filterValues.forEach((filter) => {
-					const dayMultiplier = filter === "single" ? 1 : 28;
+					const dayMultiplier =
+						filter === "single" || filter === "daily" ? 1 : 28;
 
 					// get produces and time
 					const produces = animal.produces[filterHearts];
 					const time = animal.time[filterHearts];
-					const productPerDay = (produces / time, 2).toFixed(2);
-					const dayPerProduct = (time / produces, 2).toFixed(2);
+					const productPerDay = (produces / time).toFixed(2);
+					const dayPerProduct = (time / produces).toFixed(2);
 
 					// single
 					if (filter === "single") {
@@ -47,25 +48,25 @@ const getTableData = (filterHearts, filterQuality) => {
 					}
 
 					// products
-					newProduct[filter + "productQuantityDay"] = (newProduct[
-						filter + "productQuantity"
-					] / newProduct[filter + "productTime"],
-					2).toFixed(2);
+					newProduct[filter + "productQuantityDay"] = (
+						newProduct[filter + "productQuantity"] /
+						newProduct[filter + "productTime"]
+					).toFixed(1);
 					newProduct[filter + "productCost"] =
 						50 * newProduct[filter + "productTime"] * dayMultiplier;
 					newProduct[filter + "productSell"] =
 						product.sellPrice[filterQuality] * dayMultiplier;
-					newProduct[filter + "productSellDay"] = (newProduct[
-						filter + "productSell"
-					] / newProduct[filter + "productTime"],
-					2).toFixed(2);
+					newProduct[filter + "productSellDay"] = (
+						newProduct[filter + "productSell"] /
+						newProduct[filter + "productTime"]
+					).toFixed(0);
 					newProduct[filter + "productProfit"] =
 						newProduct[filter + "productSell"] -
 						newProduct[filter + "productCost"];
-					newProduct[filter + "productProfitDay"] = (newProduct[
-						filter + "productProfit"
-					] / newProduct[filter + "productTime"],
-					2).toFixed(2);
+					newProduct[filter + "productProfitDay"] = (
+						newProduct[filter + "productProfit"] /
+						newProduct[filter + "productTime"]
+					).toFixed(0);
 				});
 
 				// ////
@@ -89,10 +90,10 @@ const getTableData = (filterHearts, filterQuality) => {
 						newProduct[filter + "processingSell"] =
 							processing.productSellPrice[newProduct.processingProductQuality] *
 							newProduct[filter + "productQuantity"];
-						newProduct[filter + "processingSellDay"] = (newProduct[
-							filter + "processingSell"
-						] / newProduct[filter + "processingTime"],
-						2).toFixed(2);
+						newProduct[filter + "processingSellDay"] = (
+							newProduct[filter + "processingSell"] /
+							newProduct[filter + "processingTime"]
+						).toFixed(2);
 						newProduct[filter + "processingDiff"] =
 							newProduct[filter + "processingSell"] -
 							newProduct[filter + "productSell"];
