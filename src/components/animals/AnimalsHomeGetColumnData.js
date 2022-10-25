@@ -8,10 +8,19 @@ const formatGold = (value) => {
 	return formatted;
 };
 
-const formatPerDay = (value) => {
+const formatGoldPerDay = (value) => {
 	let formatted;
 	if (value) {
 		formatted = `${value}g/day`;
+	} else {
+		formatted = "-";
+	}
+	return formatted;
+};
+const formatPerDay = (value) => {
+	let formatted;
+	if (value) {
+		formatted = `${value}/day`;
 	} else {
 		formatted = "-";
 	}
@@ -81,7 +90,7 @@ const getColumnData = (filterQuantity, filterProduction) => {
 					Header: "Quantity/Day",
 					accessor: filterProduction + "productQuantityDay",
 					production: ["single"],
-					Cell: ({ value }) => formatPerDay(value),
+					Cell: ({ value }) => formatGoldPerDay(value),
 				},
 				{
 					Header: "Cost",

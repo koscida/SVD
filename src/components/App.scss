@@ -1,5 +1,24 @@
+:root {
+	--background-color: #efeef9;
+	--text-color: #38363C;
+	--link-color: #0645ad;
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		--background-color: #2D2B30;
+		--text-color: #f6f8ff;
+		--link-color: #72a1eb;
+	}
+}
+
+
 body {
 	font-size: 12px;
+	background: var(--background-color);
+	color: var(--text-color);
+}
+a {
+	color: var(--link-color);
 }
 img {
 	max-width: 1rem;

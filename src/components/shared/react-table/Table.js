@@ -10,9 +10,25 @@ import {
 import { matchSorter } from "match-sorter";
 
 const Styles = styled.div`
+	--border-color: black;
+	@media (prefers-color-scheme: dark) {
+		--border-color: #eee;
+	}
+	.reactTable {
+		overflow: hidden;
+		position: relative;
+		display: flex;
+		flexdirection: row;
+		border: 1px solid var(--border-color);
+	}
+	.tableWrapper {
+		width: 100%;
+		height: 100%;
+		overflow: scroll;
+	}
 	table {
 		border-spacing: 0;
-		border: 1px solid black;
+		border: 1px solid var(--border-color);
 
 		tr {
 			:last-child {
@@ -26,8 +42,8 @@ const Styles = styled.div`
 		td {
 			margin: 0;
 			padding: 0.5rem;
-			border-bottom: 1px solid black;
-			border-right: 1px solid black;
+			border-bottom: 1px solid var(--border-color);
+			border-right: 1px solid var(--border-color);
 
 			:last-child {
 				border-right: 0;
@@ -168,20 +184,10 @@ function Table({ columns, data, filterLocation }) {
 					width: "calc(100vw - (2 * 0.5rem) - " + yFilterPadding + "px )",
 					height:
 						"calc(100vh - (2 * 0.5rem) - 26px - " + xFilterPadding + "px )",
-					overflow: "hidden",
-					position: "relative",
-					display: "flex",
-					flexDirection: "row",
-					border: "1px solid black",
 				}}
+				className="reactTable"
 			>
-				<div
-					style={{
-						width: "100%",
-						height: "100%",
-						overflow: "scroll",
-					}}
-				>
+				<div className="tableWrapper">
 					<table
 						{...getTableProps()}
 						style={{ border: "0", width: "100%", height: "100%" }}

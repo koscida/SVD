@@ -28,6 +28,7 @@ const filterDataQuantity = {
 };
 const filterDataProduction = {
 	single: "Single",
+	daily: "Daily",
 	monthly: "Monthly",
 	all: "All Product",
 };
