@@ -59,7 +59,7 @@ function AnimalsHome() {
 	);
 	const [columnData, setColumnData] = useLocalStorage(
 		"svd-animals-setColumnData",
-		getColumnData(initFilterQuantity, initFilterProduction)
+		getColumnData(initFilterProduction, initFilterProcess)
 	);
 
 	// handlers
@@ -72,20 +72,21 @@ function AnimalsHome() {
 		// update table
 		setTableData(getTableData(newFilters["hearts"], newFilters["quality"]));
 		setColumnData(
-			getColumnData(newFilters["quantity"], newFilters["production"])
+			getColumnData(newFilters["production"], newFilters["process"])
 		);
 	};
 	const handleCheckboxClick = (name, value) => {
 		// update filters
 		const newFilters = { ...filters };
-
-		// newFilters[name] = value;
-		// setFilters(newFilters);
+		newFilters[name] = newFilters[name].includes(value)
+			? newFilters[name].filter((n) => n !== value)
+			: [...newFilters[name], value];
+		setFilters(newFilters);
 
 		// update table
 		setTableData(getTableData(newFilters["hearts"], newFilters["quality"]));
 		setColumnData(
-			getColumnData(newFilters["quantity"], newFilters["production"])
+			getColumnData(newFilters["production"], newFilters["process"])
 		);
 	};
 

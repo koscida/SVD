@@ -48,7 +48,7 @@ const formatPercentage = (value) => {
 };
 
 // process column data
-const getColumnData = (filterQuantity, filterProduction) => {
+const getColumnData = (filterProduction, filterProcess) => {
 	return [
 		{
 			Header: "Animal Info",
@@ -65,6 +65,7 @@ const getColumnData = (filterQuantity, filterProduction) => {
 		},
 		{
 			Header: "Product",
+			process: "product",
 			columns: [
 				{
 					Header: "Product",
@@ -126,6 +127,7 @@ const getColumnData = (filterQuantity, filterProduction) => {
 		},
 		{
 			Header: "Processing",
+			process: "processing",
 			columns: [
 				{
 					Header: "Machine",
@@ -186,6 +188,7 @@ const getColumnData = (filterQuantity, filterProduction) => {
 		},
 		{
 			Header: "Cask",
+			process: "cask",
 			columns: [
 				{
 					Header: "Machine",
@@ -216,6 +219,7 @@ const getColumnData = (filterQuantity, filterProduction) => {
 		},
 		{
 			Header: "Total",
+			process: "total",
 			columns: [
 				// single
 				{
@@ -263,17 +267,22 @@ const getColumnData = (filterQuantity, filterProduction) => {
 			],
 		},
 	].reduce((dataColumns, headerParent) => {
-		const columns = [...headerParent.columns].filter((column) => {
-			let include = true;
-			// if (column.quantity && !column.quantity.includes(filterQuantity))
-			// 	include = false;
-			// if (column.production && !column.production.includes(filterProduction))
-			// 	include = false;
-			return include;
-		});
-		const header = { ...headerParent, columns };
+		console.log("filterProcess", filterProcess);
+		console.log("headerParent.process", headerParent.process);
+		if (!headerParent.process || filterProcess.includes(headerParent.process)) {
+			const columns = [...headerParent.columns].filter((column) => {
+				let include = true;
 
-		dataColumns.push(header);
+				// if (column.quantity && !column.quantity.includes(filterQuantity))
+				// 	include = false;
+				// if (column.production && !column.production.includes(filterProduction))
+				// 	include = false;
+				return include;
+			});
+			const header = { ...headerParent, columns };
+
+			dataColumns.push(header);
+		}
 		return dataColumns;
 	}, []);
 };
