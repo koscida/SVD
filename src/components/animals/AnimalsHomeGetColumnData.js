@@ -1,3 +1,5 @@
+import RenderImg from "../shared/Icons/RenderImg";
+
 const formatGold = (value) => {
 	let formatted;
 	if (value) {
@@ -36,16 +38,15 @@ const formatDay = (value) => {
 	return formatted;
 };
 
-const formatPercentage = (value) => {
-	let formatted;
-	if (value) {
-		let converted = Math.round(value * 100);
-		formatted = converted === 0 ? "-" : `${converted}%`;
-	} else {
-		formatted = "-";
-	}
-	return formatted;
-};
+const AnimalCell = ({ value }) =>
+	value ? (
+		<>
+			<RenderImg label={value} />
+			{value}
+		</>
+	) : (
+		"-"
+	);
 
 // process column data
 const getColumnData = (filterProduction, filterProcess) => {
@@ -56,6 +57,7 @@ const getColumnData = (filterProduction, filterProcess) => {
 				{
 					Header: "Animal",
 					accessor: "animalName",
+					Cell: AnimalCell,
 				},
 				{
 					Header: "Building",
@@ -267,8 +269,8 @@ const getColumnData = (filterProduction, filterProcess) => {
 			],
 		},
 	].reduce((dataColumns, headerParent) => {
-		console.log("filterProcess", filterProcess);
-		console.log("headerParent.process", headerParent.process);
+		// console.log("filterProcess", filterProcess);
+		// console.log("headerParent.process", headerParent.process);
 		if (!headerParent.process || filterProcess.includes(headerParent.process)) {
 			const columns = [...headerParent.columns].filter((column) => {
 				let include = true;
