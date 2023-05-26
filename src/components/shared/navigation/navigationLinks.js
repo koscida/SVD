@@ -1,8 +1,8 @@
-import Home from "../home/Home";
-import Fish from "../fish/Fish";
-import Crops from "../crops/Crops";
-import HarvestHome from "../crops/harvests/HarvestHome";
-import AnimalsHome from "../animals/AnimalsHome";
+import Home from "../../home/Home";
+import Fish from "../../fish/Fish";
+import Crops from "../../crops/Crops";
+import HarvestHome from "../../crops/harvests/HarvestHome";
+import AnimalsHome from "../../animals/AnimalsHome";
 
 const navigationLinks = [
 	{

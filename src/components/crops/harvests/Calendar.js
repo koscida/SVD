@@ -1,7 +1,7 @@
 import data from "../../shared/data/dataCrops";
 import RenderImg from "../../shared/Icons/RenderImg";
 
-function HarvestCalendar({ plots, selectedSeason }) {
+function Calendar({ plots, selectedSeason }) {
 	// console.log("plots", plots);
 
 	// reformat the harvests within the plots for easier display
@@ -263,4 +263,4 @@ function HarvestCalendar({ plots, selectedSeason }) {
 	);
 }
 
-export default HarvestCalendar;
+export default Calendar;

@@ -89,6 +89,70 @@ function Plots({
 		setSelectedPlot(plots.length - 1);
 	};
 
+	const Plot = ({ isNew, i, name, size, harvests }) => {
+		return (
+			<div className="row">
+				<div className="col-4">
+					<div>
+						Name:
+						<input
+							type="text"
+							name="name"
+							value={name}
+							onChange={({ target: { name, value } }) =>
+								isNew
+									? setNewPlot({ ...newPlot, [name]: value })
+									: handlePrevChange(i, name, value)
+							}
+						/>
+					</div>
+					<div>
+						<RenderImg label={"Marker3x2"} />
+						Size:
+						<input
+							type="number"
+							name="size"
+							value={size}
+							onChange={({ target: { name, value } }) =>
+								isNew
+									? setNewPlot({ ...newPlot, [name]: value })
+									: handlePrevChange(i, name, value)
+							}
+						/>
+					</div>
+					{!isNew ?? (
+						<div>
+							<i
+								className="fa-solid fa-angles-up"
+								onClick={() => moveTop(i)}
+							></i>
+							<i className="fa-solid fa-angle-up" onClick={() => moveUp(i)}></i>
+							<i
+								className="fa-solid fa-angle-down"
+								onClick={() => moveDown(i)}
+							></i>
+							<i
+								className="fa-solid fa-angles-down"
+								onClick={() => moveBottom(i)}
+							></i>
+						</div>
+					)}
+				</div>
+				<div className="col-8">
+					<PlotFilter
+						cropSeasonalList={cropSeasonalList}
+						selectedCrops={
+							selectedPlot !== null &&
+							!(isNaN(selectedPlot) || selectedPlot < 0) &&
+							plots[selectedPlot].selectedCrops
+						}
+						handleCropSelect={isNew ? () => {} : handleCropSelect}
+					/>
+				</div>
+			</div>
+		);
+	};
+
 	// return
 	return (
 		<div>
@@ -137,64 +201,7 @@ function Plots({
 										</button>
 									)}
 								</div>
-								{isSelected && (
-									<div className="row">
-										<div className="col-4">
-											<div>
-												Name:
-												<input
-													type="text"
-													name="name"
-													value={plot.name}
-													onChange={({ target: { name, value } }) =>
-														handlePrevChange(i, name, value)
-													}
-												/>
-											</div>
-											<div>
-												<RenderImg label={"Marker3x2"} />
-												Size:
-												<input
-													type="number"
-													name="size"
-													value={plot.size}
-													onChange={({ target: { name, value } }) =>
-														handlePrevChange(i, name, value)
-													}
-												/>
-											</div>
-											<div>
-												<i
-													className="fa-solid fa-angles-up"
-													onClick={() => moveTop(i)}
-												></i>
-												<i
-													className="fa-solid fa-angle-up"
-													onClick={() => moveUp(i)}
-												></i>
-												<i
-													className="fa-solid fa-angle-down"
-													onClick={() => moveDown(i)}
-												></i>
-												<i
-													className="fa-solid fa-angles-down"
-													onClick={() => moveBottom(i)}
-												></i>
-											</div>
-										</div>
-										<div className="col-8">
-											<PlotFilter
-												cropSeasonalList={cropSeasonalList}
-												selectedCrops={
-													selectedPlot !== null &&
-													!(isNaN(selectedPlot) || selectedPlot < 0) &&
-													plots[selectedPlot].selectedCrops
-												}
-												handleCropSelect={handleCropSelect}
-											/>
-										</div>
-									</div>
-								)}
+								{isSelected && <Plot />}
 							</div>
 						</div>
 					);
@@ -207,40 +214,7 @@ function Plots({
 						New Plot
 					</button>
 				) : (
-					<>
-						<div>
-							<div>
-								Name:
-								<input
-									type="text"
-									name="name"
-									value={newPlot.name}
-									onChange={({ target: { name, value } }) =>
-										setNewPlot({ ...newPlot, [name]: value })
-									}
-								/>
-							</div>
-							<div>
-								Size:
-								<input
-									type="number"
-									name="size"
-									value={newPlot.size}
-									onChange={({ target: { name, value } }) =>
-										setNewPlot({ ...newPlot, [name]: value })
-									}
-								/>
-							</div>
-						</div>
-						<div style={{ display: "flex", justifyContent: "space-between" }}>
-							<button onClick={clearNewPlot} className="btn">
-								Cancel
-							</button>
-							<button onClick={handleNewSave} className="btn">
-								Add
-							</button>
-						</div>
-					</>
+					<Plot />
 				)}
 			</div>
 			<hr />

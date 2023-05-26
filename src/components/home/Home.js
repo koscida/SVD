@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import navigationLinks from "../shared/navigationLinks";
+import navigationLinks from "../shared/navigation/navigationLinks";
 
 function Home() {
 	return (

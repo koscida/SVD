@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import HarvestCalendar from "./HarvestCalendar";
+import HarvestCalendar from "./Calendar";
 import useLocalStorage from "../../shared/useLocalStorage";
 import RenderImg from "../../shared/Icons/RenderImg";
 import CalendarImg from "../../shared/Icons/CalendarImg";
@@ -56,7 +56,7 @@ const reCalcHarvestYields = (harvests) => {
 	return harvests;
 };
 
-function Harvests({
+function Planting({
 	selectedCrop,
 	harvests,
 	plot,
@@ -245,4 +245,4 @@ function Harvests({
 	);
 }
 
-export default Harvests;
+export default Planting;

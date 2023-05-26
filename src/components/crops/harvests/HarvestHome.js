@@ -1,8 +1,9 @@
 import useLocalStorage from "../../shared/useLocalStorage";
 import data from "../../shared/data/dataCrops";
 import Plots from "./Plots";
-import Harvests from "./Harvests";
-import HarvestCalendar from "./HarvestCalendar";
+import Planting from "./Planting";
+import Calendar from "./Calendar";
+import Summary from "./Summary";
 
 // get data from data file
 const { crops } = data;
@@ -244,7 +245,7 @@ function HarvestHome() {
 							.map((cropName, i) => {
 								const crop = crops[cropName];
 								return (
-									<Harvests
+									<Planting
 										key={i}
 										selectedCrop={crop}
 										plot={plot}
@@ -266,14 +267,26 @@ function HarvestHome() {
 					)}
 				</div>
 				<div className="col-3">
-					{selectedPlot >= 0 && selectedPlot !== null ? (
-						<HarvestCalendar
-							plots={[plots[selectedPlot]]}
+					<div>
+						<Calendar
+							plots={
+								selectedPlot >= 0 && selectedPlot !== null
+									? [plots[selectedPlot]]
+									: plots
+							}
 							selectedSeason={selectedSeason}
 						/>
-					) : (
-						<HarvestCalendar plots={plots} selectedSeason={selectedSeason} />
-					)}
+					</div>
+					<div>
+						<Summary
+							plots={
+								selectedPlot >= 0 && selectedPlot !== null
+									? [plots[selectedPlot]]
+									: plots
+							}
+							selectedSeason={selectedSeason}
+						/>
+					</div>
 				</div>
 			</div>
 		</div>

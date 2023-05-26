@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import App from "./components/App";
-import navigationLinks from "./components/shared/navigationLinks";
+import navigationLinks from "./components/shared/navigation/navigationLinks";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
