@@ -5,6 +5,7 @@ function Home() {
 	return (
 		<>
 			<h1>SVD</h1>
+			just links for now
 			<div>
 				<ul>
 					{}
