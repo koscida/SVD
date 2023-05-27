@@ -4,46 +4,52 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
+
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
+
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+
+import MenuIcon from "@mui/icons-material/Menu";
+import SettingsIcon from "@mui/icons-material/Settings";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 
 import navigationLinks from "./navigationLinks";
+import { EditCalendarTwoTone } from "@mui/icons-material";
 
 export default function MenuAppBar() {
-	const [auth, setAuth] = React.useState(true);
-	const [anchorEl, setAnchorEl] = React.useState(null);
-
-	const handleChange = (event) => {
-		setAuth(event.target.checked);
-	};
-
-	const handleMenu = (event) => {
-		setAnchorEl(event.currentTarget);
-	};
-
-	const handleClose = () => {
-		setAnchorEl(null);
-	};
-
-	const [state, setState] = React.useState({
+	const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
+	const [drawerState, setDrawerState] = React.useState({
 		navigation: false,
 		settings: false,
 	});
+	const [settings, setSettings] = React.useState({
+		isModsAllowed: false,
+	});
+
+	const handleSettingsChange = (settingName, value) => (event) => {
+		setDrawerState({ ...drawerState, settings: true });
+		setSettings({ ...settings, [settingName]: value });
+	};
+
+	const handleProfileOpen = (event) => {
+		setProfileAnchorEl(event.currentTarget);
+	};
+
+	const handleProfileClose = () => {
+		setProfileAnchorEl(null);
+	};
 
 	const toggleDrawer = (listName, open) => (event) => {
 		if (
@@ -53,9 +59,9 @@ export default function MenuAppBar() {
 			return;
 		}
 
-		handleClose();
+		handleProfileClose();
 
-		setState({ ...state, [listName]: open });
+		setDrawerState({ ...drawerState, [listName]: open });
 	};
 
 	const list = (listName) => (
@@ -81,30 +87,25 @@ export default function MenuAppBar() {
 				</>
 			) : listName === "settings" ? (
 				<>
-					<List>
-						{["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-							<ListItem key={text} disablePadding>
-								<ListItemButton>
-									<ListItemIcon>
-										{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-									</ListItemIcon>
-									<ListItemText primary={text} />
-								</ListItemButton>
-							</ListItem>
-						))}
-					</List>
 					<Divider />
 					<List>
-						{["All mail", "Trash", "Spam"].map((text, index) => (
-							<ListItem key={text} disablePadding>
-								<ListItemButton>
-									<ListItemIcon>
-										{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-									</ListItemIcon>
-									<ListItemText primary={text} />
-								</ListItemButton>
-							</ListItem>
-						))}
+						<ListItem>
+							<FormGroup>
+								<FormControlLabel
+									control={
+										<Switch
+											checked={settings["isModsAllowed"]}
+											onChange={handleSettingsChange(
+												"isModsAllowed",
+												!settings["isModsAllowed"]
+											)}
+											aria-label="are mods allowed"
+										/>
+									}
+									label="Are mods allowed?"
+								/>
+							</FormGroup>
+						</ListItem>
 					</List>
 				</>
 			) : (
@@ -130,7 +131,7 @@ export default function MenuAppBar() {
 
 					<Drawer
 						anchor={"left"}
-						open={state["navigation"]}
+						open={drawerState["navigation"]}
 						onClose={toggleDrawer("navigation", false)}
 					>
 						{list("navigation")}
@@ -141,6 +142,7 @@ export default function MenuAppBar() {
 					</Typography>
 					{
 						<div>
+							{/* Right Drawer */}
 							<IconButton
 								size="large"
 								aria-label="settings"
@@ -149,23 +151,24 @@ export default function MenuAppBar() {
 								color="inherit"
 								onClick={toggleDrawer("settings", true)}
 							>
-								<AccountCircle />
+								<SettingsIcon />
 							</IconButton>
 
 							<Drawer
 								anchor={"right"}
-								open={state["settings"]}
+								open={drawerState["settings"]}
 								onClose={toggleDrawer("settings", false)}
 							>
 								{list("settings")}
 							</Drawer>
 
+							{/* account drop down */}
 							<IconButton
 								size="large"
 								aria-label="account of current user"
 								aria-controls="menu-appbar"
 								aria-haspopup="true"
-								onClick={handleMenu}
+								onClick={handleProfileOpen}
 								color="inherit"
 							>
 								<AccountCircle />
@@ -173,7 +176,7 @@ export default function MenuAppBar() {
 
 							<Menu
 								id="menu-appbar"
-								anchorEl={anchorEl}
+								anchorEl={profileAnchorEl}
 								anchorOrigin={{
 									vertical: "top",
 									horizontal: "right",
@@ -183,28 +186,16 @@ export default function MenuAppBar() {
 									vertical: "top",
 									horizontal: "right",
 								}}
-								open={Boolean(anchorEl)}
-								onClose={handleClose}
+								open={Boolean(profileAnchorEl)}
+								onClose={handleProfileClose}
 							>
-								<MenuItem onClick={handleClose}>Profile</MenuItem>
-								<MenuItem onClick={handleClose}>My account</MenuItem>
+								<MenuItem onClick={handleProfileClose}>Profile</MenuItem>
+								<MenuItem onClick={handleProfileClose}>My account</MenuItem>
 							</Menu>
 						</div>
 					}
 				</Toolbar>
 			</AppBar>
-			{/* <FormGroup>
-						<FormControlLabel
-							control={
-								<Switch
-									checked={auth}
-									onChange={handleChange}
-									aria-label="login switch"
-								/>
-							}
-							label={auth ? "Logout" : "Login"}
-						/>
-					</FormGroup> */}
 		</Box>
 	);
 }
