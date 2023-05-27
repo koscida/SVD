@@ -64,31 +64,52 @@ export default function MenuAppBar() {
 			onClick={toggleDrawer(listName, false)}
 			onKeyDown={toggleDrawer(listName, false)}
 		>
-			<List>
-				{["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton>
-							<ListItemIcon>
-								{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-							</ListItemIcon>
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
-			<Divider />
-			<List>
-				{["All mail", "Trash", "Spam"].map((text, index) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton>
-							<ListItemIcon>
-								{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-							</ListItemIcon>
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
+			{listName === "navigation" ? (
+				<>
+					<List>
+						{navigationLinks.map(({ to, label }, index) => (
+							<ListItem key={label} disablePadding>
+								<ListItemButton component="a" href={to}>
+									<ListItemIcon>
+										{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+									</ListItemIcon>
+									<ListItemText primary={label} />
+								</ListItemButton>
+							</ListItem>
+						))}
+					</List>
+				</>
+			) : listName === "settings" ? (
+				<>
+					<List>
+						{["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+							<ListItem key={text} disablePadding>
+								<ListItemButton>
+									<ListItemIcon>
+										{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+									</ListItemIcon>
+									<ListItemText primary={text} />
+								</ListItemButton>
+							</ListItem>
+						))}
+					</List>
+					<Divider />
+					<List>
+						{["All mail", "Trash", "Spam"].map((text, index) => (
+							<ListItem key={text} disablePadding>
+								<ListItemButton>
+									<ListItemIcon>
+										{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+									</ListItemIcon>
+									<ListItemText primary={text} />
+								</ListItemButton>
+							</ListItem>
+						))}
+					</List>
+				</>
+			) : (
+				<></>
+			)}
 		</Box>
 	);
 
@@ -107,8 +128,16 @@ export default function MenuAppBar() {
 						<MenuIcon />
 					</IconButton>
 
+					<Drawer
+						anchor={"left"}
+						open={state["navigation"]}
+						onClose={toggleDrawer("navigation", false)}
+					>
+						{list("navigation")}
+					</Drawer>
+
 					<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-						Photos
+						SVD
 					</Typography>
 					{
 						<div>
@@ -122,6 +151,15 @@ export default function MenuAppBar() {
 							>
 								<AccountCircle />
 							</IconButton>
+
+							<Drawer
+								anchor={"right"}
+								open={state["settings"]}
+								onClose={toggleDrawer("settings", false)}
+							>
+								{list("settings")}
+							</Drawer>
+
 							<IconButton
 								size="large"
 								aria-label="account of current user"
@@ -132,6 +170,7 @@ export default function MenuAppBar() {
 							>
 								<AccountCircle />
 							</IconButton>
+
 							<Menu
 								id="menu-appbar"
 								anchorEl={anchorEl}
@@ -154,32 +193,18 @@ export default function MenuAppBar() {
 					}
 				</Toolbar>
 			</AppBar>
-			<FormGroup>
-				<FormControlLabel
-					control={
-						<Switch
-							checked={auth}
-							onChange={handleChange}
-							aria-label="login switch"
+			{/* <FormGroup>
+						<FormControlLabel
+							control={
+								<Switch
+									checked={auth}
+									onChange={handleChange}
+									aria-label="login switch"
+								/>
+							}
+							label={auth ? "Logout" : "Login"}
 						/>
-					}
-					label={auth ? "Logout" : "Login"}
-				/>
-			</FormGroup>
-			<Drawer
-				anchor={"left"}
-				open={state["navigation"]}
-				onClose={toggleDrawer("navigation", false)}
-			>
-				{list("navigation")}
-			</Drawer>
-			<Drawer
-				anchor={"right"}
-				open={state["settings"]}
-				onClose={toggleDrawer("settings", false)}
-			>
-				{list("settings")}
-			</Drawer>
+					</FormGroup> */}
 		</Box>
 	);
 }
