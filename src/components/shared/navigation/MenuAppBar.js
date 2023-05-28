@@ -24,9 +24,20 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+import WifiIcon from "@mui/icons-material/Wifi";
 
 import navigationLinks from "./navigationLinks";
 import { EditCalendarTwoTone } from "@mui/icons-material";
+
+import { skills, professions } from "../data/professions";
+
+const professionNames = Object.keys(professions);
+
+const settingsInit = professionNames.reduce((init, name) => {
+	init[name] = false;
+	return init;
+}, {});
+settingsInit["isModsAllowed"] = false;
 
 export default function MenuAppBar() {
 	const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
@@ -34,9 +45,7 @@ export default function MenuAppBar() {
 		navigation: false,
 		settings: false,
 	});
-	const [settings, setSettings] = React.useState({
-		isModsAllowed: false,
-	});
+	const [settings, setSettings] = React.useState(settingsInit);
 
 	const handleSettingsChange = (settingName, value) => (event) => {
 		setDrawerState({ ...drawerState, settings: true });
@@ -87,7 +96,6 @@ export default function MenuAppBar() {
 				</>
 			) : listName === "settings" ? (
 				<>
-					<Divider />
 					<List>
 						<ListItem>
 							<FormGroup>
@@ -106,6 +114,50 @@ export default function MenuAppBar() {
 								/>
 							</FormGroup>
 						</ListItem>
+						<ListItem>
+							<ListItemIcon>
+								<WifiIcon />
+							</ListItemIcon>
+							<ListItemText id="switch-list-label-wifi" primary="Wi-Fi" />
+							<Switch
+								edge="end"
+								onChange={handleSettingsChange("wifi", !settings["wifi"])}
+								checked={settings["wifi"]}
+								inputProps={{
+									"aria-labelledby": "switch-list-label-wifi",
+								}}
+							/>
+						</ListItem>
+						<Divider />
+						{skills.map((skill) => (
+							<React.Fragment key={skill}>
+								<ListItem>
+									<ListItemText
+										id={`switch-list-label-${skill}`}
+										primary={skill}
+									/>
+								</ListItem>
+								{professionNames
+									.filter((name) => professions[name].skill === skill)
+									.map((name) => (
+										<ListItem key={name}>
+											<ListItemText
+												id={`switch-list-label-${name}`}
+												primary={name}
+											/>
+											<Switch
+												edge="end"
+												onChange={handleSettingsChange(name, !settings[name])}
+												checked={settings[name]}
+												inputProps={{
+													"aria-labelledby": `switch-list-label-${name}`,
+												}}
+											/>
+										</ListItem>
+									))}
+								<Divider />
+							</React.Fragment>
+						))}
 					</List>
 				</>
 			) : (
