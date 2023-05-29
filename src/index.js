@@ -12,13 +12,12 @@ root.render(
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<App />}>
-						{navigationLinks.map((navigationLink) => (
-							<Route
-								key={navigationLink.label}
-								path={navigationLink.to}
-								element={navigationLink.element}
-							/>
-						))}
+						{Object.entries(navigationLinks).map(
+							([sectionLabel, navigationLinks]) =>
+								navigationLinks.map(({ label, to, element }) => (
+									<Route key={label} path={to} element={element} />
+								))
+						)}
 					</Route>
 				</Routes>
 			</BrowserRouter>

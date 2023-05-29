@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Link } from "react-router-dom";
 import navigationLinks from "../shared/navigation/navigationLinks";
 
@@ -8,14 +9,16 @@ function Home() {
 			just links for now
 			<div>
 				<ul>
-					{}
-					{navigationLinks.map((navigationLink) => (
-						<li key={navigationLink.label}>
-							<article>
-								<Link to={navigationLink.to}>{navigationLink.label}</Link>
-							</article>
-						</li>
-					))}
+					{Object.entries(navigationLinks).map(
+						([sectionLabel, navigationLinks]) =>
+							navigationLinks.map(({ label, to }) => (
+								<li key={label}>
+									<article>
+										<Link to={to}>{label}</Link>
+									</article>
+								</li>
+							))
+					)}
 				</ul>
 			</div>
 		</>

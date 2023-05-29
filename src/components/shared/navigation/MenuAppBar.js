@@ -8,9 +8,11 @@ import IconButton from "@mui/material/IconButton";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
+
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import Drawer from "@mui/material/Drawer";
+import Collapse from "@mui/material/Collapse";
 
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
@@ -23,21 +25,25 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import WifiIcon from "@mui/icons-material/Wifi";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
 import navigationLinks from "./navigationLinks";
-import { EditCalendarTwoTone } from "@mui/icons-material";
-
 import { skills, professions } from "../data/professions";
 
 const professionNames = Object.keys(professions);
-
 const settingsInit = professionNames.reduce((init, name) => {
 	init[name] = false;
 	return init;
 }, {});
 settingsInit["isModsAllowed"] = false;
+
+const navLabels = Object.keys(navigationLinks);
+const listOpenInit = navLabels.reduce((init, name) => {
+	init[name] = true;
+	return init;
+}, {});
 
 export default function MenuAppBar() {
 	const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
@@ -45,6 +51,7 @@ export default function MenuAppBar() {
 		navigation: false,
 		settings: false,
 	});
+	const [listOpen, setListOpen] = React.useState(listOpenInit);
 	const [settings, setSettings] = React.useState(settingsInit);
 
 	const handleSettingsChange = (settingName, value) => (event) => {
@@ -73,25 +80,48 @@ export default function MenuAppBar() {
 		setDrawerState({ ...drawerState, [listName]: open });
 	};
 
+	const handleNavClick = (navSection) => (event) => {
+		setDrawerState({ ...drawerState, navigation: true });
+		setListOpen({ ...listOpen, [navSection]: !listOpen[navSection] });
+	};
+
 	const list = (listName) => (
-		<Box
-			role="presentation"
-			onClick={toggleDrawer(listName, false)}
-			onKeyDown={toggleDrawer(listName, false)}
-		>
+		// <Box
+		// 	role="presentation"
+		// 	onClick={toggleDrawer(listName, false)}
+		// 	onKeyDown={toggleDrawer(listName, false)}
+		// >
+		<Box role="presentation" onKeyDown={toggleDrawer(listName, false)}>
 			{listName === "navigation" ? (
 				<>
 					<List>
-						{navigationLinks.map(({ to, label }, index) => (
-							<ListItem key={label} disablePadding>
-								<ListItemButton component="a" href={to}>
-									<ListItemIcon>
-										{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-									</ListItemIcon>
-									<ListItemText primary={label} />
-								</ListItemButton>
-							</ListItem>
-						))}
+						{Object.entries(navigationLinks).map(
+							([sectionLabel, navigationLinks]) => (
+								<React.Fragment key={sectionLabel}>
+									<ListItemButton onClick={handleNavClick(sectionLabel)}>
+										<ListItemText primary={sectionLabel} />
+										{listOpen[sectionLabel] ? <ExpandLess /> : <ExpandMore />}
+									</ListItemButton>
+
+									<Collapse
+										in={listOpen[sectionLabel]}
+										timeout="auto"
+										unmountOnExit
+									>
+										<List component="div" disablePadding>
+											{navigationLinks.map(({ to, label }) => (
+												<ListItemButton component="a" href={to} key={label}>
+													<ListItemIcon>
+														<InboxIcon />
+													</ListItemIcon>
+													<ListItemText primary={label} />
+												</ListItemButton>
+											))}
+										</List>
+									</Collapse>
+								</React.Fragment>
+							)
+						)}
 					</List>
 				</>
 			) : listName === "settings" ? (
