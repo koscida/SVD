@@ -10,14 +10,20 @@ function Home() {
 			<div>
 				<ul>
 					{Object.entries(navigationLinks).map(
-						([sectionLabel, navigationLinks]) =>
-							navigationLinks.map(({ label, to }) => (
-								<li key={label}>
-									<article>
-										<Link to={to}>{label}</Link>
-									</article>
-								</li>
-							))
+						([sectionLabel, navigationLinks]) => (
+							<li key={sectionLabel}>
+								{sectionLabel}
+								<ul>
+									{navigationLinks.map(({ label, to }) => (
+										<li key={label}>
+											<article>
+												<Link to={to}>{label}</Link>
+											</article>
+										</li>
+									))}
+								</ul>
+							</li>
+						)
 					)}
 				</ul>
 			</div>

@@ -4,6 +4,7 @@ const professions = {
 		profession: "Rancher",
 		skill: "Farming",
 		description: "Animal products worth 20% more.",
+		alternative: "Tiller",
 	},
 	Tiller: {
 		level: "Level 5",
@@ -11,6 +12,7 @@ const professions = {
 		skill: "Farming",
 		description:
 			"Crops worth 10% more.(Bonus applies to all Vegetables and Flowers, plus any Fruit that has not been foraged) ",
+		alternative: "Rancher",
 	},
 	Coopmaster: {
 		level: "Level 10",
@@ -18,6 +20,7 @@ const professions = {
 		skill: "Farming",
 		description:
 			"Befriend coop animals quicker. Incubation time (for Incubator and Ostrich Incubator) cut in half. ",
+		alternative: "Shepherd",
 		"Level 5": "Rancher",
 	},
 	Shepherd: {
@@ -25,6 +28,7 @@ const professions = {
 		profession: "Shepherd",
 		skill: "Farming",
 		description: "Befriend barn animals quicker. Sheep produce wool faster.",
+		alternative: "Coopmaster",
 		"Level 5": "Rancher",
 	},
 	Artisan: {
@@ -32,6 +36,7 @@ const professions = {
 		profession: "Artisan",
 		skill: "Farming",
 		description: "Artisan goods (wine, cheese, oil, etc.) worth 40% more. ",
+		alternative: "Agriculturist",
 		"Level 5": "Tiller",
 	},
 	Agriculturist: {
@@ -39,6 +44,7 @@ const professions = {
 		profession: "Agriculturist",
 		skill: "Farming",
 		description: "All crops grow 10% faster. ",
+		alternative: "Artisan",
 		"Level 5": "Tiller",
 	},
 	Miner: {
@@ -46,18 +52,21 @@ const professions = {
 		profession: "Miner",
 		skill: "Mining",
 		description: " +1 ore per vein.",
+		alternative: "Geologist",
 	},
 	Geologist: {
 		level: "Level 5",
 		profession: "Geologist",
 		skill: "Mining",
 		description: "Chance for gems to appear in pairs.",
+		alternative: "Miner",
 	},
 	Blacksmith: {
 		level: "Level 10",
 		profession: "Blacksmith",
 		skill: "Mining",
 		description: "Metal bars worth 50% more.",
+		alternative: "Excavator",
 		"Level 5": "Miner",
 	},
 	Excavator: {
@@ -65,6 +74,7 @@ const professions = {
 		profession: "Excavator",
 		skill: "Mining",
 		description: "Chance to find geodes doubled.",
+		alternative: "Blacksmith",
 		"Level 5": "Miner",
 	},
 	Prospector: {
@@ -72,6 +82,7 @@ const professions = {
 		profession: "Prospector",
 		skill: "Mining",
 		description: "Chance to find coal doubled.",
+		alternative: "Gemologist",
 		"Level 5": "Geologist",
 	},
 	Gemologist: {
@@ -79,6 +90,7 @@ const professions = {
 		profession: "Gemologist",
 		skill: "Mining",
 		description: "Gems worth 30% more.",
+		alternative: "Prospector",
 		"Level 5": "Geologist",
 	},
 	Forester: {
@@ -86,18 +98,21 @@ const professions = {
 		profession: "Forester",
 		skill: "Foraging",
 		description: "Gain 25% more wood when chopping",
+		alternative: "Gatherer",
 	},
 	Gatherer: {
 		level: "Level 5",
 		profession: "Gatherer",
 		skill: "Foraging",
 		description: "Chance for double harvest of foraged items.",
+		alternative: "Forester",
 	},
 	Lumberjack: {
 		level: "Level 10",
 		profession: "Lumberjack",
 		skill: "Foraging",
 		description: "All trees have a chance to drop hardwood.",
+		alternative: "Tapper",
 		"Level 5": "Forester",
 	},
 	Tapper: {
@@ -105,6 +120,7 @@ const professions = {
 		profession: "Tapper",
 		skill: "Foraging",
 		description: "Syrups worth 25% more.",
+		alternative: "Lumberjack",
 		"Level 5": "Forester",
 	},
 	Botanist: {
@@ -112,6 +128,7 @@ const professions = {
 		profession: "Botanist",
 		skill: "Foraging",
 		description: "Foraged items are always highest quality.",
+		alternative: "Tracker",
 		"Level 5": "Gatherer",
 	},
 	Tracker: {
@@ -119,6 +136,7 @@ const professions = {
 		profession: "Tracker",
 		skill: "Foraging",
 		description: "Location of forageable items revealed.",
+		alternative: "Botanist",
 		"Level 5": "Gatherer",
 	},
 	Fisher: {
@@ -126,18 +144,21 @@ const professions = {
 		profession: "Fisher",
 		skill: "Fishing",
 		description: "Fish worth 25% more.",
+		alternative: "Trapper",
 	},
 	Trapper: {
 		level: "Level 5",
 		profession: "Trapper",
 		skill: "Fishing",
 		description: "Resources required to craft crab pots reduced.",
+		alternative: "Fisher",
 	},
 	Angler: {
 		level: "Level 10",
 		profession: "Angler",
 		skill: "Fishing",
 		description: "Fish worth 50% more.",
+		alternative: "Pirate",
 		"Level 5": "Fisher",
 	},
 	Pirate: {
@@ -145,6 +166,7 @@ const professions = {
 		profession: "Pirate",
 		skill: "Fishing",
 		description: "Chance to find treasure doubled.",
+		alternative: "Angler",
 		"Level 5": "Fisher",
 	},
 	Mariner: {
@@ -152,6 +174,7 @@ const professions = {
 		profession: "Mariner",
 		skill: "Fishing",
 		description: "Crab pots no longer produce junk items.",
+		alternative: "Luremaster",
 		"Level 5": "Trapper",
 	},
 	Luremaster: {
@@ -159,6 +182,7 @@ const professions = {
 		profession: "Luremaster",
 		skill: "Fishing",
 		description: "Crab pots no longer require bait.",
+		alternative: "Mariner",
 		"Level 5": "Trapper",
 	},
 	Fighter: {
@@ -167,6 +191,7 @@ const professions = {
 		skill: "Combat",
 		description: " All attacks deal 10% more damage.",
 		hp: 15,
+		alternative: "Scout",
 	},
 	Scout: {
 		level: "Level 5",
@@ -174,6 +199,7 @@ const professions = {
 		skill: "Combat",
 		description: "Critical strike chance increased by 50%.",
 		hp: 0,
+		alternative: "Fighter",
 	},
 	Brute: {
 		level: "Level 10",
@@ -181,6 +207,7 @@ const professions = {
 		skill: "Combat",
 		description: "Deal 15% more damage.",
 		hp: 0,
+		alternative: "Acrobat",
 		"Level 5": "Fighter",
 	},
 	Acrobat: {
@@ -189,6 +216,7 @@ const professions = {
 		skill: "Combat",
 		description: "Cooldown on special moves cut in half.",
 		hp: 0,
+		alternative: "Brute",
 		"Level 5": "Fighter",
 	},
 	Defender: {
@@ -197,6 +225,7 @@ const professions = {
 		skill: "Combat",
 		description: "",
 		hp: 25,
+		alternative: "Desperado",
 	},
 	Desperado: {
 		level: "Level 10",
@@ -204,6 +233,7 @@ const professions = {
 		skill: "Combat",
 		description: "Critical strikes are deadlier.",
 		hp: 0,
+		alternative: "Defender",
 	},
 };
 exports.professions = professions;

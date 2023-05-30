@@ -17,6 +17,38 @@ const navigationLinks = {
 			to: "shipped",
 			label: "Shipped",
 		},
+		{
+			to: "fish",
+			label: "Fish",
+		},
+		{
+			to: "artifacts",
+			label: "Artifacts",
+		},
+		{
+			to: "minerals",
+			label: "Minerals",
+		},
+		{
+			to: "cooking",
+			label: "Cooking",
+		},
+		{
+			to: "achievements",
+			label: "Achievements",
+		},
+		{
+			to: "letters",
+			label: "Letters",
+		},
+		{
+			to: "secretNotes",
+			label: "Secret Notes",
+		},
+		{
+			to: "journalScraps",
+			label: "Journal Scraps",
+		},
 	],
 	Resources: [
 		{

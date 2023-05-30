@@ -29,43 +29,41 @@ import WifiIcon from "@mui/icons-material/Wifi";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
+import RenderImg from "../Icons/RenderImg";
 import navigationLinks from "./navigationLinks";
 import { skills, professions } from "../data/professions";
 
-const professionNames = Object.keys(professions);
-const settingsInit = professionNames.reduce((init, name) => {
+// settings init holds the profession settings init
+const professionInfo = Object.entries(professions);
+const settingsInit = professionInfo.reduce((init, [name]) => {
 	init[name] = false;
 	return init;
 }, {});
 settingsInit["isModsAllowed"] = false;
 
-const navLabels = Object.keys(navigationLinks);
-const listOpenInit = navLabels.reduce((init, name) => {
+// state init holds the initial menu states
+let stateInit = {};
+
+const navSectionLabels = Object.keys(navigationLinks);
+stateInit = navSectionLabels.reduce((init, name) => {
 	init[name] = true;
 	return init;
-}, {});
+}, stateInit);
+
+stateInit["navigation"] = false;
+stateInit["settings"] = false;
 
 export default function MenuAppBar() {
-	const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
-	const [drawerState, setDrawerState] = React.useState({
-		navigation: false,
-		settings: false,
-	});
-	const [listOpen, setListOpen] = React.useState(listOpenInit);
 	const [settings, setSettings] = React.useState(settingsInit);
+	const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
 
-	const handleSettingsChange = (settingName, value) => (event) => {
-		setDrawerState({ ...drawerState, settings: true });
-		setSettings({ ...settings, [settingName]: value });
-	};
+	const [openState, setOpenState] = React.useState(stateInit);
 
-	const handleProfileOpen = (event) => {
-		setProfileAnchorEl(event.currentTarget);
-	};
-
-	const handleProfileClose = () => {
-		setProfileAnchorEl(null);
-	};
+	// const [drawerState, setDrawerState] = React.useState({
+	// 	navigation: false,
+	// 	settings: false,
+	// });
+	// const [listOpen, setListOpen] = React.useState(listOpenInit);
 
 	const toggleDrawer = (listName, open) => (event) => {
 		if (
@@ -77,12 +75,28 @@ export default function MenuAppBar() {
 
 		handleProfileClose();
 
-		setDrawerState({ ...drawerState, [listName]: open });
+		setOpenState({ ...openState, [listName]: open });
 	};
 
-	const handleNavClick = (navSection) => (event) => {
-		setDrawerState({ ...drawerState, navigation: true });
-		setListOpen({ ...listOpen, [navSection]: !listOpen[navSection] });
+	const toggleNavGroup = (navSection) => (event) => {
+		setOpenState({
+			...openState,
+			[navSection]: !openState[navSection],
+			navigation: true,
+		});
+	};
+
+	const handleProfessionChange = (settingName, value) => (event) => {
+		setOpenState({ ...openState, settings: true });
+		setSettings({ ...settings, [settingName]: value });
+	};
+
+	const handleProfileOpen = (event) => {
+		setProfileAnchorEl(event.currentTarget);
+	};
+
+	const handleProfileClose = (event) => {
+		setProfileAnchorEl(null);
 	};
 
 	const list = (listName) => (
@@ -98,22 +112,19 @@ export default function MenuAppBar() {
 						{Object.entries(navigationLinks).map(
 							([sectionLabel, navigationLinks]) => (
 								<React.Fragment key={sectionLabel}>
-									<ListItemButton onClick={handleNavClick(sectionLabel)}>
+									<ListItemButton onClick={toggleNavGroup(sectionLabel)}>
 										<ListItemText primary={sectionLabel} />
-										{listOpen[sectionLabel] ? <ExpandLess /> : <ExpandMore />}
+										{openState[sectionLabel] ? <ExpandLess /> : <ExpandMore />}
 									</ListItemButton>
 
 									<Collapse
-										in={listOpen[sectionLabel]}
+										in={openState[sectionLabel]}
 										timeout="auto"
 										unmountOnExit
 									>
 										<List component="div" disablePadding>
 											{navigationLinks.map(({ to, label }) => (
 												<ListItemButton component="a" href={to} key={label}>
-													<ListItemIcon>
-														<InboxIcon />
-													</ListItemIcon>
 													<ListItemText primary={label} />
 												</ListItemButton>
 											))}
@@ -133,7 +144,7 @@ export default function MenuAppBar() {
 									control={
 										<Switch
 											checked={settings["isModsAllowed"]}
-											onChange={handleSettingsChange(
+											onChange={handleProfessionChange(
 												"isModsAllowed",
 												!settings["isModsAllowed"]
 											)}
@@ -144,47 +155,58 @@ export default function MenuAppBar() {
 								/>
 							</FormGroup>
 						</ListItem>
-						<ListItem>
-							<ListItemIcon>
-								<WifiIcon />
-							</ListItemIcon>
-							<ListItemText id="switch-list-label-wifi" primary="Wi-Fi" />
-							<Switch
-								edge="end"
-								onChange={handleSettingsChange("wifi", !settings["wifi"])}
-								checked={settings["wifi"]}
-								inputProps={{
-									"aria-labelledby": "switch-list-label-wifi",
-								}}
-							/>
-						</ListItem>
+
 						<Divider />
 						{skills.map((skill) => (
 							<React.Fragment key={skill}>
 								<ListItem>
+									<ListItemIcon>
+										<RenderImg label={skill} />
+									</ListItemIcon>
 									<ListItemText
 										id={`switch-list-label-${skill}`}
 										primary={skill}
 									/>
 								</ListItem>
-								{professionNames
-									.filter((name) => professions[name].skill === skill)
-									.map((name) => (
-										<ListItem key={name}>
-											<ListItemText
-												id={`switch-list-label-${name}`}
-												primary={name}
-											/>
-											<Switch
-												edge="end"
-												onChange={handleSettingsChange(name, !settings[name])}
-												checked={settings[name]}
-												inputProps={{
-													"aria-labelledby": `switch-list-label-${name}`,
-												}}
-											/>
-										</ListItem>
-									))}
+								{professionInfo
+									.filter(([name]) => professions[name].skill === skill)
+									.map(([name, data]) => {
+										// disable if: !mods &&
+										//		this is not selected and another current level is selected
+										// 		this is a 10 that requires a preq that is not selected
+										// if mode enabled, never disable
+										const disabled =
+											!settings["isModsAllowed"] &&
+											((!settings[name] && settings[data["alternative"]]) ||
+												(data.level === "Level 10" &&
+													!settings[data["Level 5"]]))
+												? true
+												: false;
+										return (
+											<ListItem key={name}>
+												<ListItemIcon>
+													<RenderImg label={name} />
+												</ListItemIcon>
+												<ListItemText
+													id={`switch-list-label-${name}`}
+													primary={name}
+													disabled={disabled}
+												/>
+												<Switch
+													edge="end"
+													onChange={handleProfessionChange(
+														name,
+														!settings[name]
+													)}
+													checked={settings[name]}
+													inputProps={{
+														"aria-labelledby": `switch-list-label-${name}`,
+													}}
+													disabled={disabled}
+												/>
+											</ListItem>
+										);
+									})}
 								<Divider />
 							</React.Fragment>
 						))}
@@ -213,7 +235,7 @@ export default function MenuAppBar() {
 
 					<Drawer
 						anchor={"left"}
-						open={drawerState["navigation"]}
+						open={openState["navigation"]}
 						onClose={toggleDrawer("navigation", false)}
 					>
 						{list("navigation")}
@@ -238,7 +260,7 @@ export default function MenuAppBar() {
 
 							<Drawer
 								anchor={"right"}
-								open={drawerState["settings"]}
+								open={openState["settings"]}
 								onClose={toggleDrawer("settings", false)}
 							>
 								{list("settings")}
