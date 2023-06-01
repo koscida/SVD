@@ -5,9 +5,12 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 
+import Select from "@mui/material/Select";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
@@ -40,6 +43,7 @@ const settingsInit = professionInfo.reduce((init, [name]) => {
 	return init;
 }, {});
 settingsInit["isModsAllowed"] = false;
+settingsInit["version"] = 1.4;
 
 // state init holds the initial menu states
 let stateInit = {};
@@ -86,8 +90,9 @@ export default function MenuAppBar() {
 		});
 	};
 
-	const handleProfessionChange = (settingName, value) => (event) => {
+	const handleSettingsChange = (settingName, value) => (event) => {
 		setOpenState({ ...openState, settings: true });
+		if (value === null) value = event.target.value;
 		setSettings({ ...settings, [settingName]: value });
 	};
 
@@ -99,6 +104,13 @@ export default function MenuAppBar() {
 		setProfileAnchorEl(null);
 	};
 
+	const navigationElements = (navigationLinks) =>
+		navigationLinks.map(({ to, label }) => (
+			<ListItemButton component="a" href={to} key={label}>
+				<ListItemText primary={label} />
+			</ListItemButton>
+		));
+
 	const list = (listName) => (
 		// <Box
 		// 	role="presentation"
@@ -106,11 +118,11 @@ export default function MenuAppBar() {
 		// 	onKeyDown={toggleDrawer(listName, false)}
 		// >
 		<Box role="presentation" onKeyDown={toggleDrawer(listName, false)}>
-			{listName === "navigation" ? (
-				<>
-					<List>
-						{Object.entries(navigationLinks).map(
-							([sectionLabel, navigationLinks]) => (
+			<List>
+				{listName === "navigation" ? (
+					Object.entries(navigationLinks).map(
+						([sectionLabel, navigationLinks]) =>
+							navigationLinks.length > 1 ? (
 								<React.Fragment key={sectionLabel}>
 									<ListItemButton onClick={toggleNavGroup(sectionLabel)}>
 										<ListItemText primary={sectionLabel} />
@@ -123,28 +135,56 @@ export default function MenuAppBar() {
 										unmountOnExit
 									>
 										<List component="div" disablePadding>
-											{navigationLinks.map(({ to, label }) => (
-												<ListItemButton component="a" href={to} key={label}>
-													<ListItemText primary={label} />
-												</ListItemButton>
-											))}
+											{navigationElements(navigationLinks)}
 										</List>
 									</Collapse>
 								</React.Fragment>
+							) : (
+								navigationElements(navigationLinks)
 							)
-						)}
-					</List>
-				</>
-			) : listName === "settings" ? (
-				<>
-					<List>
+					)
+				) : listName === "settings" ? (
+					<>
+						<ListItem>
+							<FormControl
+								variant="standard"
+								fullwidth="true"
+								sx={{ minWidth: 120 }}
+							>
+								<InputLabel id="demo-simple-select-filled-label">
+									Version
+								</InputLabel>
+
+								<Select
+									labelId="select-version-label"
+									id="select-version"
+									value={settings["version"]}
+									label="Version"
+									autowidth="true"
+									onChange={handleSettingsChange("version", null)}
+								>
+									{[1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6].map((ver) => (
+										<MenuItem
+											value={ver}
+											key={ver}
+											default={ver === settings["version"]}
+										>
+											{ver}
+										</MenuItem>
+									))}
+								</Select>
+							</FormControl>
+						</ListItem>
+
+						<Divider />
+
 						<ListItem>
 							<FormGroup>
 								<FormControlLabel
 									control={
 										<Switch
 											checked={settings["isModsAllowed"]}
-											onChange={handleProfessionChange(
+											onChange={handleSettingsChange(
 												"isModsAllowed",
 												!settings["isModsAllowed"]
 											)}
@@ -194,10 +234,7 @@ export default function MenuAppBar() {
 												/>
 												<Switch
 													edge="end"
-													onChange={handleProfessionChange(
-														name,
-														!settings[name]
-													)}
+													onChange={handleSettingsChange(name, !settings[name])}
 													checked={settings[name]}
 													inputProps={{
 														"aria-labelledby": `switch-list-label-${name}`,
@@ -210,11 +247,11 @@ export default function MenuAppBar() {
 								<Divider />
 							</React.Fragment>
 						))}
-					</List>
-				</>
-			) : (
-				<></>
-			)}
+					</>
+				) : (
+					<></>
+				)}
+			</List>
 		</Box>
 	);
 

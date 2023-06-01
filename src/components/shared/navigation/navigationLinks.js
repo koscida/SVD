@@ -4,6 +4,10 @@ import Crops from "../../crops/Crops";
 import HarvestHome from "../../crops/harvests/HarvestHome";
 import AnimalsHome from "../../animals/AnimalsHome";
 
+import CookingHome from "../../cooking/cookingHome/CookingHome";
+import RecipiesHome from "../../cooking/recipiesHome/RecipiesHome";
+import CookingPlannerHome from "../../cooking/cookingPlanner/CookingPlannerHome";
+
 const navigationLinks = {
 	Home: [
 		{
@@ -32,6 +36,7 @@ const navigationLinks = {
 		{
 			to: "cooking",
 			label: "Cooking",
+			element: <CookingHome />,
 		},
 		{
 			to: "achievements",
@@ -48,6 +53,10 @@ const navigationLinks = {
 		{
 			to: "journalScraps",
 			label: "Journal Scraps",
+		},
+		{
+			to: "perfection",
+			label: "Perfection",
 		},
 	],
 	Resources: [
@@ -78,6 +87,7 @@ const navigationLinks = {
 		{
 			to: "recepies",
 			label: "Receipes",
+			element: <RecipiesHome />,
 		},
 	],
 	Planners: [
@@ -89,6 +99,11 @@ const navigationLinks = {
 			to: "harvests",
 			label: "Harvests",
 			element: <HarvestHome />,
+		},
+		{
+			to: "cookingPlanner",
+			label: "Cooking Planner",
+			element: <CookingPlannerHome />,
 		},
 	],
 };
