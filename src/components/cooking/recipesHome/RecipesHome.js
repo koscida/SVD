@@ -5,12 +5,14 @@ import getTableData from "../../animals/AnimalsHomeGetTableData";
 import RadioOption from "../../shared/filters/RadioOption";
 import CheckOption from "../../shared/filters/CheckOption";
 
+import recipies from "../../shared/data/recipes";
+
 // ////
 // RecipiesHome()
 
-function RecipiesHome() {
+function RecipesHome() {
 	// return
 	return <></>;
 }
 
-export default RecipiesHome;
+export default RecipesHome;

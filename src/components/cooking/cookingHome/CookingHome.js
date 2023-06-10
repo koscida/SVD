@@ -5,6 +5,8 @@ import getTableData from "../../animals/AnimalsHomeGetTableData";
 import RadioOption from "../../shared/filters/RadioOption";
 import CheckOption from "../../shared/filters/CheckOption";
 
+import recipies from "../../shared/data/recipes";
+
 // ////
 // CookingHome()
 

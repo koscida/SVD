@@ -5,8 +5,8 @@ import HarvestHome from "../../crops/harvests/HarvestHome";
 import AnimalsHome from "../../animals/AnimalsHome";
 
 import CookingHome from "../../cooking/cookingHome/CookingHome";
-import RecipiesHome from "../../cooking/recipiesHome/RecipiesHome";
-import CookingPlannerHome from "../../cooking/cookingPlanner/CookingPlannerHome";
+import RecipesHome from "../../cooking/recipesHome/RecipesHome";
+import CookingPlannerHome from "../../cooking/cookingPlannerHome/CookingPlannerHome";
 
 const navigationLinks = {
 	Home: [
@@ -87,10 +87,14 @@ const navigationLinks = {
 		{
 			to: "recepies",
 			label: "Receipes",
-			element: <RecipiesHome />,
+			element: <RecipesHome />,
 		},
 	],
 	Planners: [
+		{
+			to: "seasonal",
+			label: "Seasonal",
+		},
 		{
 			to: "planner",
 			label: "Planner",
