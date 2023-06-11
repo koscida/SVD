@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 // import Accordion from "@mui/material/Accordion";
 // import AccordionSummary from "@mui/material/AccordionSummary";
 // import AccordionDetails from "@mui/material/AccordionDetails";
@@ -11,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 
+import SVDBasicTable from "../../shared/SVDBasicTable";
 import Table from "../../shared/react-table/Table";
 import useLocalStorage from "../../shared/useLocalStorage";
 import RadioOption from "../../shared/filters/RadioOption";
@@ -26,127 +28,36 @@ import { recipes } from "../../shared/data/recipes";
 // table data
 const tableColumnsInit = [
 	{
-		Header: "Recipe",
-		columns: [
-			{
-				Header: "",
-				accessor: "icon",
-			},
-			{
-				Header: "Name",
-				accessor: "name",
-			},
-			{
-				Header: "Description",
-				accessor: "description",
-			},
-			{
-				Header: "Sell Price",
-				accessor: "sellPrice",
-			},
-		],
+		Header: "Name",
+		accessor: "name",
+	},
+	{
+		Header: "Description",
+		accessor: "description",
+	},
+	{
+		Header: "Sell Price",
+		accessor: "sellPrice",
 	},
 	{
 		Header: "Ingredients",
-		columns: [
-			{
-				Header: "",
-				accessor: "ingredientIcon0",
-			},
-			{
-				Header: "Ingredient",
-				accessor: "ingredient0",
-			},
-			{
-				Header: "Type",
-				accessor: "type0",
-			},
-			{
-				Header: "Amount",
-				accessor: "amount0",
-			},
-			{
-				Header: "",
-				accessor: "ingredientIcon1",
-			},
-
-			{
-				Header: "Ingredient",
-				accessor: "ingredient1",
-			},
-			{
-				Header: "Type",
-				accessor: "type1",
-			},
-			{
-				Header: "Amount",
-				accessor: "amount1",
-			},
-			{
-				Header: "",
-				accessor: "ingredientIcon2",
-			},
-			{
-				Header: "Ingredient",
-				accessor: "ingredient2",
-			},
-			{
-				Header: "Type",
-				accessor: "type2",
-			},
-			{
-				Header: "Amount",
-				accessor: "amount2",
-			},
-			{
-				Header: "",
-				accessor: "ingredientIcon3",
-			},
-			{
-				Header: "Ingredient",
-				accessor: "ingredient3",
-			},
-			{
-				Header: "Type",
-				accessor: "type3",
-			},
-			{
-				Header: "Amount",
-				accessor: "amount3",
-			},
-		],
+		accessor: "ingredients",
 	},
-
-	{
-		Header: "Effects",
-		columns: [
-			{
-				Header: "Energy",
-				accessor: "energy",
-			},
-			{
-				Header: "Health",
-				accessor: "health",
-			},
-			{
-				Header: "Buffs",
-				accessor: "buffs",
-			},
-		],
-	},
-
 	{
 		Header: "Sources",
-		columns: [
-			{
-				Header: "Source",
-				accessor: "source0",
-			},
-			{
-				Header: "Source",
-				accessor: "source1",
-			},
-		],
+		accessor: "sources",
+	},
+	{
+		Header: "Energy",
+		accessor: "energy",
+	},
+	{
+		Header: "Health",
+		accessor: "health",
+	},
+	{
+		Header: "Buffs",
+		accessor: "buffs",
 	},
 ];
 
@@ -155,35 +66,88 @@ const getTableDataInit = (recipes) =>
 		const newRow = {};
 		//
 		// recipe data
-		newRow.name = recipe.name;
-		newRow.icon = <RenderImg label={recipe.name} />;
-		newRow.description = recipe.description;
+		newRow.name = (
+			<>
+				<RenderImg label={recipe.name} /> {recipe.name}
+			</>
+		);
+		newRow.description = (
+			<Box sx={{ maxWidth: "250px" }}>{recipe.description}</Box>
+		);
 		newRow.sellPrice = recipe.sellPrice;
 		//
 		// ingredients
-		recipe.ingredients.forEach((ingredient, i) => {
-			newRow[`ingredient${i}`] = ingredient.ingredient;
-			newRow[`ingredientIcon${i}`] = (
-				<RenderImg label={ingredient.ingredient} />
-			);
-			newRow[`type${i}`] = ingredient.type;
-			newRow[`amount${i}`] = ingredient.amount;
-		});
+		newRow.ingredients = (
+			<>
+				{recipe.ingredients.map((ingredient, i) => (
+					<Box key={ingredient.ingredient}>
+						<RenderImg label={ingredient.ingredient} />
+						{ingredient.ingredient} ({ingredient.amount})
+					</Box>
+				))}
+			</>
+		);
 		//
 		// effects
 		newRow.energy = recipe.effects.energy;
 		newRow.health = recipe.effects.health;
-		newRow.buffs = recipe.effects.buffs
-			? recipe.effects.buffs.reduce(
-					(buffs, buff) => (buffs += `${buff.buff} ${buff.value} \n`),
-					""
-			  )
-			: "";
+		newRow.buffs = recipe.effects.buffs ? (
+			recipe.effects.buffs.map((buff) => (
+				<Box key={buff.buff}>
+					<RenderImg label={buff.buff} /> &nbsp;
+					{buff.buff} ({buff.value > 0 ? "+" : ""}
+					{buff.value})
+				</Box>
+			))
+		) : (
+			<></>
+		);
 		//
 		// sources
-		Object.keys(recipe.sources).forEach((source, i) => {
-			newRow[`source${i}`] = source;
-		});
+		newRow.sources = (
+			<>
+				{Object.entries(recipe.sources).map(([sourceType, sourceInfo], i) => (
+					<Box key={i}>
+						{sourceType === "Starter" ? (
+							<>Starter</>
+						) : sourceType === "The Queen of Sauce" ? (
+							<>
+								<RenderImg label={sourceType} /> &nbsp;
+								{sourceInfo.date}, {sourceInfo.year}
+							</>
+						) : sourceType === "Shop" ? (
+							<>
+								<RenderImg label={sourceInfo.shopName} /> &nbsp;
+								{sourceInfo.shopName}{" "}
+								{typeof sourceInfo.price === "number" ? (
+									<>
+										({sourceInfo.price} <RenderImg label={"Gold"} /> gold)
+									</>
+								) : (
+									<>
+										({sourceInfo.price.amount}{" "}
+										<RenderImg label={sourceInfo.price.artifact} />{" "}
+										{sourceInfo.price.artifact} )
+									</>
+								)}
+							</>
+						) : sourceType === "Friendship" ? (
+							<>
+								<RenderImg label={`${sourceInfo.friend}_Icon`} /> &nbsp;
+								{sourceInfo.friend} {sourceInfo.hearts} Hearts
+							</>
+						) : sourceType === "Skill" ? (
+							<>
+								<RenderImg label={`${sourceInfo.skill}`} /> &nbsp;
+								{sourceInfo.skill} Level {sourceInfo.level}
+							</>
+						) : (
+							""
+						)}
+					</Box>
+				))}
+			</>
+		);
 		//
 		return newRow;
 	});
@@ -263,11 +227,11 @@ function CookingPlannerHome() {
 	return (
 		<>
 			<Box>
-				<Accordion>
+				<Accordion expanded={true}>
 					<AccordionSummary
 						expandIcon={<ExpandMoreIcon />}
-						aria-controls="panel1a-content"
-						id="panel1a-header"
+						aria-controls="panel1"
+						id="panel1"
 					>
 						<Typography>All Recipes</Typography>
 					</AccordionSummary>
@@ -280,7 +244,66 @@ function CookingPlannerHome() {
 					</AccordionDetails>
 				</Accordion>
 			</Box>
-			<Box></Box>
+			<Box>
+				{Object.entries(ingredientsList).map(([category, categoryData]) => (
+					<div key={category}>
+						<h3>{category}</h3>
+						<SVDBasicTable
+							columns={[
+								{ field: "name", headerName: "Name" },
+								{ field: "amount", headerName: "Needed" },
+								{
+									field: "recipes",
+									headerName: "Recipes",
+									sx: { maxWidth: "500px" },
+								},
+							]}
+							rows={Object.entries(categoryData).reduce(
+								(rows, [ingredientName, recipes]) => {
+									rows = [
+										...rows,
+										{
+											name: (
+												<>
+													<RenderImg label={ingredientName} /> &nbsp;
+													{ingredientName}
+												</>
+											),
+											amount: Object.values(recipes).reduce(
+												(totalAmount, recipeAmount) =>
+													(totalAmount += recipeAmount),
+												0
+											),
+											recipes: (
+												<Box
+													sx={{
+														display: "flex",
+														flexDirection: "row",
+														flexWrap: "wrap",
+														justifyContent: "flex-start",
+														gap: "4px 10px",
+													}}
+												>
+													{Object.entries(recipes).map(
+														([recipeName, amount]) => (
+															<Box key={recipeName}>
+																<RenderImg label={recipeName} /> &nbsp;
+																{recipeName} ({amount})
+															</Box>
+														)
+													)}
+												</Box>
+											),
+										},
+									];
+									return rows;
+								},
+								[]
+							)}
+						/>
+					</div>
+				))}
+			</Box>
 		</>
 	);
 }

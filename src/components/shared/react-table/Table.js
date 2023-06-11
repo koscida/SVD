@@ -179,63 +179,80 @@ function Table({ columns, data, filterLocation }) {
 
 	return (
 		<Styles>
+			{/* <div
+			// style={{
+			// 	height: "calc(100vh - 100px )",
+			// }}
+			// style={{
+			// 	width: "calc(100vw - (2 * 0.5rem) - " + yFilterPadding + "px )",
+			// 	height:
+			// 		"calc(100vh - (2 * 0.5rem) - 26px - " + xFilterPadding + "px )",
+			// }}
+			// className="reactTable"
+			> */}
 			<div
+				className="tableWrapper"
 				style={{
-					width: "calc(100vw - (2 * 0.5rem) - " + yFilterPadding + "px )",
-					height:
-						"calc(100vh - (2 * 0.5rem) - 26px - " + xFilterPadding + "px )",
+					height: "calc(100vh - 100px - 48px - 32px)",
+					overflow: "scroll",
 				}}
-				className="reactTable"
 			>
-				<div className="tableWrapper">
-					<table
-						{...getTableProps()}
-						style={{ border: "0", width: "100%", height: "100%" }}
-					>
-						<thead>
-							{headerGroups.map((headerGroup) => (
-								<tr {...headerGroup.getHeaderGroupProps()}>
-									{headerGroup.headers.map((column) => (
-										// Add the sorting props to control sorting. For this example
-										// we can add them into the header props
-										<th
-											{...column.getHeaderProps(column.getSortByToggleProps())}
-										>
-											{column.render("Header")}
-											{/* Add a sort direction indicator */}
-											<span>
-												{column.isSorted
-													? column.isSortedDesc
-														? " 🔽"
-														: " 🔼"
-													: ""}
-											</span>
-											{/* Render the columns filter UI */}
-											{/* <div>
+				<table
+					{...getTableProps()}
+					style={{
+						border: "0",
+						width: "100%",
+					}}
+				>
+					<thead>
+						{headerGroups.map((headerGroup) => (
+							<tr {...headerGroup.getHeaderGroupProps()}>
+								{headerGroup.headers.map((column) => (
+									// Add the sorting props to control sorting. For this example
+									// we can add them into the header props
+									<th
+										{...column.getHeaderProps(column.getSortByToggleProps())}
+										style={{
+											position: "sticky",
+											top: 0,
+											background: "#eaf0f9",
+										}}
+									>
+										{column.render("Header")}
+										{/* Add a sort direction indicator */}
+										<span>
+											{column.isSorted
+												? column.isSortedDesc
+													? " 🔽"
+													: " 🔼"
+												: ""}
+										</span>
+										{/* Render the columns filter UI */}
+										{/* <div>
 												{column.canFilter ? column.render("Filter") : null}
 											</div> */}
-										</th>
-									))}
+									</th>
+								))}
+							</tr>
+						))}
+					</thead>
+					<tbody {...getTableBodyProps()}>
+						{firstPageRows.map((row, i) => {
+							prepareRow(row);
+							return (
+								<tr {...row.getRowProps()}>
+									{row.cells.map((cell) => {
+										return (
+											<td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+										);
+									})}
 								</tr>
-							))}
-						</thead>
-						<tbody {...getTableBodyProps()}>
-							{firstPageRows.map((row, i) => {
-								prepareRow(row);
-								return (
-									<tr {...row.getRowProps()}>
-										{row.cells.map((cell) => {
-											return (
-												<td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-											);
-										})}
-									</tr>
-								);
-							})}
-						</tbody>
-					</table>
-				</div>
+							);
+						})}
+					</tbody>
+				</table>
 			</div>
+			{/* </div> */}
 		</Styles>
 	);
 }
