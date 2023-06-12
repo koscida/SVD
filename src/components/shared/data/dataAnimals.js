@@ -1,112 +1,5 @@
-// ////
-// Animals
-//
-/* 
-animals = {
-	animalName: {
-		name: animalName,
-		building: buildingName,
-		buyPrice: buyPrice,
-		sellPrice: sellPrice,
-		time: {
-			"1heart": 7,
-			"2hearts": 7,
-			"3hearts": 7,
-			"4hearts": 7,
-			"5hearts": 7,
-		},
-		produces: {
-			"1heart": 1,
-			"2hearts": 1,
-			"3hearts": 1,
-			"4hearts": 1,
-			"5hearts": 1,
-		},
-		products: {
-			productSize: {
-				name: productName,
-				quality: [quality]
-			},
-		},
-	}
-}
-
-animalProducts: {
-	productName: {
-		name: productName,
-		productType: itemType,
-		productSize: itemSize,
-		sellPrice: {
-			regular: regularPrice,
-			silver: silverPrice,
-			gold: goldPrice,
-			iridium: iridiumPrice
-		},
-		machineProcessing: {
-			machineName: {
-				name: MachineName,
-				processingTime: processingTime,
-				productName: productName,
-				productQuality: {
-					regular: {
-						inputQuality: inputQuality,
-						outputQuality: outputQuality,
-						sellPrice: sellPrice,
-					},
-					silver: {
-						inputQuality: inputQuality,
-						outputQuality: outputQuality,
-						sellPrice: sellPrice,
-					},
-					gold: {
-						inputQuality: inputQuality,
-						outputQuality: outputQuality,
-						sellPrice: sellPrice,
-					},
-					iridium: {
-						inputQuality: inputQuality,
-						outputQuality: outputQuality,
-						sellPrice: sellPrice,
-					},
-				},
-				productSellPrice: {
-					regular: regularPrice,
-					silver: silverPrice,
-					gold: goldPrice,
-					iridium: iridiumPrice
-				},
-			}
-		}
-	}
-}
-
-buildings: {
-	buildingName: {
-		name: buildingName,
-		buildCosts: {
-			level1: {
-				wood: woodAmount,
-				stone: stoneAmount,
-				gold: goldAmount
-			},
-		}
-	}
-}
-
-machines: {
-	machineName: {
-		name: machineName,
-		buildCost: {
-			wood: woodAmount,
-			stone: stoneAmount,
-		}
-	}
-}
-
-*/
-
-// ////
-// animals
+// //
+// animals db
 const animals = {
 	Dinosaur: {
 		name: "Dinosaur",
@@ -395,6 +288,8 @@ const animals = {
 };
 exports.animals = animals;
 
+// //
+// animal products db
 const animalProducts = {
 	"Dinosaur Egg": {
 		name: "Dinosaur Egg",
@@ -402,20 +297,6 @@ const animalProducts = {
 		productType: "Dinosaur Egg",
 		productSize: "Regular",
 		sellPrice: { regular: 350, silver: 437, gold: 525, iridium: 700 },
-		machineProcessing: {
-			"Mayonnaise Machine": {
-				machineName: "Mayonnaise Machine",
-				processingTime: 3,
-				productName: "Dinosaur Mayonnaise",
-				productQuality: {
-					regular: "regular",
-					silver: "regular",
-					gold: "regular",
-					iridium: "regular",
-				},
-				productSellPrice: { regular: 800 },
-			},
-		},
 	},
 	"Duck Egg": {
 		name: "Duck Egg",
@@ -423,20 +304,6 @@ const animalProducts = {
 		productType: "Duck Egg",
 		productSize: "Regular",
 		sellPrice: { regular: 95, silver: 118, gold: 142, iridium: 190 },
-		machineProcessing: {
-			"Mayonnaise Machine": {
-				machineName: "Mayonnaise Machine",
-				processingTime: 3,
-				productName: "Duck Mayonnaise",
-				productQuality: {
-					regular: "regular",
-					silver: "regular",
-					gold: "regular",
-					iridium: "regular",
-				},
-				productSellPrice: { regular: 375 },
-			},
-		},
 	},
 	"Duck Feather": {
 		name: "Duck Feather",
@@ -451,20 +318,6 @@ const animalProducts = {
 		productType: "Egg",
 		productSize: "Regular",
 		sellPrice: { regular: 50, silver: 62, gold: 75, iridium: 100 },
-		machineProcessing: {
-			"Mayonnaise Machine": {
-				machineName: "Mayonnaise Machine",
-				processingTime: 3,
-				productName: "Mayonnaise",
-				productQuality: {
-					regular: "regular",
-					silver: "regular",
-					gold: "regular",
-					iridium: "regular",
-				},
-				productSellPrice: { regular: 190, gold: 285 },
-			},
-		},
 	},
 	"Large Brown Egg": {
 		name: "Large Brown Egg",
@@ -472,41 +325,6 @@ const animalProducts = {
 		productType: "Egg",
 		productSize: "Large",
 		sellPrice: { regular: 95, silver: 118, gold: 142, iridium: 190 },
-		machineProcessing: {
-			"Mayonnaise Machine": {
-				machineName: "Mayonnaise Machine",
-				processingTime: 3,
-				productName: "Mayonnaise",
-				productQuality: {
-					regular: "gold",
-					silver: "gold",
-					gold: "gold",
-					iridium: "gold",
-				},
-				productSellPrice: { regular: 190, gold: 285 },
-			},
-		},
-	},
-	"Large White Egg": {
-		name: "Large White Egg",
-		animals: ["White Chicken", "Blue Chicken"],
-		productType: "Egg",
-		productSize: "Large",
-		sellPrice: { regular: 95, silver: 118, gold: 142, iridium: 190 },
-		machineProcessing: {
-			"Mayonnaise Machine": {
-				machineName: "Mayonnaise Machine",
-				processingTime: 3,
-				productName: "Mayonnaise",
-				productQuality: {
-					regular: "gold",
-					silver: "gold",
-					gold: "gold",
-					iridium: "gold",
-				},
-				productSellPrice: { regular: 190, gold: 285 },
-			},
-		},
 	},
 	"White Egg": {
 		name: "White Egg",
@@ -514,20 +332,13 @@ const animalProducts = {
 		productType: "Egg",
 		productSize: "Regular",
 		sellPrice: { regular: 50, silver: 62, gold: 75, iridium: 100 },
-		machineProcessing: {
-			"Mayonnaise Machine": {
-				machineName: "Mayonnaise Machine",
-				processingTime: 3,
-				productName: "Mayonnaise",
-				productQuality: {
-					regular: "regular",
-					silver: "regular",
-					gold: "regular",
-					iridium: "regular",
-				},
-				productSellPrice: { regular: 190, gold: 285 },
-			},
-		},
+	},
+	"Large White Egg": {
+		name: "Large White Egg",
+		animals: ["White Chicken", "Blue Chicken"],
+		productType: "Egg",
+		productSize: "Large",
+		sellPrice: { regular: 95, silver: 118, gold: 142, iridium: 190 },
 	},
 	"Goat Milk": {
 		name: "Goat Milk",
@@ -535,83 +346,13 @@ const animalProducts = {
 		productType: "Goat Milk",
 		productSize: "Regular",
 		sellPrice: { regular: 225, silver: 281, gold: 337, iridium: 450 },
-		machineProcessing: {
-			"Cheese Press": {
-				machineName: "Cheese Press",
-				processingTime: 3,
-				productName: "Goat Cheese",
-				productQuality: {
-					regular: "regular",
-					silver: "regular",
-					gold: "regular",
-					iridium: "regular",
-				},
-				productSellPrice: { regular: 400 },
-			},
-		},
-		aging: {
-			Cask: {
-				machineName: "Cask",
-				time: { silver: 3, gold: 4, iridium: 7 },
-				sell: 800,
-			},
-		},
 	},
 	"Large Goat Milk": {
 		name: "Large Goat Milk",
 		animals: ["Goat"],
-		productType: "Milk",
+		productType: "Goat Milk",
 		productSize: "Large",
 		sellPrice: { regular: 345, silver: 431, gold: 517, iridium: 690 },
-		machineProcessing: {
-			"Cheese Press": {
-				machineName: "Cheese Press",
-				processingTime: 3,
-				productName: "Goat Cheese",
-				productQuality: {
-					regular: "gold",
-					silver: "gold",
-					gold: "gold",
-					iridium: "gold",
-				},
-				productSellPrice: { gold: 600 },
-			},
-		},
-		aging: {
-			Cask: {
-				machineName: "Cask",
-				time: { silver: 3, gold: 4, iridium: 7 },
-				sell: 800,
-			},
-		},
-	},
-	"Large Milk": {
-		name: "Large Milk",
-		animals: ["Brown Cow", "White Cow"],
-		productType: "Milk",
-		productSize: "Large",
-		sellPrice: { regular: 190, silver: 237, gold: 285, iridium: 380 },
-		machineProcessing: {
-			"Cheese Press": {
-				machineName: "Cheese Press",
-				processingTime: 3.3,
-				productName: "Cheese",
-				productQuality: {
-					regular: "gold",
-					silver: "gold",
-					gold: "gold",
-					iridium: "gold",
-				},
-				productSellPrice: { gold: 345 },
-			},
-		},
-		aging: {
-			Cask: {
-				machineName: "Cask",
-				time: { silver: 3, gold: 4, iridium: 7 },
-				sell: 460,
-			},
-		},
 	},
 	Milk: {
 		name: "Milk",
@@ -619,27 +360,13 @@ const animalProducts = {
 		productType: "Milk",
 		productSize: "Regular",
 		sellPrice: { regular: 125, silver: 156, gold: 187, iridium: 250 },
-		machineProcessing: {
-			"Cheese Press": {
-				machineName: "Cheese Press",
-				processingTime: 3.3,
-				productName: "Cheese",
-				productQuality: {
-					regular: "regular",
-					silver: "regular",
-					gold: "regular",
-					iridium: "regular",
-				},
-				productSellPrice: { regular: 230 },
-			},
-		},
-		aging: {
-			Cask: {
-				machineName: "Cask",
-				time: { silver: 3, gold: 4, iridium: 7 },
-				sell: 460,
-			},
-		},
+	},
+	"Large Milk": {
+		name: "Large Milk",
+		animals: ["Brown Cow", "White Cow"],
+		productType: "Milk",
+		productSize: "Large",
+		sellPrice: { regular: 190, silver: 237, gold: 285, iridium: 380 },
 	},
 	"Rabbit's Foot": {
 		name: "Rabbit's Foot",
@@ -654,20 +381,6 @@ const animalProducts = {
 		productType: "Truffle",
 		productSize: "Regular",
 		sellPrice: { regular: 625, silver: 781, gold: 937, iridium: 1250 },
-		machineProcessing: {
-			"Oil Maker": {
-				machineName: "Oil Maker",
-				processingTime: 6,
-				productName: "Truffle Oil",
-				productQuality: {
-					regular: "regular",
-					silver: "regular",
-					gold: "regular",
-					iridium: "regular",
-				},
-				productSellPrice: { regular: 1065 },
-			},
-		},
 	},
 	"Void Egg": {
 		name: "Void Egg",
@@ -675,20 +388,6 @@ const animalProducts = {
 		productType: "Void Egg",
 		productSize: "Regular",
 		sellPrice: { regular: 65, silver: 81, gold: 97, iridium: 130 },
-		machineProcessing: {
-			"Mayonnaise Machine": {
-				machineName: "Mayonnaise Machine",
-				processingTime: 3,
-				productName: "Void Mayonnaise",
-				productQuality: {
-					regular: "regular",
-					silver: "regular",
-					gold: "regular",
-					iridium: "regular",
-				},
-				productSellPrice: { regular: 275 },
-			},
-		},
 	},
 	Wool: {
 		name: "Wool",
@@ -696,67 +395,95 @@ const animalProducts = {
 		productType: "Wool",
 		productSize: "Regular",
 		sellPrice: { regular: 340, silver: 425, gold: 510, iridium: 680 },
-		machineProcessing: {
-			Loom: {
-				machineName: "Loom",
-				processingTime: 4,
-				productName: "Cloth",
-				productQuality: {
-					regular: "regular",
-					silver: "regular",
-					gold: "regular",
-					iridium: "regular",
-				},
-				productSellPrice: { regular: 470 },
-			},
-		},
 	},
 };
 exports.animalProducts = animalProducts;
 
-const buildings = {
-	Barn: {
-		name: "Barn",
-		footprint: { width: 7, height: 4 },
-		size: "Regular",
-		cost: { gold: 6000, wood: 350, stone: 150 },
-		Big: {
-			name: "Big Barn",
-			size: "Big",
-			cost: { gold: 12000, wood: 450, stone: 200 },
-		},
-		Deluxe: {
-			name: "Deluxe Barn",
-			size: "Deluxe",
-			cost: { gold: 25000, wood: 550, stone: 300 },
-		},
+// //
+// types
+exports.animalTimeTypes = [
+	"1heart",
+	"2hearts",
+	"3hearts",
+	"4hearts",
+	"5hearts",
+];
+exports.animalProduceTypes = [
+	"1heart",
+	"2hearts",
+	"3hearts",
+	"4hearts",
+	"5hearts",
+];
+exports.animalProductTypes = ["regular", "silver", "gold", "iridium"];
+//
+exports.productTypes = [
+	"Dinosaur Egg",
+	"Duck Egg",
+	"Duck Feather",
+	"Egg",
+	"Goat Milk",
+	"Milk",
+	"Rabbit's Foot",
+	"Truffle",
+	"Void Egg",
+	"Wool",
+];
+exports.productTypesData = {
+	"Dinosaur Egg": {
+		name: "Dinosaur Egg",
+		animals: ["Dinosaur"],
+		products: ["Dinosaur Egg"],
 	},
-	Coop: {
-		name: "Coop",
-		footprint: { width: 6, height: 3 },
-		size: "Regular",
-		cost: { gold: 4000, wood: 300, stone: 100 },
-		Big: {
-			name: "Big Coop",
-			size: "Big",
-			cost: { gold: 10000, wood: 400, stone: 150 },
-		},
-		Deluxe: {
-			name: "Deluxe Coop",
-			size: "Deluxe",
-			cost: { gold: 20000, wood: 500, stone: 200 },
-		},
+	"Duck Egg": {
+		name: "Duck Egg",
+		animals: ["Duck"],
+		products: ["Duck Egg"],
 	},
-	Shed: {
-		name: "Shed",
-		footprint: { width: 7, height: 3 },
-		size: "Regular",
-		cost: { gold: 1500, wood: 300 },
-		Big: {
-			name: "Big Shed",
-			size: "Big",
-			cost: { gold: 20000, wood: 550, stone: 300 },
-		},
+	"Duck Feather": {
+		name: "Duck Feather",
+		animals: ["Duck"],
+		products: ["Duck Feather"],
+	},
+	Egg: {
+		name: "Egg",
+		animals: ["Brown Chicken", "White Chicken", "Blue Chicken"],
+		products: ["Brown Egg", "Large Brown Egg", "White Egg", "Large White Egg"],
+		rate: 1,
+	},
+	"Goat Milk": {
+		name: "Goat Milk",
+		animals: ["Goat"],
+		products: ["Goat Milk", "Large Goat Milk"],
+		rate: 0.5,
+	},
+	Milk: {
+		name: "Milk",
+		animals: ["Brown Cow", "White Cow"],
+		products: ["Milk", "Large Milk"],
+		rate: 1,
+	},
+	"Rabbit's Foot": {
+		name: "Rabbit's Foot",
+		animals: ["Rabbit"],
+		products: ["Rabbit's Foot"],
+	},
+	Truffle: {
+		name: "Truffle",
+		animals: ["Pig"],
+		products: ["Truffle"],
+	},
+	"Void Egg": {
+		name: "Void Egg",
+		animals: ["Void Chicken"],
+		products: ["Void Egg"],
+		rate: 1,
+	},
+	Wool: {
+		name: "Wool",
+		animals: ["Rabbit"],
+		products: ["Wool"],
 	},
 };
-exports.buildings = buildings;
+exports.productSizeTypes = ["Regular", "Large"];
+exports.productSellPriceTypes = ["regular", "silver", "gold", "iridium"];

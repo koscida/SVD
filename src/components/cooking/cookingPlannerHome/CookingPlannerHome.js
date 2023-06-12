@@ -19,49 +19,69 @@ import RadioOption from "../../shared/filters/RadioOption";
 import CheckOption from "../../shared/filters/CheckOption";
 import RenderImg from "../../shared/Icons/RenderImg";
 
-import { recipes } from "../../shared/data/recipes";
-
-// ////
+import { recipes, ingredientTypes } from "../../shared/data/recipes";
+import {
+	animalProducts,
+	productTypesData,
+} from "../../shared/data/dataAnimals";
+import { crops } from "../../shared/data/dataCrops";
+// ///////////
 // CookingPlannerHome()
+
+// //
+// useState init
 
 //
 // table data
-const tableColumnsInit = [
-	{
-		Header: "Name",
-		accessor: "name",
-	},
-	{
-		Header: "Description",
-		accessor: "description",
-	},
-	{
-		Header: "Sell Price",
-		accessor: "sellPrice",
-	},
-	{
-		Header: "Ingredients",
-		accessor: "ingredients",
-	},
-	{
-		Header: "Sources",
-		accessor: "sources",
-	},
-	{
-		Header: "Energy",
-		accessor: "energy",
-	},
-	{
-		Header: "Health",
-		accessor: "health",
-	},
-	{
-		Header: "Buffs",
-		accessor: "buffs",
-	},
-];
+const getRecipeColumnsInit = (ingredientTypes) => {
+	const ingredientTypesHeaders = ingredientTypes.reduce((headers, type) => {
+		const h = [
+			...headers,
+			{
+				Header: type,
+				accessor: type,
+			},
+		];
+		return h;
+	}, []);
+	return [
+		{
+			Header: "Name",
+			accessor: "name",
+		},
+		{
+			Header: "Description",
+			accessor: "description",
+		},
+		{
+			Header: "Sell Price",
+			accessor: "sellPrice",
+		},
+		{
+			Header: "Ingredients",
+			accessor: "ingredients",
+		},
+		...ingredientTypesHeaders,
+		{
+			Header: "Sources",
+			accessor: "sources",
+		},
+		{
+			Header: "Energy",
+			accessor: "energy",
+		},
+		{
+			Header: "Health",
+			accessor: "health",
+		},
+		{
+			Header: "Buffs",
+			accessor: "buffs",
+		},
+	];
+};
 
-const getTableDataInit = (recipes) =>
+const getRecipeDataInit = (recipes) =>
 	Object.values(recipes).map((recipe) => {
 		const newRow = {};
 		//
@@ -87,6 +107,21 @@ const getTableDataInit = (recipes) =>
 				))}
 			</>
 		);
+		ingredientTypes.forEach((type) => {
+			newRow[type] = (
+				<>
+					{recipe.ingredients
+						.filter((ingredient) => ingredient.type === type)
+						.map((ingredient, i) => (
+							<Box key={ingredient.ingredient}>
+								<RenderImg label={ingredient.ingredient} />
+								{ingredient.ingredient} ({ingredient.amount})
+							</Box>
+						))}
+				</>
+			);
+		});
+
 		//
 		// effects
 		newRow.energy = recipe.effects.energy;
@@ -154,10 +189,11 @@ const getTableDataInit = (recipes) =>
 
 //
 // ingredients lists
-const getIngredientsListInit = (recipes) =>
+const getIngredientsDataInit = (recipes) =>
 	Object.values(recipes).reduce(
 		(ingredientsList, recipe) =>
 			recipe.ingredients.reduce((ingredientsList, ingredient) => {
+				// check if ingredient groups empty
 				if (!(ingredient.type in ingredientsList)) {
 					ingredientsList[ingredient.type] = {};
 				}
@@ -165,14 +201,170 @@ const getIngredientsListInit = (recipes) =>
 					ingredientsList[ingredient.type][ingredient.ingredient] = {};
 				}
 
+				// add ingredient
 				ingredientsList[ingredient.type][ingredient.ingredient][recipe.name] =
 					ingredient.amount;
+
+				// check if cooking
+				if (ingredient.type === "Cooking") {
+					// find ingredients for the cooking recipe
+					recipes[ingredient.ingredient].ingredients.forEach(
+						(cookingIngredient) => {
+							// check if ingredient group empty
+							if (!(cookingIngredient.type in ingredientsList)) {
+								ingredientsList[cookingIngredient.type] = {};
+							}
+							if (
+								!(
+									cookingIngredient.ingredient in
+									ingredientsList[cookingIngredient.type]
+								)
+							) {
+								ingredientsList[cookingIngredient.type][
+									cookingIngredient.ingredient
+								] = {};
+							}
+
+							// add ingredient
+							ingredientsList[cookingIngredient.type][
+								cookingIngredient.ingredient
+							][recipe.name] = cookingIngredient.amount;
+						}
+					);
+				}
 
 				return ingredientsList;
 			}, ingredientsList),
 
 		{}
 	);
+
+// ingredients columns
+const getIngredientsColumns = (ingredientType) => {
+	let extraFields = [];
+	if (ingredientType === "Crop")
+		extraFields = [
+			...extraFields,
+			{ field: "source", headerName: "Source" },
+			{ field: "season", headerName: "Season" },
+
+			{ field: "days", headerName: "Days" },
+			{ field: "seasonalHarvest", headerName: "Seasonal Harvest" },
+			{ field: "extra", headerName: "Extra" },
+		];
+	else if (ingredientType === "Animal Product")
+		extraFields = [
+			...extraFields,
+			{ field: "source", headerName: "Source" },
+			{ field: "rate", headerName: "Rate" },
+		];
+	else if (ingredientType === "Artisan Goods")
+		extraFields = [...extraFields, { field: "source", headerName: "Source" }];
+	else if (ingredientType === "Fish")
+		extraFields = [
+			...extraFields,
+			{ field: "location", headerName: "Location" },
+			{ field: "conditions", headerName: "Conditions" },
+		];
+	return [
+		{ field: "name", headerName: "Name" },
+		{ field: "amount", headerName: "Needed" },
+		{
+			field: "recipes",
+			headerName: "Recipes",
+			sx: { maxWidth: "500px" },
+		},
+		...extraFields,
+	];
+};
+
+// ingredients rows
+const getIngredientsRows = (ingredientType, ingredientTypeData) =>
+	Object.entries(ingredientTypeData).reduce(
+		(rows, [ingredientName, recipes]) => {
+			rows = [
+				...rows,
+				{
+					name: (
+						<>
+							<RenderImg label={ingredientName} /> &nbsp;
+							{ingredientName}
+						</>
+					),
+					amount: Object.values(recipes).reduce(
+						(totalAmount, recipeAmount) => (totalAmount += recipeAmount),
+						0
+					),
+					recipes: (
+						<Box
+							sx={{
+								display: "flex",
+								flexDirection: "row",
+								flexWrap: "wrap",
+								justifyContent: "flex-start",
+								gap: "4px 10px",
+							}}
+						>
+							{Object.entries(recipes).map(([recipeName, amount]) => (
+								<Box key={recipeName}>
+									<RenderImg label={recipeName} /> &nbsp;
+									{recipeName} ({amount})
+								</Box>
+							))}
+						</Box>
+					),
+					source:
+						ingredientType === "Crop" ? (
+							ingredientName in crops ? (
+								<Box>
+									<RenderImg label={crops[ingredientName].seeds} />{" "}
+									{crops[ingredientName].seeds}
+								</Box>
+							) : (
+								<></>
+							)
+						) : ingredientType === "Animal Product" ? (
+							<>
+								{productTypesData[ingredientName].animals.map((animal) => (
+									<Box key={animal}>
+										<RenderImg label={animal} /> {animal}
+									</Box>
+								))}
+							</>
+						) : (
+							<></>
+						),
+					rate:
+						ingredientType === "Animal Product" ? (
+							<>{productTypesData[ingredientName].rate ?? <></>}</>
+						) : (
+							<></>
+						),
+					season:
+						ingredientType === "Crop" ? (
+							ingredientName in crops ? (
+								<>
+									{crops[ingredientName].season.map((season) => (
+										<Box key={season}>
+											<RenderImg label={season} /> {season}
+										</Box>
+									))}
+								</>
+							) : (
+								<></>
+							)
+						) : (
+							<></>
+						),
+				},
+			];
+			return rows;
+		},
+		[]
+	);
+
+// //
+// styles
 
 //
 // accordion stylings
@@ -211,98 +403,44 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 	borderTop: "1px solid rgba(0, 0, 0, .125)",
 }));
 
-//
-// component
+// //
+// CookingPlannerHome()
 function CookingPlannerHome() {
 	// table data
-	const [tableColumns, setTableColumns] = useState(tableColumnsInit);
-	const [tableData, setTableData] = useState(getTableDataInit(recipes));
+	const [recipeColumns, setRecipeColumns] = useState(
+		getRecipeColumnsInit(ingredientTypes)
+	);
+	const [recipeData, setRecipeData] = useState(getRecipeDataInit(recipes));
 	//
 	// ingredients lists
-	const [ingredientsList, setIngredientsList] = useState(
-		getIngredientsListInit(recipes)
+	const [ingredientsData, setIngredientsData] = useState(
+		getIngredientsDataInit(recipes)
 	);
 
 	// return
 	return (
 		<>
 			<Box>
-				<Accordion expanded={true}>
-					<AccordionSummary
-						expandIcon={<ExpandMoreIcon />}
-						aria-controls="panel1"
-						id="panel1"
-					>
-						<Typography>All Recipes</Typography>
-					</AccordionSummary>
-					<AccordionDetails>
-						<Table
-							columns={tableColumns}
-							data={tableData}
-							filterLocation={{ top: 40 }}
-						/>
-					</AccordionDetails>
-				</Accordion>
+				<h1>Recipes</h1>
+				<Table
+					columns={recipeColumns}
+					data={recipeData}
+					offset={{ yOffset: "100px - 32px" }}
+				/>
 			</Box>
 			<Box>
-				{Object.entries(ingredientsList).map(([category, categoryData]) => (
-					<div key={category}>
-						<h3>{category}</h3>
-						<SVDBasicTable
-							columns={[
-								{ field: "name", headerName: "Name" },
-								{ field: "amount", headerName: "Needed" },
-								{
-									field: "recipes",
-									headerName: "Recipes",
-									sx: { maxWidth: "500px" },
-								},
-							]}
-							rows={Object.entries(categoryData).reduce(
-								(rows, [ingredientName, recipes]) => {
-									rows = [
-										...rows,
-										{
-											name: (
-												<>
-													<RenderImg label={ingredientName} /> &nbsp;
-													{ingredientName}
-												</>
-											),
-											amount: Object.values(recipes).reduce(
-												(totalAmount, recipeAmount) =>
-													(totalAmount += recipeAmount),
-												0
-											),
-											recipes: (
-												<Box
-													sx={{
-														display: "flex",
-														flexDirection: "row",
-														flexWrap: "wrap",
-														justifyContent: "flex-start",
-														gap: "4px 10px",
-													}}
-												>
-													{Object.entries(recipes).map(
-														([recipeName, amount]) => (
-															<Box key={recipeName}>
-																<RenderImg label={recipeName} /> &nbsp;
-																{recipeName} ({amount})
-															</Box>
-														)
-													)}
-												</Box>
-											),
-										},
-									];
-									return rows;
-								},
-								[]
-							)}
-						/>
-					</div>
-				))}
+				<h1>Ingredients</h1>
+				{Object.entries(ingredientsData).map(
+					([ingredientType, ingredientTypeData]) => (
+						<div key={ingredientType}>
+							<h3>{ingredientType}</h3>
+							<SVDBasicTable
+								columns={getIngredientsColumns(ingredientType)}
+								rows={getIngredientsRows(ingredientType, ingredientTypeData)}
+							/>
+						</div>
+					)
+				)}
 			</Box>
 		</>
 	);

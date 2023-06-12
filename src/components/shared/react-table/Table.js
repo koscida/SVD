@@ -8,27 +8,18 @@ import {
 	useAsyncDebounce,
 } from "react-table";
 import { matchSorter } from "match-sorter";
+import TableContainer from "@mui/material/TableContainer";
+import Paper from "@mui/material/Paper";
 
 const Styles = styled.div`
 	--border-color: black;
 	@media (prefers-color-scheme: dark) {
 		--border-color: #eee;
 	}
-	.reactTable {
-		overflow: hidden;
-		position: relative;
-		display: flex;
-		flexdirection: row;
-		border: 1px solid var(--border-color);
-	}
-	.tableWrapper {
-		width: 100%;
-		height: 100%;
-		overflow: scroll;
-	}
 	table {
 		border-spacing: 0;
-		border: 1px solid var(--border-color);
+		border: 0;
+		width: 100%;
 
 		tr {
 			:last-child {
@@ -108,7 +99,7 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 fuzzyTextFilterFn.autoRemove = (val) => !val;
 
 // Our table component
-function Table({ columns, data, filterLocation }) {
+function Table({ columns, data, offset: { xOffset = 0, yOffset = 0 } }) {
 	const filterTypes = React.useMemo(
 		() => ({
 			// Add a new fuzzyTextFilterFn filter type.
@@ -168,91 +159,63 @@ function Table({ columns, data, filterLocation }) {
 		sliceSize = firstPageRows.length;
 	}
 
-	const xFilterPadding =
-		0 +
-		(filterLocation.top ? filterLocation.top : 0) +
-		(filterLocation.bottom ? filterLocation.bottom : 0);
-	const yFilterPadding =
-		0 +
-		(filterLocation.left ? filterLocation.left : 0) +
-		(filterLocation.right ? filterLocation.right : 0);
-
 	return (
 		<Styles>
-			{/* <div
-			// style={{
-			// 	height: "calc(100vh - 100px )",
-			// }}
-			// style={{
-			// 	width: "calc(100vw - (2 * 0.5rem) - " + yFilterPadding + "px )",
-			// 	height:
-			// 		"calc(100vh - (2 * 0.5rem) - 26px - " + xFilterPadding + "px )",
-			// }}
-			// className="reactTable"
-			> */}
-			<div
-				className="tableWrapper"
-				style={{
-					height: "calc(100vh - 100px - 48px - 32px)",
-					overflow: "scroll",
-				}}
-			>
-				<table
-					{...getTableProps()}
+			<TableContainer component={Paper}>
+				<div
+					className="tableWrapper"
 					style={{
-						border: "0",
-						width: "100%",
+						height: `calc(100vh - ${yOffset})`,
+						width: `calc(100vw - ${xOffset})`,
+						overflow: "scroll",
 					}}
 				>
-					<thead>
-						{headerGroups.map((headerGroup) => (
-							<tr {...headerGroup.getHeaderGroupProps()}>
-								{headerGroup.headers.map((column) => (
-									// Add the sorting props to control sorting. For this example
-									// we can add them into the header props
-									<th
-										{...column.getHeaderProps(column.getSortByToggleProps())}
-										style={{
-											position: "sticky",
-											top: 0,
-											background: "#eaf0f9",
-										}}
-									>
-										{column.render("Header")}
-										{/* Add a sort direction indicator */}
-										<span>
-											{column.isSorted
-												? column.isSortedDesc
-													? " 🔽"
-													: " 🔼"
-												: ""}
-										</span>
-										{/* Render the columns filter UI */}
-										{/* <div>
-												{column.canFilter ? column.render("Filter") : null}
-											</div> */}
-									</th>
-								))}
-							</tr>
-						))}
-					</thead>
-					<tbody {...getTableBodyProps()}>
-						{firstPageRows.map((row, i) => {
-							prepareRow(row);
-							return (
-								<tr {...row.getRowProps()}>
-									{row.cells.map((cell) => {
-										return (
-											<td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-										);
-									})}
+					<table {...getTableProps()}>
+						<thead>
+							{headerGroups.map((headerGroup) => (
+								<tr {...headerGroup.getHeaderGroupProps()}>
+									{headerGroup.headers.map((column) => (
+										// Add the sorting props to control sorting. For this example
+										// we can add them into the header props
+										<th
+											{...column.getHeaderProps(column.getSortByToggleProps())}
+											style={{
+												position: "sticky",
+												top: 0,
+												background: "#eaf0f9",
+											}}
+										>
+											{column.render("Header")}
+											{/* Add a sort direction indicator */}
+											<span>
+												{column.isSorted
+													? column.isSortedDesc
+														? " 🔽"
+														: " 🔼"
+													: ""}
+											</span>
+										</th>
+									))}
 								</tr>
-							);
-						})}
-					</tbody>
-				</table>
-			</div>
-			{/* </div> */}
+							))}
+						</thead>
+						<tbody {...getTableBodyProps()}>
+							{firstPageRows.map((row, i) => {
+								prepareRow(row);
+								return (
+									<tr {...row.getRowProps()}>
+										{row.cells.map((cell) => {
+											return (
+												<td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+											);
+										})}
+									</tr>
+								);
+							})}
+						</tbody>
+					</table>
+				</div>
+			</TableContainer>
 		</Styles>
 	);
 }

@@ -1560,5 +1560,36 @@ const recipes = {
 		},
 	},
 };
-
 exports.recipes = recipes;
+
+// pull meta types
+exports.ingredientTypes = [
+	"Animal Product",
+	"Artisan Goods",
+	"Cooking",
+	"Crop",
+	"Fish",
+	"Forage",
+];
+
+exports.buffTypes = [
+	"Attack",
+	"Defense",
+	"Farming",
+	"Fishing",
+	"Foraging",
+	"Luck",
+	"Magnetism",
+	"Max Energy",
+	"Mining",
+	"Speed",
+	"Squid Ink Ravioli Buff",
+];
+
+exports.sourceTypes = [
+	"Friendship",
+	"Shop",
+	"Skill",
+	"Starter",
+	"The Queen of Sauce",
+];
