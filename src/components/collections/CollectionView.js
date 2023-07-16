@@ -1,0 +1,65 @@
+import React from "react";
+import styled from "styled-components";
+
+import RenderImg from "../shared/Icons/RenderImg";
+
+// ///////
+// CollectionView
+//
+// Will display a Collection, expects:
+//
+// collection is the collection that will be displayed, it expects the following values:
+// collection = [
+//     {
+//         id: <int>,
+//         name: <string>,
+//         collected: <int>
+//     }
+// ]
+//
+// selected is the id of the item in the collection that is currently selected
+// selected = <int>
+//
+// setSelected is the callback function that sets the selected value
+// setSelected = <func>
+
+const StyledCollection = styled.div`
+	display: grid;
+	grid-template-columns: repeat(10, 10%);
+
+	> div {
+		padding: 3px;
+		box-sizing: border-box;
+		border: 1px solid transparent;
+	}
+	.selected {
+		border: 1px solid #ddd;
+	}
+
+	img {
+		width: 100%;
+	}
+`;
+
+function CollectionView({ collection, selected, setSelected }) {
+	return (
+		<StyledCollection>
+			{collection.map((item) => (
+				<div
+					key={item.id}
+					onClick={setSelected(item.id)}
+					className={item.id === selected ? "selected" : ""}
+				>
+					{
+						<RenderImg
+							label={item.name}
+							disabled={item.collected === 0}
+						/>
+					}
+				</div>
+			))}
+		</StyledCollection>
+	);
+}
+
+export default CollectionView;

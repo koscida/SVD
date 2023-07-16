@@ -11,7 +11,6 @@
 // 	}
 // }
 
-
 body {
 	font-size: 12px;
 	background: var(--background-color);
@@ -20,10 +19,10 @@ body {
 a {
 	color: var(--link-color);
 }
-img {
-	max-width: 1rem;
-	max-height: 1rem;
-}
+// img {
+// 	max-width: 1rem;
+// 	max-height: 1rem;
+// }
 img.icon {
 	margin: 3px;
 }
@@ -36,7 +35,8 @@ img.smIcon {
 .configuration {
 	.filterOptions {
 		.filterOption {
-			input, label {
+			input,
+			label {
 				cursor: pointer;
 			}
 		}
@@ -47,7 +47,7 @@ img.smIcon {
 			max-width: 1rem;
 			max-height: 1rem;
 		}
-		
+
 		.Sun {
 			background: rgb(247, 247, 228);
 		}
@@ -64,31 +64,26 @@ img.smIcon {
 			background: rgb(251, 235, 237);
 		}
 	}
-	
 }
 .seasonalDisplay {
 	.season {
-		
 		.seasonTimeline {
-			
 		}
 	}
 }
 .cell {
-	border: 1px solid #E7EAFA;
-	
+	border: 1px solid #e7eafa;
+
 	&.cellHeader {
 		font-weight: bold;
 		display: flex;
 		align-items: end;
 	}
-	
-	
 
 	&.fishCell {
 		opacity: 0.7;
 		text-align: center;
-		
+
 		&.first-child {
 			opacity: 1;
 			text-align: left;
@@ -98,23 +93,23 @@ img.smIcon {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			
+
 			.form-check {
 				min-height: auto;
 				margin: 0;
 				padding: 0;
-				
+
 				input {
 					margin: 0;
 					padding: 0;
 				}
 			}
 		}
-		
+
 		&.alt {
 			opacity: 1;
-			background: #F0F2FF;
-			border: 1px solid #D4D8EF;
+			background: #f0f2ff;
+			border: 1px solid #d4d8ef;
 			border-left-width: 0;
 		}
 		&.alt.first-child {
@@ -132,7 +127,7 @@ img.smIcon {
 			opacity: 0.5;
 			background: #e2e5ff;
 		}
-		
+
 		.weather {
 			img {
 				width: 100%;
@@ -140,7 +135,7 @@ img.smIcon {
 				max-width: 1rem;
 				max-height: 1rem;
 			}
-			
+
 			.Sun {
 				background: rgb(247, 247, 228);
 
@@ -156,7 +151,7 @@ img.smIcon {
 					background: rgb(175, 238, 238); // paleturquoise
 				}
 			}
-			
+
 			.Snow {
 				background: rgb(231, 247, 249);
 
@@ -172,7 +167,7 @@ img.smIcon {
 					background: rgb(192, 192, 192); // silver
 				}
 			}
-			
+
 			.Wind {
 				background: rgb(251, 235, 237);
 
@@ -181,15 +176,15 @@ img.smIcon {
 				}
 			}
 		}
-
 	}
-	
+
 	&.cropCell {
-		.seed, .crop {
+		.seed,
+		.crop {
 			max-width: 20px;
 			max-height: 20px;
 		}
-		
+
 		.date {
 			background: #e9e9f4;
 			font-weight: bold;
@@ -197,7 +192,6 @@ img.smIcon {
 		}
 	}
 }
-
 
 $border-width: 1px;
 $border-color: red;
@@ -211,22 +205,19 @@ $cell-padding: $vertical-padding $horizontal-padding;
 	border-bottom: 0;
 	width: 100%;
 	border-spacing: 0px;
-	
-		th,
-		td {
-			position: relative;
-			box-sizing: border-box;
-			padding: 0;
-	
-			padding: $cell-padding;
-			white-space: normal;
-			word-break: break-word;
-			border: $border;
-			border-top: 0;
-			border-left: 0;
-			transition: box-shadow 0.3s;
-	
-		}
+
+	th,
+	td {
+		position: relative;
+		box-sizing: border-box;
+		padding: 0;
+
+		padding: $cell-padding;
+		white-space: normal;
+		word-break: break-word;
+		border: $border;
+		border-top: 0;
+		border-left: 0;
+		transition: box-shadow 0.3s;
+	}
 }
-
-
