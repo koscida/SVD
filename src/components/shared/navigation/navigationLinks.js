@@ -8,6 +8,8 @@ import CookingHome from "../../cooking/cookingHome/CookingHome";
 import RecipesHome from "../../cooking/recipesHome/RecipesHome";
 import CookingPlannerHome from "../../cooking/cookingPlannerHome/CookingPlannerHome";
 
+import ShippedHome from "../../collections/shipped/ShippedHome";
+
 const navigationLinks = {
 	Home: [
 		{
@@ -20,6 +22,7 @@ const navigationLinks = {
 		{
 			to: "shipped",
 			label: "Shipped",
+			element: <ShippedHome />,
 		},
 		{
 			to: "fish",
