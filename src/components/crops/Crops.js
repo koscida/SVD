@@ -5,7 +5,7 @@ import useLocalStorage from "../shared/useLocalStorage";
 import data from "../shared/data/dataCrops";
 import SeasonSelect from "../shared/filters/SeasonSelect";
 
-const cropTableData = data.cropsList.map((crop) => {
+const cropTableData = data.crops.map((crop) => {
 	const newCrop = {};
 	// crop info
 	newCrop.crop = crop.name;
@@ -88,7 +88,8 @@ const cropTableData = data.cropsList.map((crop) => {
 	// preserves price - single
 	newCrop.preservesSellSingle = crop.preserves ? crop.preserves : 0;
 	// preserves price - total
-	newCrop.preservesSellTotal = newCrop.preservesSellSingle * newCrop.yieldTotal;
+	newCrop.preservesSellTotal =
+		newCrop.preservesSellSingle * newCrop.yieldTotal;
 	newCrop.preservesSellTotalPerSeedCostTotal = (
 		newCrop.preservesSellTotal / newCrop.seedCostTotal
 	).toFixed(2);
@@ -397,7 +398,9 @@ const calcColumnData = (selectedProducts, selectedQuantity) => {
 					selectedProducts.includes(parentSection.Header))
 			) {
 				const columns = parentSection.columns.filter((section) =>
-					section.quantity ? selectedQuantity.includes(section.quantity) : true
+					section.quantity
+						? selectedQuantity.includes(section.quantity)
+						: true
 				);
 				newCropTable.push({ ...parentSection, columns });
 			}
@@ -468,7 +471,11 @@ function Crops() {
 		tmp[name] = newSelected;
 		// update table data
 		setTableData(
-			calcTableData(tmp.selectedSeason, tmp.selectedTrellis, tmp.selectedRegrow)
+			calcTableData(
+				tmp.selectedSeason,
+				tmp.selectedTrellis,
+				tmp.selectedRegrow
+			)
 		);
 		// update table columns
 		setColumnData([
@@ -513,38 +520,57 @@ function Crops() {
 							selectedOptions: selectedQuantity,
 							setSelected: setSelectedQuantity,
 						},
-					].map(({ name, key, options, selectedOptions, setSelected }) => (
-						<div key={name} className="d-flex flex-column flex-wrap me-3">
-							<p className="me-1">{name}</p>
-							<div className="d-flex flex-row">
-								{options.map((option) => {
-									const optionLabel = name + option;
-									return (
-										<div className="form-check me-2" key={optionLabel}>
-											<input
-												className="form-check-input"
-												type="checkbox"
-												value={option}
-												id={optionLabel}
-												checked={selectedOptions.includes(option)}
-												onChange={() =>
-													handleSelectInfo(
-														key,
-														option,
-														selectedOptions,
-														setSelected
-													)
-												}
-											/>
-											<label className="form-check-label" htmlFor={optionLabel}>
-												{option}
-											</label>
-										</div>
-									);
-								})}
+					].map(
+						({
+							name,
+							key,
+							options,
+							selectedOptions,
+							setSelected,
+						}) => (
+							<div
+								key={name}
+								className="d-flex flex-column flex-wrap me-3"
+							>
+								<p className="me-1">{name}</p>
+								<div className="d-flex flex-row">
+									{options.map((option) => {
+										const optionLabel = name + option;
+										return (
+											<div
+												className="form-check me-2"
+												key={optionLabel}
+											>
+												<input
+													className="form-check-input"
+													type="checkbox"
+													value={option}
+													id={optionLabel}
+													checked={selectedOptions.includes(
+														option
+													)}
+													onChange={() =>
+														handleSelectInfo(
+															key,
+															option,
+															selectedOptions,
+															setSelected
+														)
+													}
+												/>
+												<label
+													className="form-check-label"
+													htmlFor={optionLabel}
+												>
+													{option}
+												</label>
+											</div>
+										);
+									})}
+								</div>
 							</div>
-						</div>
-					))}
+						)
+					)}
 				</div>
 			</div>
 			<Table
