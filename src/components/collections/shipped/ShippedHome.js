@@ -4,6 +4,7 @@ import { Typography, Box, Paper, TextField, Divider } from "@mui/material";
 
 import { shipped } from "../../shared/data/collectionShipped";
 import { crops } from "../../shared/data/dataCrops";
+import { foraging } from "../../shared/data/foraging";
 
 import RenderImg from "../../shared/Icons/RenderImg";
 import useLocalStorage from "../../shared/useLocalStorage";
@@ -87,6 +88,22 @@ function ShippedHome() {
 		</>
 	);
 
+	const ForageView = ({ forage }) => (
+		<>
+			<div>{forage.description}</div>
+			<Divider />
+			<div>
+				{forage.sell ? (
+					<>Sellable: {forage.sellPrice}</>
+				) : (
+					"Not sellable"
+				)}
+			</div>
+		</>
+	);
+
+	const GenericView = ({ item }) => <>{item.name}</>;
+
 	const ShippedItem = ({ item }) => (
 		<>
 			<Paper sx={{ padding: "1em", margin: "0 1em 1em" }}>
@@ -121,6 +138,12 @@ function ShippedHome() {
 				{item.type === "Crop" ? (
 					<CropView
 						crop={crops.find((crop) => crop.name === item.name)}
+					/>
+				) : item.type === "Forage" ? (
+					<ForageView
+						forage={foraging.find(
+							(forage) => forage.name === item.name
+						)}
 					/>
 				) : (
 					<></>

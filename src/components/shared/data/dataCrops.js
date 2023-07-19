@@ -839,4 +839,14 @@ const crops = [
 ];
 exports.crops = crops;
 
-exports.cropTypes = ["Regrows", "Single harvest"];
+exports.cropSubTypes = ["Crop", "Forage", "Tree"];
+exports.cropSeasons = ["Spring", "Summer", "Fall"];
+exports.cropSources = [
+	"Pierre",
+	"JojaMart",
+	"Oasis",
+	"Traveling Cart",
+	"Egg Festival",
+	"Night Market",
+	"Island Trader",
+];
