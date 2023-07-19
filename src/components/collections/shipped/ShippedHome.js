@@ -5,6 +5,7 @@ import { Typography, Box, Paper, TextField, Divider } from "@mui/material";
 import { shipped } from "../../shared/data/collectionShipped";
 import { crops } from "../../shared/data/dataCrops";
 import { foraging } from "../../shared/data/foraging";
+import { animalProducts } from "../../shared/data/dataAnimals";
 
 import RenderImg from "../../shared/Icons/RenderImg";
 import useLocalStorage from "../../shared/useLocalStorage";
@@ -37,7 +38,7 @@ const createShippedData = (shipped, shippedCollected) => {
 // ShippedHome()
 
 function ShippedHome() {
-	const [selected, setSelected] = useState(-1);
+	const [selectedItem, setSelectedItem] = useState(-1);
 	const [shippedCollected, setShippedCollected] = useLocalStorage(
 		"svd-collections-shippedCollected",
 		createShippedCollectedData(shipped)
@@ -60,7 +61,9 @@ function ShippedHome() {
 		setShippedData(createShippedData(shipped, newShippedCollected));
 	};
 
-	const setSelectedValue = (itemID) => (e) => setSelected(itemID);
+	const setSelectedItemValue = (itemID) => (e) => {
+		setSelectedItem(itemID);
+	};
 
 	const handleTabChange = (e) => {
 		const newTab = e.target.value;
@@ -102,55 +105,81 @@ function ShippedHome() {
 		</>
 	);
 
-	const GenericView = ({ item }) => <>{item.name}</>;
-
-	const ShippedItem = ({ item }) => (
+	const AnimalProductView = ({ animalProduct }) => (
 		<>
-			<Paper sx={{ padding: "1em", margin: "0 1em 1em" }}>
-				<div
-					style={{ display: "grid", gridTemplateColumns: "50% 50%" }}
-				>
-					<div style={{ display: "flex", flexDirection: "row" }}>
-						<RenderImg
-							label={item.name}
-							styles={{ padding: "0 10px 0 0" }}
-						/>
-						<h2>{item.name}</h2>
-					</div>
-					<div
-						style={{
-							display: "flex",
-							flexDirection: "row-reverse",
-						}}
-					>
-						<TextField
-							id="shippedItem"
-							label="Items shipped"
-							variant="outlined"
-							value={item.collected}
-							onChange={handleItemShippedChanged(item.id)}
-						/>
-					</div>
-				</div>
-			</Paper>
-			<Paper sx={{ padding: "1em", margin: "0 1em 1em" }}>
-				<h3>{item.type}</h3>
-				{item.type === "Crop" ? (
-					<CropView
-						crop={crops.find((crop) => crop.name === item.name)}
+			<div>{animalProduct.description}</div>
+			<Divider />
+			<div>
+				Animals:
+				{animalProduct.animals.map((animal) => (
+					<RenderImg
+						key={animal.name}
+						label={animal}
+						styles={{ padding: "0 10px 0 0" }}
 					/>
-				) : item.type === "Forage" ? (
-					<ForageView
-						forage={foraging.find(
-							(forage) => forage.name === item.name
-						)}
-					/>
-				) : (
-					<></>
-				)}
-			</Paper>
+				))}
+			</div>
 		</>
 	);
+
+	const GenericView = ({ item }) => <>{item.name}</>;
+
+	const ShippedItem = ({ item }) => {
+		return (
+			<>
+				<Paper sx={{ padding: "1em", margin: "0 1em 1em" }}>
+					<div
+						style={{
+							display: "grid",
+							gridTemplateColumns: "50% 50%",
+						}}
+					>
+						<div style={{ display: "flex", flexDirection: "row" }}>
+							<RenderImg
+								label={item.name}
+								styles={{ padding: "0 10px 0 0" }}
+							/>
+							<h2>{item.name}</h2>
+						</div>
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "row-reverse",
+							}}
+						>
+							<TextField
+								id="shippedItem"
+								label="Items shipped"
+								variant="outlined"
+								value={item.collected}
+								onChange={handleItemShippedChanged(item.id)}
+							/>
+						</div>
+					</div>
+				</Paper>
+				<Paper sx={{ padding: "1em", margin: "0 1em 1em" }}>
+					<h3>{item.type}</h3>
+					{item.type === "Crop" ? (
+						<CropView
+							crop={crops.find((x) => x.name === item.name)}
+						/>
+					) : item.type === "Forage" ? (
+						<ForageView
+							forage={foraging.find((x) => x.name === item.name)}
+						/>
+					) : item.type === "Animal Product" ? (
+						<AnimalProductView
+							animalProduct={animalProducts.find(
+								(x) => x.name === item.name
+							)}
+						/>
+					) : (
+						<></>
+					)}
+				</Paper>
+			</>
+		);
+	};
 
 	// //////
 	// render
@@ -162,16 +191,16 @@ function ShippedHome() {
 				<Box sx={{ display: "grid", gridTemplateColumns: "30% 70%" }}>
 					<CollectionView
 						collection={shippedData}
-						selected={selected}
-						setSelected={setSelectedValue}
+						selected={selectedItem}
+						setSelected={setSelectedItemValue}
 					/>
 					<Box>
-						{selected === -1 ? (
+						{selectedItem === -1 ? (
 							<>select an item from the collection</>
 						) : (
 							<ShippedItem
 								item={shippedData.find(
-									(item) => item.id === selected
+									(item) => item.id === selectedItem
 								)}
 							/>
 						)}
