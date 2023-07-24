@@ -7,6 +7,9 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
+import ListItemText from "@mui/material/ListItemText";
+import Checkbox from "@mui/material/Checkbox";
+import { Divider } from "@mui/material";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -51,8 +54,12 @@ export default function MultipleSelectChip({
 					value={selectedOption}
 					onChange={handleChange}
 					input={
-						<OutlinedInput id="select-multiple-chip" label="Chip" />
+						<OutlinedInput
+							id={`MultipleSelectChip-${options[0]}`}
+							label="Chip"
+						/>
 					}
+					MenuProps={MenuProps}
 					renderValue={(selected) => (
 						<Box
 							sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
@@ -62,15 +69,13 @@ export default function MultipleSelectChip({
 							))}
 						</Box>
 					)}
-					MenuProps={MenuProps}
 				>
 					{options.map((option) => (
-						<MenuItem
-							key={option}
-							value={option}
-							style={getStyles(option, selectedOption, theme)}
-						>
-							{option}
+						<MenuItem key={option} value={option}>
+							<Checkbox
+								checked={selectedOption.indexOf(option) > -1}
+							/>
+							<ListItemText primary={option} />
 						</MenuItem>
 					))}
 				</Select>
