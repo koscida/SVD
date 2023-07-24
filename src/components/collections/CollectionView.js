@@ -48,7 +48,10 @@ function CollectionView({ collection, selected, setSelected }) {
 				<div
 					key={item.id}
 					onClick={setSelected(item.id)}
-					className={item.id === selected ? "selected" : ""}
+					className={
+						selected && item.id === selected.id ? "selected" : ""
+					}
+					value={item.id}
 				>
 					{
 						<RenderImg
