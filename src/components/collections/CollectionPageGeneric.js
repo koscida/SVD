@@ -20,7 +20,7 @@ import {
 	seasons,
 } from "../shared/data/collectionShipped";
 import { crops } from "../shared/data/dataCrops";
-import { fish } from "../shared/data/dataFish";
+import { fish, fishTypes } from "../shared/data/dataFish";
 import { foraging } from "../shared/data/foraging";
 import { animalProducts } from "../shared/data/dataAnimals";
 import { artisanProducts } from "../shared/data/artisanProducts";
@@ -37,11 +37,27 @@ import GenericItem from "../shared/views/GenericItem";
 
 // create data
 const createDataSource = (collectionName, shipped, fish) =>
-	collectionName === "Shipped" ? shipped : fish;
+	collectionName === "Shipped"
+		? shipped.map((item) => {
+				item.item =
+					item.type === "Crop"
+						? crops.find((x) => x.name === item.name)
+						: item.type === "Forage"
+						? foraging.find((x) => x.name === item.name)
+						: item.type === "Artisan Product"
+						? artisanProducts.find((x) => x.name === item.name)
+						: item.type === "Animal Product"
+						? animalProducts.find((x) => x.name === item.name)
+						: null;
+				return item;
+		  })
+		: collectionName === "Fish"
+		? fish
+		: [];
 
 const createCollectedData = (collectionName, dataSource) => {
 	const collectedData = dataSource.reduce((collectedData, item) => {
-		collectedData[item.id] = {
+		collectedData[item.name] = {
 			id: item.id,
 			name: item.name,
 			collected: 0,
@@ -69,7 +85,12 @@ const createCollectionData = (collectedData, collectionName, dataSource) => {
 
 // create filter options
 const createCollectionTypeOptions = (collectionName) => {
-	const types = collectionName === "Shipped" ? shippedTypes : [];
+	const types =
+		collectionName === "Shipped"
+			? shippedTypes
+			: collectionName === "Fish"
+			? fishTypes
+			: [];
 	// console.log(" types: ", types);
 	const options = ["All", ...types];
 	return options;
@@ -176,34 +197,75 @@ function CollectionPageGeneric({
 		setSeasonsSelected(newSeason);
 	};
 
-	// filter the collection data
-	const filterCollectionData = (collectionData) =>
-		collectionData.filter(
-			(item) =>
-				(itemTypesSelected.includes("All") ||
-					itemTypesSelected.includes(item.type)) &&
-				(hideCollected ? item.collected < 1 : true) &&
-				(!item.seasons
-					? true
-					: item.seasons.reduce(
-							(inSeason, season) =>
-								inSeason || seasonsSelected.includes(season),
-							false
-					  ))
-		);
-
 	//
 	// item collected
 
 	// number of items shipped
-	const handleItemCollectedChanged = (itemID) => (e) => {
-		const newCollectedData = JSON.parse(JSON.stringify(collectedData));
-		newCollectedData[itemID] = e.target.value;
+	const handleItemCollectedChanged = (itemName) => (e) => {
+		const collected = parseInt(e.target.value);
+		console.log("itemName: ", itemName, " e: ", collected);
+
+		// update collected data (stored locally)
+		let newCollectedData = JSON.parse(JSON.stringify(collectedData));
+		console.log("newCollectedData: ", newCollectedData);
+		newCollectedData[itemName].collected = collected;
 		setCollectedData(newCollectedData);
-		setCollectionData(
-			createCollectionData(newCollectedData, collectionName, dataSource)
-		);
+
+		// update what is selected
+		// update collection data (what is shown in display)
+		let newCollectionData = JSON.parse(JSON.stringify(collectionData));
+		console.log("newCollectionData: ", newCollectionData);
+		newCollectionData = newCollectionData.map((item) => {
+			if (item.name === itemName) {
+				item.collected = collected;
+				setSelectedItem(item);
+			}
+			return item;
+		});
+		setCollectionData(newCollectionData);
 	};
+
+	//
+	//
+	// filter the collection data
+	const filterCollectionData = (collectionData) =>
+		collectionData.filter((item) => {
+			// is collected hidden
+			const inHideSelected = hideCollected ? item.collected < 1 : true;
+
+			// if item type selected
+			const type = !item.item ? item["sub-type"] : item.type;
+			const inTypeSelected = itemTypesSelected.includes("All")
+				? true
+				: itemTypesSelected.includes(type);
+
+			// if seasons selected
+			const seasons = !item.seasons
+				? !item.item
+					? null
+					: !item.item.seasons
+					? null
+					: item.item.seasons
+				: item.seasons;
+			const inSeasons = !seasons
+				? true
+				: seasons.reduce(
+						(inSeason, season) =>
+							inSeason || seasonsSelected.includes(season),
+						false
+				  );
+
+			// combine
+			// console.log(
+			// 	"- name: ",
+			// 	item.name,
+			// 	" inTypeSelected: ",
+			// 	inTypeSelected,
+			// 	" type: ",
+			// 	type
+			// );
+			return inHideSelected && inTypeSelected && inSeasons;
+		});
 
 	//
 	//
@@ -261,7 +323,7 @@ function CollectionPageGeneric({
 								label={`${collectionItemName} ${collectionGoal}`}
 								variant="outlined"
 								value={item.collected}
-								onChange={handleItemCollectedChanged(item.id)}
+								onChange={handleItemCollectedChanged(item.name)}
 							/>
 						</div>
 					</div>
