@@ -42,6 +42,7 @@ const StyledCollection = styled.div`
 `;
 
 function CollectionView({ collection, selected, setSelected }) {
+	// console.log("--CollectionView-- collection: ", collection);
 	return (
 		<StyledCollection>
 			{collection.map((item) => (

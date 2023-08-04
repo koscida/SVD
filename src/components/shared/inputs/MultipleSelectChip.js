@@ -56,7 +56,7 @@ export default function MultipleSelectChip({
 					input={
 						<OutlinedInput
 							id={`MultipleSelectChip-${options[0]}`}
-							label="Chip"
+							label={label}
 						/>
 					}
 					MenuProps={MenuProps}

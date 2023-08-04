@@ -162,3 +162,4 @@ exports.shippedTypes = [
 	"Monster",
 	"Resource",
 ];
+exports.seasons = ["Spring", "Summer", "Fall", "Winter"];

@@ -9,6 +9,7 @@ import RecipesHome from "../../cooking/recipesHome/RecipesHome";
 import CookingPlannerHome from "../../cooking/cookingPlannerHome/CookingPlannerHome";
 
 import ShippedHome from "../../collections/shipped/ShippedHome";
+import FishCaughtHome from "../../collections/fish/FishCaughtHome";
 
 const navigationLinks = {
 	Home: [
@@ -27,6 +28,7 @@ const navigationLinks = {
 		{
 			to: "fish",
 			label: "Fish",
+			element: <FishCaughtHome />,
 		},
 		{
 			to: "artifacts",

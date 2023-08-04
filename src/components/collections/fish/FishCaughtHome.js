@@ -33,18 +33,18 @@ import GenericItem from "../../shared/views/GenericItem";
 import CollectionPageGeneric from "../CollectionPageGeneric";
 
 // ////
-// ShippedHome()
+// FishCaughtHome()
 
-function ShippedHome() {
+function FishCaughtHome() {
 	return (
 		<>
 			<CollectionPageGeneric
-				collectionName={"Shipped"}
-				collectionItemName={"Item"}
-				collectionGoal={"Shipped"}
+				collectionName={"Fish"}
+				collectionItemName={"Fish"}
+				collectionGoal={"Caught"}
 			/>
 		</>
 	);
 }
 
-export default ShippedHome;
+export default FishCaughtHome;
