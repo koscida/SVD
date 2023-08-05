@@ -1,4 +1,4 @@
-import { animals, animalProducts } from "../shared/data/dataAnimals";
+import { animals, animalProducts } from "../shared/data/animals";
 
 const filterValues = ["single", "daily", "monthly", "all"];
 
@@ -38,13 +38,16 @@ const getTableData = (filterHearts, filterQuality) => {
 						newProduct[filter + "productQuantity"] = 1;
 					} else if (filter === "daily") {
 						newProduct[filter + "productTime"] = 1;
-						newProduct[filter + "productQuantity"] = 1 * productPerDay;
+						newProduct[filter + "productQuantity"] =
+							1 * productPerDay;
 					} else if (filter === "monthly") {
 						newProduct[filter + "productTime"] = 28;
-						newProduct[filter + "productQuantity"] = 28 * productPerDay;
+						newProduct[filter + "productQuantity"] =
+							28 * productPerDay;
 					} else if (filter === "all") {
 						newProduct[filter + "productTime"] = 28;
-						newProduct[filter + "productQuantity"] = 28 * productPerDay;
+						newProduct[filter + "productQuantity"] =
+							28 * productPerDay;
 					}
 
 					// products
@@ -75,7 +78,9 @@ const getTableData = (filterHearts, filterQuality) => {
 				// if machine processing
 				if (product.machineProcessing) {
 					// get machine processing
-					const processing = Object.values(product.machineProcessing)[0];
+					const processing = Object.values(
+						product.machineProcessing
+					)[0];
 					newProduct.processingMachine = processing.machineName;
 					newProduct.processingProductName = processing.productName;
 					newProduct.processingProductQuality =
@@ -88,8 +93,9 @@ const getTableData = (filterHearts, filterQuality) => {
 							processing.processingTime *
 							newProduct[filter + "productQuantity"];
 						newProduct[filter + "processingSell"] =
-							processing.productSellPrice[newProduct.processingProductQuality] *
-							newProduct[filter + "productQuantity"];
+							processing.productSellPrice[
+								newProduct.processingProductQuality
+							] * newProduct[filter + "productQuantity"];
 						newProduct[filter + "processingSellDay"] = (
 							newProduct[filter + "processingSell"] /
 							newProduct[filter + "processingTime"]
@@ -117,13 +123,18 @@ const getTableData = (filterHearts, filterQuality) => {
 						// get aging
 						const aging = Object.values(product.aging)[0];
 						newProduct.agingMachine = aging.machineName;
-						newProduct.agingProduct = newProduct.processingProductName;
+						newProduct.agingProduct =
+							newProduct.processingProductName;
 						newProduct.agingProductQuality = "iridium";
 
 						// for each production type
 						filterValues.forEach((filter) => {
-							newProduct[filter + "agingTime"] = aging.time["iridium"];
-							if (newProduct.processingProductQuality === "regular")
+							newProduct[filter + "agingTime"] =
+								aging.time["iridium"];
+							if (
+								newProduct.processingProductQuality ===
+								"regular"
+							)
 								newProduct.singleagingTime +=
 									aging.time["silver"] + aging.time["gold"];
 							newProduct[filter + "agingSell"] = aging.sell;
@@ -143,13 +154,15 @@ const getTableData = (filterHearts, filterQuality) => {
 						newProduct[filter + "processingSell"] ??
 						newProduct[filter + "productSell"];
 					newProduct[filter + "totalSellDays"] = (
-						newProduct[filter + "totalSell"] / newProduct[filter + "totalTime"]
+						newProduct[filter + "totalSell"] /
+						newProduct[filter + "totalTime"]
 					).toFixed(2);
 					newProduct[filter + "totalDiff"] =
 						newProduct[filter + "totalSell"] -
 						newProduct[filter + "productSell"];
 					newProduct[filter + "totalDiffDays"] = (
-						newProduct[filter + "totalDiff"] / newProduct[filter + "totalTime"]
+						newProduct[filter + "totalDiff"] /
+						newProduct[filter + "totalTime"]
 					).toFixed(2);
 					newProduct[filter + "totalProfit"] =
 						newProduct[filter + "totalSell"] -

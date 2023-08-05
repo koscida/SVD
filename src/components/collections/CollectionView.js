@@ -48,9 +48,11 @@ function CollectionView({ collection, selected, setSelected }) {
 			{collection.map((item) => (
 				<div
 					key={item.id}
-					onClick={setSelected(item.id)}
+					onClick={setSelected(item.name)}
 					className={
-						selected && item.id === selected.id ? "selected" : ""
+						selected && item.name === selected.name
+							? "selected"
+							: ""
 					}
 					value={item.id}
 				>

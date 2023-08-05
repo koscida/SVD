@@ -4,15 +4,15 @@ import CollectionPageGeneric from "../CollectionPageGeneric";
 import { fish, fishTypes } from "../../shared/data/fish";
 
 // ////
-// FishCaughtHome()
+// JournalScrapsFoundHome()
 
-function FishCaughtHome() {
+function JournalScrapsFoundHome() {
 	return (
 		<>
 			<CollectionPageGeneric
-				collectionName={"Fish"}
-				collectionItemName={"Fish"}
-				collectionGoal={"Caught"}
+				collectionName={"Journal Scraps"}
+				collectionItemName={"Journal Scrap"}
+				collectionGoal={"Found"}
 				dataSource={fish}
 				filterItemTypes={fishTypes}
 			/>
@@ -20,4 +20,4 @@ function FishCaughtHome() {
 	);
 }
 
-export default FishCaughtHome;
+export default JournalScrapsFoundHome;

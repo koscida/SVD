@@ -1,4 +1,4 @@
-import data from "../../shared/data/dataCrops";
+import data from "../../shared/data/crops";
 import RenderImg from "../../shared/Icons/RenderImg";
 
 function Calendar({ plots, selectedSeason }) {
@@ -27,14 +27,17 @@ function Calendar({ plots, selectedSeason }) {
 		// plots per day
 		return plots.reduce((newPlots, plot) => {
 			// crops per plot
-			const plotCrops = plot.selectedCrops.reduce((newCrops, cropName) => {
-				newCrops[cropName] = {
-					isHarvesting: false,
-					isPlanting: false,
-					isGrowing: false,
-				};
-				return newCrops;
-			}, {});
+			const plotCrops = plot.selectedCrops.reduce(
+				(newCrops, cropName) => {
+					newCrops[cropName] = {
+						isHarvesting: false,
+						isPlanting: false,
+						isGrowing: false,
+					};
+					return newCrops;
+				},
+				{}
+			);
 			newPlots[plot.name] = plotCrops;
 			return newPlots;
 		}, {});
@@ -93,71 +96,92 @@ function Calendar({ plots, selectedSeason }) {
 				return (
 					<div className="cell cropCell d-grid" key={i} style={{}}>
 						<div className="date">{i + 1}</div>
-						{Object.entries(dayPlots).map(([plotName, crops], j) => {
-							return Object.entries(crops).map(([cropName, cropData], k) => {
-								const crop = data.crops[cropName];
+						{Object.entries(dayPlots).map(
+							([plotName, crops], j) => {
+								return Object.entries(crops).map(
+									([cropName, cropData], k) => {
+										const crop = data.crops[cropName];
 
-								// const harvestOpacity = 1;
-								// const seedOpacity = 1;
-								// const growOpacity = 1;
-								// const cropColor = "#444";
+										// const harvestOpacity = 1;
+										// const seedOpacity = 1;
+										// const growOpacity = 1;
+										// const cropColor = "#444";
 
-								// set opacity
-								// if planting
-								let seedOpacity = !crop.regrow
-									? 1 / (crop.growTime + 1)
-									: 1 / (crop.regrowTime + 1);
-								let growOpacity = 1 / (crop.growTime + 1);
-								// if harvesting
-								let harvestOpacity = 1;
-								//
-								// // if growing crop and no next harvest set, means this is a grow only day, so change opacity
-								// if (isGrowing && !isHarvesting && !isPlanting) {
-								// 	// if regrowing
-								// 	if (crop.regrow && harvestInd !== 0) {
-								// 		growOpacity =
-								// 			(i - thisHarvest.growDays[0] + 0) / (crop.regrowTime + 1);
-								// 	} // else, replanting
-								// 	else {
-								// 		growOpacity =
-								// 			(i - thisHarvest.plantDay + 1) / (crop.growTime + 1);
-								// 	}
-								// 	// }
-								// }
+										// set opacity
+										// if planting
+										let seedOpacity = !crop.regrow
+											? 1 / (crop.growTime + 1)
+											: 1 / (crop.regrowTime + 1);
+										let growOpacity =
+											1 / (crop.growTime + 1);
+										// if harvesting
+										let harvestOpacity = 1;
+										//
+										// // if growing crop and no next harvest set, means this is a grow only day, so change opacity
+										// if (isGrowing && !isHarvesting && !isPlanting) {
+										// 	// if regrowing
+										// 	if (crop.regrow && harvestInd !== 0) {
+										// 		growOpacity =
+										// 			(i - thisHarvest.growDays[0] + 0) / (crop.regrowTime + 1);
+										// 	} // else, replanting
+										// 	else {
+										// 		growOpacity =
+										// 			(i - thisHarvest.plantDay + 1) / (crop.growTime + 1);
+										// 	}
+										// 	// }
+										// }
 
-								// get crop color
-								let cropColor = crop.color;
+										// get crop color
+										let cropColor = crop.color;
 
-								return (
-									<div
-										key={cropName}
-										className="d-flex direction-row align-items-center"
-										style={{ minHeight: "20px" }}
-									>
-										{cropData.isHarvesting && (
-											<>
-												<RenderBand
-													opacity={harvestOpacity}
-													color={cropColor}
-												/>
-												<RenderImg label={crop.name} />
-											</>
-										)}
-										{cropData.isPlanting && (
-											<>
-												<RenderImg label={crop.seeds} />
-												<RenderBand opacity={seedOpacity} color={cropColor} />
-											</>
-										)}
-										{cropData.isGrowing && (
-											<>
-												<RenderBand opacity={growOpacity} color={cropColor} />
-											</>
-										)}
-									</div>
+										return (
+											<div
+												key={cropName}
+												className="d-flex direction-row align-items-center"
+												style={{ minHeight: "20px" }}
+											>
+												{cropData.isHarvesting && (
+													<>
+														<RenderBand
+															opacity={
+																harvestOpacity
+															}
+															color={cropColor}
+														/>
+														<RenderImg
+															label={crop.name}
+														/>
+													</>
+												)}
+												{cropData.isPlanting && (
+													<>
+														<RenderImg
+															label={crop.seeds}
+														/>
+														<RenderBand
+															opacity={
+																seedOpacity
+															}
+															color={cropColor}
+														/>
+													</>
+												)}
+												{cropData.isGrowing && (
+													<>
+														<RenderBand
+															opacity={
+																growOpacity
+															}
+															color={cropColor}
+														/>
+													</>
+												)}
+											</div>
+										);
+									}
 								);
-							});
-						})}
+							}
+						)}
 						{/*plots.map((plot) =>
 							Object.entries(plot.harvests).map(([cropName, harvests]) => {
 								const crop = data.crops[cropName];

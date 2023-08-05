@@ -6,13 +6,13 @@ import { fish, fishTypes } from "../../shared/data/fish";
 // ////
 // FishCaughtHome()
 
-function FishCaughtHome() {
+function MineralsCollectedHome() {
 	return (
 		<>
 			<CollectionPageGeneric
-				collectionName={"Fish"}
-				collectionItemName={"Fish"}
-				collectionGoal={"Caught"}
+				collectionName={"Minerals"}
+				collectionItemName={"Minerals"}
+				collectionGoal={"Collected"}
 				dataSource={fish}
 				filterItemTypes={fishTypes}
 			/>
@@ -20,4 +20,4 @@ function FishCaughtHome() {
 	);
 }
 
-export default FishCaughtHome;
+export default MineralsCollectedHome;

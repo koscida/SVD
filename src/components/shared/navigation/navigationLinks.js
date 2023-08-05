@@ -10,6 +10,14 @@ import CookingPlannerHome from "../../cooking/cookingPlannerHome/CookingPlannerH
 
 import ShippedHome from "../../collections/shipped/ShippedHome";
 import FishCaughtHome from "../../collections/fish/FishCaughtHome";
+import ArtifactsFoundHome from "../../collections/artifacts/ArtifactsFoundHome";
+import MineralsCollectedHome from "../../collections/minerals/MineralsCollectedHome";
+import RecipesCookedHome from "../../collections/cooking/RecipesCookedHome";
+import AchievementsHome from "../../collections/achievements/AchievementsHome";
+import LettersReceivedHome from "../../collections/letters/LettersReceivedHome";
+import SecretNotesHome from "../../collections/secretNotes/SecretNotesHome";
+import JournalScrapsFoundHome from "../../collections/journalScraps/JournalScrapsFoundHome";
+import PerfectionHome from "../../collections/perfection/PerfectionHome";
 
 const navigationLinks = {
 	Home: [
@@ -33,35 +41,42 @@ const navigationLinks = {
 		{
 			to: "artifacts",
 			label: "Artifacts",
+			element: <ArtifactsFoundHome />,
 		},
 		{
 			to: "minerals",
 			label: "Minerals",
+			element: <MineralsCollectedHome />,
 		},
 		{
 			to: "cooking",
 			label: "Cooking",
-			element: <CookingHome />,
+			element: <RecipesCookedHome />,
 		},
 		{
 			to: "achievements",
 			label: "Achievements",
+			element: <AchievementsHome />,
 		},
 		{
 			to: "letters",
 			label: "Letters",
+			element: <LettersReceivedHome />,
 		},
 		{
 			to: "secretNotes",
 			label: "Secret Notes",
+			element: <SecretNotesHome />,
 		},
 		{
 			to: "journalScraps",
 			label: "Journal Scraps",
+			element: <JournalScrapsFoundHome />,
 		},
 		{
 			to: "perfection",
 			label: "Perfection",
+			element: <PerfectionHome />,
 		},
 	],
 	Resources: [

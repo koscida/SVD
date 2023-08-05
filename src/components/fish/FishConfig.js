@@ -1,4 +1,4 @@
-import data from "../shared/data/dataFish";
+import data from "../shared/data/fish";
 import _dataSeasons from "../shared/data/dataSeasons";
 import _dataWeather from "../shared/data/dataWeather";
 
@@ -35,7 +35,9 @@ function FishConfig({
 			label: "Weather",
 			data: dataWeather,
 			shownData: Object.values(dataWeather).filter((weatherStatus) =>
-				Object.keys(weatherStatus.images).some((x) => seasonsNames.includes(x))
+				Object.keys(weatherStatus.images).some((x) =>
+					seasonsNames.includes(x)
+				)
 			),
 			filterdData: filterWeather,
 			filterdDataNames: filterWeather.map((x) => x.name),
@@ -105,7 +107,9 @@ function FishConfig({
 
 						const included = filterdDataNames.includes(name);
 						const className =
-							"filterOption me-1 mb-1 " + name + (included ? " shown" : "");
+							"filterOption me-1 mb-1 " +
+							name +
+							(included ? " shown" : "");
 						return (
 							<div key={name} className={className}>
 								<div className="form-check m-0 p-0 d-flex align-items-center">
@@ -127,13 +131,24 @@ function FishConfig({
 										value={name}
 									/>
 									<label
-										className={"form-check-label m-1 d-flex flex-row" + name}
+										className={
+											"form-check-label m-1 d-flex flex-row" +
+											name
+										}
 										htmlFor={label + name}
 									>
-										{image && <img src={"images/" + image} alt={name} />}
+										{image && (
+											<img
+												src={"images/" + image}
+												alt={name}
+											/>
+										)}
 										{images && (
 											<img
-												src={"images/" + Object.values(images)[0]}
+												src={
+													"images/" +
+													Object.values(images)[0]
+												}
 												alt={name}
 											/>
 										)}
@@ -165,17 +180,26 @@ function FishConfig({
 									<input
 										className="form-check-input"
 										type="radio"
-										name={"showGridDisplay" + showGridOption}
+										name={
+											"showGridDisplay" + showGridOption
+										}
 										id={"showGridDisplay" + showGridOption}
 										onChange={(e) => {
-											handleRadioChange(showGridOption, setFilterShowBy);
+											handleRadioChange(
+												showGridOption,
+												setFilterShowBy
+											);
 										}}
-										checked={filterShowBy === showGridOption}
+										checked={
+											filterShowBy === showGridOption
+										}
 										value={showGridOption}
 									/>
 									<label
 										className="form-check-label"
-										htmlFor={"showGridDisplay" + showGridOption}
+										htmlFor={
+											"showGridDisplay" + showGridOption
+										}
 									>
 										{showGridOption}
 									</label>
@@ -187,7 +211,10 @@ function FishConfig({
 						<h6>Type</h6>
 						{dataShowTypeOptions.map((showTypeOption) => {
 							return (
-								<div className="form-check" key={"showType" + showTypeOption}>
+								<div
+									className="form-check"
+									key={"showType" + showTypeOption}
+								>
 									<input
 										className="form-check-input"
 										type="checkbox"
@@ -200,7 +227,9 @@ function FishConfig({
 												setShowType
 											);
 										}}
-										checked={showType.includes(showTypeOption)}
+										checked={showType.includes(
+											showTypeOption
+										)}
 										value={showTypeOption}
 									/>
 									<label

@@ -20,11 +20,8 @@ import CheckOption from "../../shared/filters/CheckOption";
 import RenderImg from "../../shared/Icons/RenderImg";
 
 import { recipes, ingredientTypes } from "../../shared/data/recipes";
-import {
-	animalProducts,
-	productTypesData,
-} from "../../shared/data/dataAnimals";
-import { crops } from "../../shared/data/dataCrops";
+import { animalProducts, productTypesData } from "../../shared/data/animals";
+import { crops } from "../../shared/data/crops";
 // ///////////
 // CookingPlannerHome()
 
@@ -141,46 +138,59 @@ const getRecipeDataInit = (recipes) =>
 		// sources
 		newRow.sources = (
 			<>
-				{Object.entries(recipe.sources).map(([sourceType, sourceInfo], i) => (
-					<Box key={i}>
-						{sourceType === "Starter" ? (
-							<>Starter</>
-						) : sourceType === "The Queen of Sauce" ? (
-							<>
-								<RenderImg label={sourceType} /> &nbsp;
-								{sourceInfo.date}, {sourceInfo.year}
-							</>
-						) : sourceType === "Shop" ? (
-							<>
-								<RenderImg label={sourceInfo.shopName} /> &nbsp;
-								{sourceInfo.shopName}{" "}
-								{typeof sourceInfo.price === "number" ? (
-									<>
-										({sourceInfo.price} <RenderImg label={"Gold"} /> gold)
-									</>
-								) : (
-									<>
-										({sourceInfo.price.amount}{" "}
-										<RenderImg label={sourceInfo.price.artifact} />{" "}
-										{sourceInfo.price.artifact} )
-									</>
-								)}
-							</>
-						) : sourceType === "Friendship" ? (
-							<>
-								<RenderImg label={`${sourceInfo.friend}_Icon`} /> &nbsp;
-								{sourceInfo.friend} {sourceInfo.hearts} Hearts
-							</>
-						) : sourceType === "Skill" ? (
-							<>
-								<RenderImg label={`${sourceInfo.skill}`} /> &nbsp;
-								{sourceInfo.skill} Level {sourceInfo.level}
-							</>
-						) : (
-							""
-						)}
-					</Box>
-				))}
+				{Object.entries(recipe.sources).map(
+					([sourceType, sourceInfo], i) => (
+						<Box key={i}>
+							{sourceType === "Starter" ? (
+								<>Starter</>
+							) : sourceType === "The Queen of Sauce" ? (
+								<>
+									<RenderImg label={sourceType} /> &nbsp;
+									{sourceInfo.date}, {sourceInfo.year}
+								</>
+							) : sourceType === "Shop" ? (
+								<>
+									<RenderImg label={sourceInfo.shopName} />{" "}
+									&nbsp;
+									{sourceInfo.shopName}{" "}
+									{typeof sourceInfo.price === "number" ? (
+										<>
+											({sourceInfo.price}{" "}
+											<RenderImg label={"Gold"} /> gold)
+										</>
+									) : (
+										<>
+											({sourceInfo.price.amount}{" "}
+											<RenderImg
+												label={
+													sourceInfo.price.artifact
+												}
+											/>{" "}
+											{sourceInfo.price.artifact} )
+										</>
+									)}
+								</>
+							) : sourceType === "Friendship" ? (
+								<>
+									<RenderImg
+										label={`${sourceInfo.friend}_Icon`}
+									/>{" "}
+									&nbsp;
+									{sourceInfo.friend} {sourceInfo.hearts}{" "}
+									Hearts
+								</>
+							) : sourceType === "Skill" ? (
+								<>
+									<RenderImg label={`${sourceInfo.skill}`} />{" "}
+									&nbsp;
+									{sourceInfo.skill} Level {sourceInfo.level}
+								</>
+							) : (
+								""
+							)}
+						</Box>
+					)
+				)}
 			</>
 		);
 		//
@@ -197,13 +207,17 @@ const getIngredientsDataInit = (recipes) =>
 				if (!(ingredient.type in ingredientsList)) {
 					ingredientsList[ingredient.type] = {};
 				}
-				if (!(ingredient.ingredient in ingredientsList[ingredient.type])) {
-					ingredientsList[ingredient.type][ingredient.ingredient] = {};
+				if (
+					!(ingredient.ingredient in ingredientsList[ingredient.type])
+				) {
+					ingredientsList[ingredient.type][ingredient.ingredient] =
+						{};
 				}
 
 				// add ingredient
-				ingredientsList[ingredient.type][ingredient.ingredient][recipe.name] =
-					ingredient.amount;
+				ingredientsList[ingredient.type][ingredient.ingredient][
+					recipe.name
+				] = ingredient.amount;
 
 				// check if cooking
 				if (ingredient.type === "Cooking") {
@@ -259,7 +273,10 @@ const getIngredientsColumns = (ingredientType) => {
 			{ field: "rate", headerName: "Rate" },
 		];
 	else if (ingredientType === "Artisan Goods")
-		extraFields = [...extraFields, { field: "source", headerName: "Source" }];
+		extraFields = [
+			...extraFields,
+			{ field: "source", headerName: "Source" },
+		];
 	else if (ingredientType === "Fish")
 		extraFields = [
 			...extraFields,
@@ -292,7 +309,8 @@ const getIngredientsRows = (ingredientType, ingredientTypeData) =>
 						</>
 					),
 					amount: Object.values(recipes).reduce(
-						(totalAmount, recipeAmount) => (totalAmount += recipeAmount),
+						(totalAmount, recipeAmount) =>
+							(totalAmount += recipeAmount),
 						0
 					),
 					recipes: (
@@ -305,19 +323,23 @@ const getIngredientsRows = (ingredientType, ingredientTypeData) =>
 								gap: "4px 10px",
 							}}
 						>
-							{Object.entries(recipes).map(([recipeName, amount]) => (
-								<Box key={recipeName}>
-									<RenderImg label={recipeName} /> &nbsp;
-									{recipeName} ({amount})
-								</Box>
-							))}
+							{Object.entries(recipes).map(
+								([recipeName, amount]) => (
+									<Box key={recipeName}>
+										<RenderImg label={recipeName} /> &nbsp;
+										{recipeName} ({amount})
+									</Box>
+								)
+							)}
 						</Box>
 					),
 					source:
 						ingredientType === "Crop" ? (
 							ingredientName in crops ? (
 								<Box>
-									<RenderImg label={crops[ingredientName].seeds} />{" "}
+									<RenderImg
+										label={crops[ingredientName].seeds}
+									/>{" "}
 									{crops[ingredientName].seeds}
 								</Box>
 							) : (
@@ -325,18 +347,23 @@ const getIngredientsRows = (ingredientType, ingredientTypeData) =>
 							)
 						) : ingredientType === "Animal Product" ? (
 							<>
-								{productTypesData[ingredientName].animals.map((animal) => (
-									<Box key={animal}>
-										<RenderImg label={animal} /> {animal}
-									</Box>
-								))}
+								{productTypesData[ingredientName].animals.map(
+									(animal) => (
+										<Box key={animal}>
+											<RenderImg label={animal} />{" "}
+											{animal}
+										</Box>
+									)
+								)}
 							</>
 						) : (
 							<></>
 						),
 					rate:
 						ingredientType === "Animal Product" ? (
-							<>{productTypesData[ingredientName].rate ?? <></>}</>
+							<>
+								{productTypesData[ingredientName].rate ?? <></>}
+							</>
 						) : (
 							<></>
 						),
@@ -344,11 +371,14 @@ const getIngredientsRows = (ingredientType, ingredientTypeData) =>
 						ingredientType === "Crop" ? (
 							ingredientName in crops ? (
 								<>
-									{crops[ingredientName].season.map((season) => (
-										<Box key={season}>
-											<RenderImg label={season} /> {season}
-										</Box>
-									))}
+									{crops[ingredientName].season.map(
+										(season) => (
+											<Box key={season}>
+												<RenderImg label={season} />{" "}
+												{season}
+											</Box>
+										)
+									)}
 								</>
 							) : (
 								<></>
@@ -436,7 +466,10 @@ function CookingPlannerHome() {
 							<h3>{ingredientType}</h3>
 							<SVDBasicTable
 								columns={getIngredientsColumns(ingredientType)}
-								rows={getIngredientsRows(ingredientType, ingredientTypeData)}
+								rows={getIngredientsRows(
+									ingredientType,
+									ingredientTypeData
+								)}
 							/>
 						</div>
 					)

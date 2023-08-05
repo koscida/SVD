@@ -14,16 +14,7 @@ import {
 	Switch,
 } from "@mui/material";
 
-import {
-	shipped,
-	shippedTypes,
-	seasons,
-} from "../shared/data/collectionShipped";
-import { crops } from "../shared/data/dataCrops";
-import { fish, fishTypes } from "../shared/data/dataFish";
-import { foraging } from "../shared/data/foraging";
-import { animalProducts } from "../shared/data/dataAnimals";
-import { artisanProducts } from "../shared/data/artisanProducts";
+import { seasons } from "../shared/data/collectionShipped";
 
 import useLocalStorage from "../shared/useLocalStorage";
 import RenderImg from "../shared/Icons/RenderImg";
@@ -34,26 +25,6 @@ import GenericItem from "../shared/views/GenericItem";
 
 // ////
 // helper functions
-
-// create data
-const createDataSource = (collectionName, shipped, fish) =>
-	collectionName === "Shipped"
-		? shipped.map((item) => {
-				item.item =
-					item.type === "Crop"
-						? crops.find((x) => x.name === item.name)
-						: item.type === "Forage"
-						? foraging.find((x) => x.name === item.name)
-						: item.type === "Artisan Product"
-						? artisanProducts.find((x) => x.name === item.name)
-						: item.type === "Animal Product"
-						? animalProducts.find((x) => x.name === item.name)
-						: null;
-				return item;
-		  })
-		: collectionName === "Fish"
-		? fish
-		: [];
 
 const createCollectedData = (collectionName, dataSource) => {
 	const collectedData = dataSource.reduce((collectedData, item) => {
@@ -80,21 +51,24 @@ const createCollectionData = (collectedData, collectionName, dataSource) => {
 	if (collectionName === "Fish")
 		collectionData = collectionData.filter((f) => f.id > 0);
 
+	// console.log(
+	// 	"-createCollectionData-",
+	// 	" collectedData: ",
+	// 	collectedData,
+	// 	" collectionData: ",
+	// 	collectionData,
+	// 	" dataSource: ",
+	// 	dataSource
+	// );
+
 	return collectionData;
 };
 
 // create filter options
-const createCollectionTypeOptions = (collectionName) => {
-	const types =
-		collectionName === "Shipped"
-			? shippedTypes
-			: collectionName === "Fish"
-			? fishTypes
-			: [];
-	// console.log(" types: ", types);
-	const options = ["All", ...types];
-	return options;
-};
+const createCollectionTypeOptions = (filterItemTypes) => [
+	"All",
+	...filterItemTypes,
+];
 const createSeasonOptions = (seasons) => [...seasons];
 
 // ////
@@ -104,13 +78,9 @@ function CollectionPageGeneric({
 	collectionName,
 	collectionItemName,
 	collectionGoal,
+	dataSource,
+	filterItemTypes,
 }) {
-	// //
-	// data
-	const [dataSource, setDataSource] = useState(
-		createDataSource(collectionName, shipped, fish)
-	);
-
 	// //
 	// collection
 	//
@@ -133,7 +103,7 @@ function CollectionPageGeneric({
 	const [hideCollected, setHideCollected] = useState(false);
 	// 	dropdown of item types
 	const [collectionTypeOptions, setCollectionTypeOptions] = useState(
-		createCollectionTypeOptions(collectionName)
+		createCollectionTypeOptions(filterItemTypes)
 	);
 	const [itemTypesSelected, setItemTypeSelected] = useState(["All"]);
 	// dropdown of seasons
@@ -151,13 +121,10 @@ function CollectionPageGeneric({
 	// select item
 
 	// selected item in collection
-	const setSelectedItemValue = (itemID) => (e) => {
-		// console.log("---ShippedItem--- itemID: ", itemID, " e: ", e);
-		if (typeof parseInt(itemID) === "number") {
-			const newItem = dataSource.find((item) => item.id === itemID);
-			// console.log("itemID: ", itemID, " newItem: ", newItem);
-			setSelectedItem(newItem);
-		}
+	const setSelectedItemValue = (itemName) => (e) => {
+		const newItem = dataSource.find((item) => item.name === itemName);
+		// console.log(""---ShippedItem--- itemName: ", itemName, " newItem: ", newItem);
+		setSelectedItem(newItem);
 	};
 	// exit button
 	const resetSelectedItemValue = () => {
@@ -240,29 +207,32 @@ function CollectionPageGeneric({
 				: itemTypesSelected.includes(type);
 
 			// if seasons selected
-			const seasons = !item.seasons
+			const itemSeasons = !item.seasons
 				? !item.item
 					? null
 					: !item.item.seasons
 					? null
 					: item.item.seasons
 				: item.seasons;
-			const inSeasons = !seasons
-				? true
-				: seasons.reduce(
-						(inSeason, season) =>
-							inSeason || seasonsSelected.includes(season),
-						false
-				  );
+			const inSeasons =
+				!itemSeasons || itemSeasons.length === 0
+					? true
+					: itemSeasons.reduce(
+							(inSeason, season) =>
+								inSeason || seasonsSelected.includes(season),
+							false
+					  );
 
-			// combine
 			// console.log(
-			// 	"- name: ",
-			// 	item.name,
+			// 	"-filterCollectionData- ",
+			// 	" item: ",
+			// 	item,
+			// 	" inHideSelected: ",
+			// 	inHideSelected,
 			// 	" inTypeSelected: ",
 			// 	inTypeSelected,
-			// 	" type: ",
-			// 	type
+			// 	" inSeasons: ",
+			// 	inSeasons
 			// );
 			return inHideSelected && inTypeSelected && inSeasons;
 		});
@@ -276,16 +246,7 @@ function CollectionPageGeneric({
 		if (!item) return <></>;
 
 		const itemType = item.type;
-		const newItem =
-			itemType === "Crop"
-				? crops.find((x) => x.name === item.name)
-				: itemType === "Forage"
-				? foraging.find((x) => x.name === item.name)
-				: itemType === "Artisan Product"
-				? artisanProducts.find((x) => x.name === item.name)
-				: itemType === "Animal Product"
-				? animalProducts.find((x) => x.name === item.name)
-				: null;
+		const newItem = !item.item ? item : item.item;
 
 		return (
 			<>
@@ -328,14 +289,12 @@ function CollectionPageGeneric({
 						</div>
 					</div>
 				</Paper>
-				<Paper sx={{ padding: "1em", margin: "0 1em 1em" }}>
-					<h3>{itemType}</h3>
-					{newItem ? (
-						<GenericItem item={newItem} type={itemType} />
-					) : (
-						<></>
-					)}
-				</Paper>
+
+				{newItem ? (
+					<GenericItem item={newItem} type={itemType} />
+				) : (
+					<></>
+				)}
 			</>
 		);
 	};
@@ -344,7 +303,7 @@ function CollectionPageGeneric({
 	// render
 	return (
 		<>
-			<CollectionTabs />
+			<CollectionTabs collectionName={collectionName} />
 			<Box sx={{ padding: "1em" }}>
 				<h1>Collections: {collectionName}</h1>
 				<Box sx={{ display: "grid", gridTemplateColumns: "30% 70%" }}>
@@ -359,6 +318,7 @@ function CollectionPageGeneric({
 								display: "flex",
 								flexDirection: "row",
 								alignItems: "center",
+								margin: "0 1em",
 							}}
 						>
 							{
@@ -377,7 +337,9 @@ function CollectionPageGeneric({
 									/>
 								</FormGroup>
 							}
-							{collectionTypeOptions && itemTypesSelected ? (
+							{filterItemTypes.length > 0 &&
+							collectionTypeOptions &&
+							itemTypesSelected ? (
 								<MultipleSelectChip
 									label={`${collectionItemName} Type`}
 									options={collectionTypeOptions}
@@ -398,11 +360,13 @@ function CollectionPageGeneric({
 								<></>
 							)}
 						</Box>
-						<Divider />
+						<Divider sx={{ margin: "1em" }} />
 						{selectedItem ? (
 							<CollectionItem item={selectedItem} />
 						) : (
-							<>select an item from the collection</>
+							<Box sx={{ margin: "1em" }}>
+								select an item from the collection
+							</Box>
 						)}
 					</Box>
 				</Box>

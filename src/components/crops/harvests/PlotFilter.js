@@ -1,4 +1,4 @@
-import data from "../../shared/data/dataCrops";
+import data from "../../shared/data/crops";
 import RenderImg from "../../shared/Icons/RenderImg";
 
 function PlotFilter({ cropSeasonalList, selectedCrops, handleCropSelect }) {
@@ -11,7 +11,9 @@ function PlotFilter({ cropSeasonalList, selectedCrops, handleCropSelect }) {
 						(newList, seasonalCropName) => {
 							data.crops[seasonalCropName].regrow
 								? newList.Reproduces.push(seasonalCropName)
-								: newList["Single Harvest"].push(seasonalCropName);
+								: newList["Single Harvest"].push(
+										seasonalCropName
+								  );
 							return newList;
 						},
 						{ "Single Harvest": [], Reproduces: [] }
@@ -28,10 +30,14 @@ function PlotFilter({ cropSeasonalList, selectedCrops, handleCropSelect }) {
 						>
 							{seasonalCropTypeList.map((seasonalCropName) => {
 								const checked =
-									selectedCrops && selectedCrops.includes(seasonalCropName);
+									selectedCrops &&
+									selectedCrops.includes(seasonalCropName);
 								const checkedStyle =
 									seasonalCropName && checked
-										? { background: "#dde", border: "1px solid #ccb" }
+										? {
+												background: "#dde",
+												border: "1px solid #ccb",
+										  }
 										: {};
 								return (
 									<div

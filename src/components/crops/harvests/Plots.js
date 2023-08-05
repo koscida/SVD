@@ -1,5 +1,5 @@
 import { useState } from "react";
-import data from "../../shared/data/dataCrops";
+import data from "../../shared/data/crops";
 import useLocalStorage from "../../shared/useLocalStorage";
 import RenderImg from "../../shared/Icons/RenderImg";
 import PlotFilter from "./PlotFilter";
@@ -126,7 +126,10 @@ function Plots({
 								className="fa-solid fa-angles-up"
 								onClick={() => moveTop(i)}
 							></i>
-							<i className="fa-solid fa-angle-up" onClick={() => moveUp(i)}></i>
+							<i
+								className="fa-solid fa-angle-up"
+								onClick={() => moveUp(i)}
+							></i>
 							<i
 								className="fa-solid fa-angle-down"
 								onClick={() => moveDown(i)}
@@ -168,19 +171,28 @@ function Plots({
 			<div>
 				{plots.map((plot, i) => {
 					const isSelected = selectedPlot === i;
-					const selectedStyles = isSelected && { background: "#eeeefa" };
+					const selectedStyles = isSelected && {
+						background: "#eeeefa",
+					};
 					return (
 						<div key={i}>
 							<div style={{ ...selectedStyles }} className="p-2">
 								<div
-									style={{ display: "flex", justifyContent: "space-between" }}
+									style={{
+										display: "flex",
+										justifyContent: "space-between",
+									}}
 								>
 									<div>
 										{i + 1}. {plot.name} ({plot.size})
 									</div>
 									<div>
 										{plot.selectedCrops
-											.filter((c) => crops[c].season.includes(selectedSeason))
+											.filter((c) =>
+												crops[c].season.includes(
+													selectedSeason
+												)
+											)
 											.map((selectedCropName) => (
 												<RenderImg
 													label={selectedCropName}
@@ -189,7 +201,10 @@ function Plots({
 											))}
 									</div>
 									{isSelected ? (
-										<button className="btn btn-sm" onClick={handleCancel}>
+										<button
+											className="btn btn-sm"
+											onClick={handleCancel}
+										>
 											Close
 										</button>
 									) : (
@@ -231,8 +246,8 @@ function Plots({
 				) : (
 					<div>
 						<p>
-							Confirm - Do you want to clear/delete all plots (this cannot be
-							undone!)
+							Confirm - Do you want to clear/delete all plots
+							(this cannot be undone!)
 						</p>
 						<button
 							className="btn ms-auto"

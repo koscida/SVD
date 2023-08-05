@@ -1,18 +1,23 @@
-import Table from "../../shared/react-table/Table";
-import useLocalStorage from "../../shared/useLocalStorage";
-import getColumnData from "../../animals/AnimalsHomeGetColumnData";
-import getTableData from "../../animals/AnimalsHomeGetTableData";
-import RadioOption from "../../shared/filters/RadioOption";
-import CheckOption from "../../shared/filters/CheckOption";
+import React from "react";
+import CollectionPageGeneric from "../CollectionPageGeneric";
 
-import recipies from "../../shared/data/recipes";
+import { fish, fishTypes } from "../../shared/data/fish";
 
 // ////
-// CookingHome()
+// SecretNotesHome()
 
 function SecretNotesHome() {
-	// return
-	return <></>;
+	return (
+		<>
+			<CollectionPageGeneric
+				collectionName={"Secret Notes"}
+				collectionItemName={"Secret Note"}
+				collectionGoal={"Found"}
+				dataSource={fish}
+				filterItemTypes={fishTypes}
+			/>
+		</>
+	);
 }
 
 export default SecretNotesHome;

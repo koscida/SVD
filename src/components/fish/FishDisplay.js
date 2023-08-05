@@ -1,5 +1,5 @@
 import _dataSeasons from "../shared/data/dataSeasons";
-import _dataFish from "../shared/data/dataFish";
+import _dataFish from "../shared/data/fish";
 import _dataLocations from "../shared/data/dataLocations";
 import GridBody from "./GridBody";
 
@@ -42,16 +42,28 @@ function FishDisplay({
 		const cellClasses = "cell cellHeader px-1";
 		return (
 			<>
-				<div className={cellClasses} style={{ gridRowStart: 1, gridRowEnd: 3 }}>
+				<div
+					className={cellClasses}
+					style={{ gridRowStart: 1, gridRowEnd: 3 }}
+				>
 					<p>Name</p>
 				</div>
-				<div className={cellClasses} style={{ gridRowStart: 1, gridRowEnd: 3 }}>
+				<div
+					className={cellClasses}
+					style={{ gridRowStart: 1, gridRowEnd: 3 }}
+				>
 					<p>Caught?</p>
 				</div>
-				<div className={cellClasses} style={{ gridRowStart: 1, gridRowEnd: 3 }}>
+				<div
+					className={cellClasses}
+					style={{ gridRowStart: 1, gridRowEnd: 3 }}
+				>
 					<p>Type</p>
 				</div>
-				<div className={cellClasses} style={{ gridRowStart: 1, gridRowEnd: 3 }}>
+				<div
+					className={cellClasses}
+					style={{ gridRowStart: 1, gridRowEnd: 3 }}
+				>
 					<p>Tool</p>
 				</div>
 				{locations.map((location, i) => (
@@ -136,18 +148,26 @@ function FishDisplay({
 					.filter(
 						(thisFish) =>
 							thisFish.season.includes(name) &&
-							thisFish.weather.some((w) => filteredWeatherNames.includes(w)) &&
+							thisFish.weather.some((w) =>
+								filteredWeatherNames.includes(w)
+							) &&
 							showType.includes(thisFish.type) &&
 							thisFish.type !== "Crabpot"
 					)
 					.filter(caughtFilter)
 					.sort((a, b) => a.id < b.id)
-					.sort((a, b) => a.type === "Regular" || a.type === "Special");
+					.sort(
+						(a, b) => a.type === "Regular" || a.type === "Special"
+					);
 
 				return (
 					<div className={"season mb-5 " + name} key={name}>
 						<h3>
-							<img src={"images/" + image} alt={name} className="me-2" />
+							<img
+								src={"images/" + image}
+								alt={name}
+								className="me-2"
+							/>
 							{name}
 						</h3>
 
@@ -155,7 +175,9 @@ function FishDisplay({
 							className="seasonTimeline d-grid"
 							style={{
 								gridTemplateColumns:
-									"100px repeat(3, auto) repeat(" + columnsLen + ", auto)",
+									"100px repeat(3, auto) repeat(" +
+									columnsLen +
+									", auto)",
 							}}
 						>
 							{filterShowBy === "Location" ? (
@@ -170,7 +192,9 @@ function FishDisplay({
 								seasonName={name}
 								seasonWeather={seasonWeather}
 								displayHeaders={
-									filterShowBy === "Location" ? locations : blockTimes
+									filterShowBy === "Location"
+										? locations
+										: blockTimes
 								}
 								caughtFish={caughtFish}
 								handleCaught={handleCaught}

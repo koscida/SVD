@@ -4,15 +4,15 @@ import CollectionPageGeneric from "../CollectionPageGeneric";
 import { fish, fishTypes } from "../../shared/data/fish";
 
 // ////
-// FishCaughtHome()
+// PerfectionHome()
 
-function FishCaughtHome() {
+function PerfectionHome() {
 	return (
 		<>
 			<CollectionPageGeneric
-				collectionName={"Fish"}
-				collectionItemName={"Fish"}
-				collectionGoal={"Caught"}
+				collectionName={"Perfection"}
+				collectionItemName={"Achievement"}
+				collectionGoal={"Achieved"}
 				dataSource={fish}
 				filterItemTypes={fishTypes}
 			/>
@@ -20,4 +20,4 @@ function FishCaughtHome() {
 	);
 }
 
-export default FishCaughtHome;
+export default PerfectionHome;

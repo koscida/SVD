@@ -1,5 +1,5 @@
 import useLocalStorage from "../../shared/useLocalStorage";
-import data from "../../shared/data/dataCrops";
+import data from "../../shared/data/crops";
 import Plots from "./Plots";
 import Planting from "./Planting";
 import Calendar from "./Calendar";
@@ -68,7 +68,9 @@ const calcInitHarvests = (crop, seeds) => {
 			newHarvest.yield = seeds;
 
 			// add grow days that the harvest grew
-			newHarvest.growDays = [...Array(newHarvest.harvestDay).keys()].slice(day);
+			newHarvest.growDays = [
+				...Array(newHarvest.harvestDay).keys(),
+			].slice(day);
 
 			// add the harvest
 			harvests.push(newHarvest);
@@ -157,9 +159,10 @@ function HarvestHome() {
 		} // else, name was not in selected crops, then add it
 		else {
 			// add to selected crops
-			newPlots[selectedPlot].selectedCrops = [...oldSelectedCrops, name].sort(
-				(a, b) => a < b
-			);
+			newPlots[selectedPlot].selectedCrops = [
+				...oldSelectedCrops,
+				name,
+			].sort((a, b) => a < b);
 			// add to harvests
 			newPlots[selectedPlot].harvests[name] = calcInitHarvests(
 				crops[name],
@@ -199,7 +202,11 @@ function HarvestHome() {
 		setPlots(filteredPlots);
 	};
 	// CropYield handlers
-	const handleSetHarvest = (selectedPlotName, selectedCropName, newHarvest) => {
+	const handleSetHarvest = (
+		selectedPlotName,
+		selectedCropName,
+		newHarvest
+	) => {
 		// copy new crops
 		const newPlots = [...plots];
 
@@ -241,7 +248,9 @@ function HarvestHome() {
 						: plots
 					).map((plot) =>
 						plot.selectedCrops
-							.filter((c) => crops[c].season.includes(selectedSeason))
+							.filter((c) =>
+								crops[c].season.includes(selectedSeason)
+							)
 							.map((cropName, i) => {
 								const crop = crops[cropName];
 								return (
@@ -251,13 +260,20 @@ function HarvestHome() {
 										plot={plot}
 										harvests={plot.harvests[cropName]}
 										setHarvests={(newHarvest) =>
-											handleSetHarvest(plot.name, cropName, newHarvest)
+											handleSetHarvest(
+												plot.name,
+												cropName,
+												newHarvest
+											)
 										}
 										resetHarvests={() =>
 											handleSetHarvest(
 												plot.name,
 												cropName,
-												calcInitHarvests(crop, plot.size)
+												calcInitHarvests(
+													crop,
+													plot.size
+												)
 											)
 										}
 										totals={plot.totals[cropName]}

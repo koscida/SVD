@@ -10,6 +10,7 @@ exports.foraging = [
 		seasons: ["Spring", "Summer", "Fall", "Winter"],
 		edible: true,
 		stats: { energy: -5, health: 0 },
+		buffs: [{ name: "Poison", stat: "Energy", effect: -2 }],
 		sources: [],
 		locationTree: "Wherever there are trees that can be chopped down ",
 	},

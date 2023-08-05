@@ -1,47 +1,37 @@
 import React from "react";
-import { useState } from "react";
-import CollectionView from "../CollectionView";
-import {
-	Typography,
-	Box,
-	Paper,
-	TextField,
-	Divider,
-	Card,
-	CardContent,
-	FormGroup,
-	FormControlLabel,
-	Switch,
-} from "@mui/material";
-
-import {
-	shipped,
-	shippedTypes,
-	seasons,
-} from "../../shared/data/collectionShipped";
-import { crops } from "../../shared/data/dataCrops";
-import { foraging } from "../../shared/data/foraging";
-import { animalProducts } from "../../shared/data/dataAnimals";
-import { artisanProducts } from "../../shared/data/artisanProducts";
-
-import useLocalStorage from "../../shared/useLocalStorage";
-import RenderImg from "../../shared/Icons/RenderImg";
-import CancelImg from "../../shared/Icons/CancelImg";
-import CollectionTabs from "../CollectionTabs";
-import MultipleSelectChip from "../../shared/inputs/MultipleSelectChip";
-import GenericItem from "../../shared/views/GenericItem";
 import CollectionPageGeneric from "../CollectionPageGeneric";
+
+import { shipped, shippedTypes } from "../../shared/data/collectionShipped";
+import { crops } from "../../shared/data/crops";
+import { foraging } from "../../shared/data/foraging";
+import { animalProducts } from "../../shared/data/animals";
+import { artisanProducts } from "../../shared/data/artisanProducts";
 
 // ////
 // ShippedHome()
 
 function ShippedHome() {
+	const dataSource = shipped.map((item) => {
+		item.item =
+			item.type === "Crop"
+				? crops.find((x) => x.name === item.name)
+				: item.type === "Forage"
+				? foraging.find((x) => x.name === item.name)
+				: item.type === "Artisan Product"
+				? artisanProducts.find((x) => x.name === item.name)
+				: item.type === "Animal Product"
+				? animalProducts.find((x) => x.name === item.name)
+				: null;
+		return item;
+	});
 	return (
 		<>
 			<CollectionPageGeneric
 				collectionName={"Shipped"}
 				collectionItemName={"Item"}
 				collectionGoal={"Shipped"}
+				dataSource={dataSource}
+				filterItemTypes={shippedTypes}
 			/>
 		</>
 	);

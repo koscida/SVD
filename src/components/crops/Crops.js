@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import Table from "../shared/react-table/Table";
 import useLocalStorage from "../shared/useLocalStorage";
-import data from "../shared/data/dataCrops";
+import data from "../shared/data/crops";
 import SeasonSelect from "../shared/filters/SeasonSelect";
 
 const cropTableData = data.crops.map((crop) => {
@@ -13,7 +13,7 @@ const cropTableData = data.crops.map((crop) => {
 	newCrop.trellis = crop.trellis;
 	newCrop.regeow = crop.regrow;
 	// process info
-	newCrop.season = crop.season.join("/");
+	newCrop.season = crop.seasons.join("/");
 	newCrop.trellis = crop.trellis ? "Yes" : "No";
 	newCrop.regrow = crop.regrow ? "Yes" : "No";
 	newCrop.giant = crop.giant ? "Yes" : "No";
