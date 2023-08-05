@@ -123,7 +123,12 @@ function CollectionPageGeneric({
 	// selected item in collection
 	const setSelectedItemValue = (itemName) => (e) => {
 		const newItem = dataSource.find((item) => item.name === itemName);
-		// console.log(""---ShippedItem--- itemName: ", itemName, " newItem: ", newItem);
+		// console.log(
+		// 	"---setSelectedItemValue--- itemName: ",
+		// 	itemName,
+		// 	" newItem: ",
+		// 	newItem
+		// );
 		setSelectedItem(newItem);
 	};
 	// exit button

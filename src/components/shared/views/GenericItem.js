@@ -5,48 +5,76 @@ import RenderImg from "../Icons/RenderImg";
 import RenderImageSmall from "../Icons/RenderImageSmall";
 
 //
-const CropView = ({ crop }) => (
-	<>
-		<h4>Grow</h4>
-		<p>
-			Seeds:
-			<RenderImageSmall
-				label={crop.seeds}
-				styles={{ padding: "0 10px 0 0" }}
-			/>
-			{crop.seeds}
-		</p>
-		<p>Seasons: {crop.seasons.join(", ")}</p>
-		<p>
-			Grow Time: {crop.growTime} Days
-			{crop.regrow ? "(Regrow: " + crop.regrowTime + " Days)" : ""}
-		</p>
-	</>
-);
-// exports.CropView = CropView;
+const CropView = ({
+	item: {
+		Grow: { ingredients, time, amount },
+	},
+}) => {
+	const seeds = ingredients[0].ingredient;
+	return (
+		<>
+			<h4>Grow</h4>
+			<div style={{ display: "flex", flexDirection: "row" }}>
+				<div>
+					<p>
+						<RenderImageSmall label={seeds} />
+						{seeds}
+					</p>
+					<Divider />
+					<p>
+						{time.time} Days
+						{time.regrow
+							? " (Regrow: " + time.regrowTime + " Days)"
+							: ""}
+					</p>
+					{amount.Chance ? (
+						<>
+							<Divider />
+							<p>
+								{amount.Min}
+								{amount.Chance
+									? ` (Chance of a Multiplier: ${amount.Chance}% chance of X${amount.Multiplier})`
+									: ""}
+							</p>
+						</>
+					) : (
+						<></>
+					)}
+				</div>
+			</div>
+		</>
+	);
+};
 
-//
-const FishView = ({ fish }) => (
+const FishView = ({ item }) => (
 	<>
 		<h4>Fish</h4>
+		{item.Legend ? <p>Legend</p> : <></>}
+		{item.Legend ? <p>Legend</p> : <></>}
 	</>
 );
-// exports.FishView = FishView;
 
-const ForageView = ({ forage }) => (
+const ForageView = ({ item }) => (
 	<>
 		<h4>Forage</h4>
+		<p>TOOO</p>
 	</>
 );
-// exports.ForageView = ForageView;
 
-const CookingView = ({ dish: { Cooking } }) => (
+const MonsterView = ({ item }) => (
+	<>
+		<h4>Monster</h4>
+		<p>TOOO</p>
+	</>
+);
+
+const CookingView = ({ item }) => (
 	<>
 		<h4>Cooking</h4>
 		<div style={{ display: "flex", flexDirection: "row", gap: "1em" }}>
 			<div>
 				<p>Ingredients</p>
-				{Cooking.ingredients.map((ingredient) => (
+				{item.Cooking.ingredients.map((ingredient) => (
 					<p key={ingredient.ingredient}>
 						<RenderImageSmall label={ingredient.ingredient} />
 						{ingredient.ingredient} ({ingredient.amount})
@@ -55,7 +83,7 @@ const CookingView = ({ dish: { Cooking } }) => (
 			</div>
 			<div>
 				<p>Recipe Source</p>
-				{Object.entries(Cooking.recipeSources).map(
+				{Object.entries(item.recipeSources).map(
 					([source, sourceInfo]) => (
 						<p key={source}>
 							{source === "Friendship" ? (
@@ -110,13 +138,13 @@ const CookingView = ({ dish: { Cooking } }) => (
 		</div>
 	</>
 );
-// exports.ForageView = ForageView;
 
 //
-const AnimalProductView = ({ animalProduct }) => (
+const AnimalProductView = ({ item }) => (
 	<>
 		<h4>Animals</h4>
-		<p>
+		<p>TOOO</p>
+		{/* <p>
 			{animalProduct.animals.map((animal, i) => (
 				<span key={i}>
 					<RenderImg
@@ -126,15 +154,15 @@ const AnimalProductView = ({ animalProduct }) => (
 					{animal.name}
 				</span>
 			))}
-		</p>
+		</p> */}
 	</>
 );
-// exports.AnimalProductView = AnimalProductView;
 
 //
-const ArtisanProductsView = ({ artisanProduct }) => (
+const ArtisanProductsView = ({ item }) => (
 	<>
 		<h4>Equipment</h4>
+		<p>TOOO</p>
 		{/* <p>Machine: {artisanProduct.machine}</p> */}
 		{/* <p>
 			Processing Time:{" "}
@@ -147,7 +175,6 @@ const ArtisanProductsView = ({ artisanProduct }) => (
 		{/* <p>Ingredients: {artisanProduct.machine}</p> */}
 	</>
 );
-// exports.ArtisanProductsView = ArtisanProductsView;
 
 const StyledItem = styled.div`
 	> .MuiPaper-root {
@@ -181,6 +208,7 @@ const StyledItem = styled.div`
 
 //
 export default function GenericItem({ item }) {
+	console.log("--GenericItem-- item: ", item);
 	return (
 		<StyledItem>
 			<Paper>
@@ -282,15 +310,22 @@ export default function GenericItem({ item }) {
 				<Card variant="outlined">
 					<CardContent>
 						<div>
-							{item.Forage ? <ForageView forage={item} /> : <></>}
-							{item.Grow ? <CropView crop={item} /> : <></>}
-							{item.Animal ? (
-								<AnimalProductView animalProduct={item} />
+							{item.type === "Forage" ? (
+								<ForageView item={item} />
+							) : item.type === "Animal Product" ? (
+								<AnimalProductView item={item} />
+							) : item.type === "Artisan Product" ? (
+								<ArtisanProductsView item={item} />
+							) : item.type === "Fish" ? (
+								<FishView item={item} />
+							) : item.type === "Monster" ? (
+								<MonsterView item={item} />
 							) : (
 								<></>
 							)}
-							{item.Fish ? <FishView fish={item} /> : <></>}
-							{item.Cooking ? <CookingView dish={item} /> : <></>}
+							{item.Grow ? <CropView item={item} /> : <></>}
+
+							{item.Cooking ? <CookingView item={item} /> : <></>}
 						</div>
 					</CardContent>
 				</Card>

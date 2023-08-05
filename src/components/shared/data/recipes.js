@@ -25,9 +25,9 @@ exports.recipes = [
 			ingredients: [
 				{ ingredient: "Green Algae", type: "Fish", amount: 4 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Clint", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Clint", hearts: 3 },
 		},
 	},
 	{
@@ -49,9 +49,9 @@ exports.recipes = [
 				{ ingredient: "Artichoke", type: "Crop", amount: 1 },
 				{ ingredient: "Milk", type: "Animal Product", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Fall 28" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Fall 28" },
 		},
 	},
 	{
@@ -77,9 +77,9 @@ exports.recipes = [
 				{ ingredient: "Pumpkin", type: "Crop", amount: 1 },
 				{ ingredient: "Yam", type: "Crop", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Demetrius", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Demetrius", hearts: 7 },
 		},
 	},
 	{
@@ -102,9 +102,9 @@ exports.recipes = [
 				{ ingredient: "Sunfish", type: "Fish", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Summer 7" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Summer 7" },
 		},
 	},
 	{
@@ -130,13 +130,14 @@ exports.recipes = [
 			ingredients: [
 				{ ingredient: "Milk", type: "Animal Product", amount: 1 },
 			],
-			recipeSources: {
-				Shop: {
+		},
+		recipeSources: {
+			Shops: [
+				{
 					shopName: "Island Trader",
-					artifact: "Bone Fragment",
-					amount: 30,
+					price: { artifact: "Bone Fragment", amount: 30 },
 				},
-			},
+			],
 		},
 	},
 	{
@@ -161,9 +162,9 @@ exports.recipes = [
 			ingredients: [
 				{ ingredient: "Green Bean", type: "Crop", amount: 2 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Clint", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Clint", hearts: 7 },
 		},
 	},
 	{
@@ -186,9 +187,9 @@ exports.recipes = [
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Fall 14" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Fall 14" },
 		},
 	},
 	{
@@ -212,9 +213,9 @@ exports.recipes = [
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Pierre", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Pierre", hearts: 3 },
 		},
 	},
 	{
@@ -235,10 +236,10 @@ exports.recipes = [
 			ingredients: [
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 3 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Summer 28" },
-				Shop: { shopName: "Stardrop Saloon", price: 100 },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Summer 28" },
+			Shops: [{ shopName: "Stardrop Saloon", price: 100 }],
 		},
 	},
 	{
@@ -261,9 +262,9 @@ exports.recipes = [
 				{ ingredient: "Oil", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Bread", type: "Cooking", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Winter 21" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Winter 21" },
 		},
 	},
 	{
@@ -282,9 +283,9 @@ exports.recipes = [
 		sources: ["Cooking"],
 		Cooking: {
 			ingredients: [{ ingredient: "Carp", type: "Fish", amount: 4 }],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Summer 7" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Summer 7" },
 		},
 	},
 	{
@@ -306,9 +307,9 @@ exports.recipes = [
 				{ ingredient: "Cauliflower", type: "Crop", amount: 1 },
 				{ ingredient: "Cheese", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Pam", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Pam", hearts: 3 },
 		},
 	},
 	{
@@ -331,9 +332,9 @@ exports.recipes = [
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Winter 14" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Winter 14" },
 		},
 	},
 	{
@@ -357,9 +358,9 @@ exports.recipes = [
 				{ ingredient: "Clam", type: "Forage", amount: 1 },
 				{ ingredient: "Milk", type: "Animal Product", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Willy", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Willy", hearts: 3 },
 		},
 	},
 	{
@@ -382,9 +383,9 @@ exports.recipes = [
 				{ ingredient: "Mayonnaise", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Vinegar", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Spring 14" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Spring 14" },
 		},
 	},
 	{
@@ -412,9 +413,9 @@ exports.recipes = [
 				{ ingredient: "Hashbrowns", type: "Cooking", amount: 1 },
 				{ ingredient: "Pancakes", type: "Cooking", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Spring 21" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Spring 21" },
 		},
 	},
 	{
@@ -437,9 +438,9 @@ exports.recipes = [
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Evelyn", hearts: 4 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Evelyn", hearts: 4 },
 		},
 	},
 	{
@@ -468,9 +469,9 @@ exports.recipes = [
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Oil", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Fall 21" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Fall 21" },
 		},
 	},
 	{
@@ -493,9 +494,9 @@ exports.recipes = [
 				{ ingredient: "Apple", type: "Crop", amount: 1 },
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Winter 28" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Winter 28" },
 		},
 	},
 	{
@@ -518,9 +519,9 @@ exports.recipes = [
 				{ ingredient: "Cranberries", type: "Crop", amount: 1 },
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Gus", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Gus", hearts: 7 },
 		},
 	},
 	{
@@ -544,9 +545,9 @@ exports.recipes = [
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Oil", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Kent", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Kent", hearts: 3 },
 		},
 	},
 	{
@@ -569,9 +570,9 @@ exports.recipes = [
 				{ ingredient: "Sardine", type: "Fish", amount: 2 },
 				{ ingredient: "Hashbrowns", type: "Cooking", amount: 1 },
 			],
-			recipeSources: {
-				Skill: { skill: "Fishing", level: 3 },
-			},
+		},
+		recipeSources: {
+			Skill: { skill: "Fishing", level: 3 },
 		},
 	},
 	{
@@ -597,9 +598,9 @@ exports.recipes = [
 				{ ingredient: "Eggplant", type: "Crop", amount: 1 },
 				{ ingredient: "Tomato", type: "Crop", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Lewis", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Lewis", hearts: 7 },
 		},
 	},
 	{
@@ -622,9 +623,9 @@ exports.recipes = [
 				{ ingredient: "Snail", type: "Fish", amount: 1 },
 				{ ingredient: "Garlic", type: "Crop", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Willy", hearts: 5 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Willy", hearts: 5 },
 		},
 	},
 	{
@@ -647,9 +648,9 @@ exports.recipes = [
 				{ ingredient: "Parsnip", type: "Crop", amount: 1 },
 				{ ingredient: "Omelet", type: "Cooking", amount: 1 },
 			],
-			recipeSources: {
-				Skill: { skill: "Farming", level: 3 },
-			},
+		},
+		recipeSources: {
+			Skill: { skill: "Farming", level: 3 },
 		},
 	},
 	{
@@ -673,9 +674,9 @@ exports.recipes = [
 				{ ingredient: "Garlic", type: "Crop", amount: 1 },
 				{ ingredient: "Oil", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Fall 28" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Fall 28" },
 		},
 	},
 	{
@@ -700,9 +701,9 @@ exports.recipes = [
 				{ ingredient: "Periwinkle", type: "Fish", amount: 1 },
 				{ ingredient: "Tomato", type: "Crop", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Willy", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Willy", hearts: 7 },
 		},
 	},
 	{
@@ -727,9 +728,9 @@ exports.recipes = [
 				{ ingredient: "Mayonnaise", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Tortilla", type: "Cooking", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Linus", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Linus", hearts: 7 },
 		},
 	},
 	{
@@ -752,9 +753,9 @@ exports.recipes = [
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Oil", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Jodi", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Jodi", hearts: 3 },
 		},
 	},
 	{
@@ -777,9 +778,9 @@ exports.recipes = [
 				{ ingredient: "Eel", type: "Fish", amount: 1 },
 				{ ingredient: "Oil", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "George", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "George", hearts: 3 },
 		},
 	},
 	{
@@ -800,9 +801,9 @@ exports.recipes = [
 			ingredients: [
 				{ ingredient: "Egg", type: "Animal Product", amount: 1 },
 			],
-			recipeSources: {
-				Starter: { starter: "Starter" },
-			},
+		},
+		recipeSources: {
+			Starter: { starter: "Starter" },
 		},
 	},
 	{
@@ -826,9 +827,9 @@ exports.recipes = [
 				{ ingredient: "Morel", type: "Forage", amount: 1 },
 				{ ingredient: "Oil", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Demetrius", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Demetrius", hearts: 3 },
 		},
 	},
 	{
@@ -851,9 +852,9 @@ exports.recipes = [
 				{ ingredient: "Melon", type: "Crop", amount: 1 },
 				{ ingredient: "Apricot", type: "Crop", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Fall 7" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Fall 7" },
 		},
 	},
 	{
@@ -877,12 +878,9 @@ exports.recipes = [
 				{ ingredient: "Ginger", type: "Crop", amount: 3 },
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Shop: {
-					shopName: "Dwarf Shop in Volcano Dungeon",
-					price: 1000,
-				},
-			},
+		},
+		recipeSources: {
+			Shops: [{ shopName: "Dwarf Shop in Volcano Dungeon", price: 1000 }],
 		},
 	},
 	{
@@ -905,9 +903,9 @@ exports.recipes = [
 				{ ingredient: "Yam", type: "Crop", amount: 1 },
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Fall 21" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Fall 21" },
 		},
 	},
 	{
@@ -930,10 +928,10 @@ exports.recipes = [
 				{ ingredient: "Potato", type: "Crop", amount: 1 },
 				{ ingredient: "Oil", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Spring 14" },
-				Shop: { shopName: "Stardrop Saloon", price: 50 },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Spring 14" },
+			Shops: [{ shopName: "Stardrop Saloon", price: 50 }],
 		},
 	},
 	{
@@ -955,9 +953,9 @@ exports.recipes = [
 				{ ingredient: "Milk", type: "Animal Product", amount: 1 },
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Jodi", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Jodi", hearts: 7 },
 		},
 	},
 	{
@@ -983,10 +981,10 @@ exports.recipes = [
 				{ ingredient: "Lobster", type: "Fish", amount: 1 },
 				{ ingredient: "Milk", type: "Animal Product", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Winter 14" },
-				Friendship: { friend: "Willy", hearts: 9 },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Winter 14" },
+			Friendship: { friend: "Willy", hearts: 9 },
 		},
 	},
 	{
@@ -1010,9 +1008,9 @@ exports.recipes = [
 				{ ingredient: "Blue Jazz ", type: "Crop", amount: 1 },
 				{ ingredient: "Tortilla", type: "Cooking", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Spring 28" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Spring 28" },
 		},
 	},
 	{
@@ -1035,10 +1033,10 @@ exports.recipes = [
 				{ ingredient: "Seaweed", type: "Fish", amount: 1 },
 				{ ingredient: "Rice", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Summer 21" },
-				Shop: { shopName: "Stardrop Saloon", price: 300 },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Summer 21" },
+			Shops: [{ shopName: "Stardrop Saloon", price: 300 }],
 		},
 	},
 	{
@@ -1063,9 +1061,9 @@ exports.recipes = [
 				{ ingredient: "Coconut", type: "Forage", amount: 1 },
 				{ ingredient: "Rice", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Leo", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Leo", hearts: 7 },
 		},
 	},
 	{
@@ -1093,9 +1091,9 @@ exports.recipes = [
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Summer 14" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Summer 14" },
 		},
 	},
 	{
@@ -1122,9 +1120,9 @@ exports.recipes = [
 				{ ingredient: "Milk", type: "Animal Product", amount: 1 },
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Skill: { skill: "Mining", level: 3 },
-			},
+		},
+		recipeSources: {
+			Skill: { skill: "Mining", level: 3 },
 		},
 	},
 	{
@@ -1146,10 +1144,10 @@ exports.recipes = [
 				{ ingredient: "Egg", type: "Animal Product", amount: 1 },
 				{ ingredient: "Milk", type: "Animal Product", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Spring 28" },
-				Shop: { shopName: "Stardrop Saloon", price: 100 },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Spring 28" },
+			Shops: [{ shopName: "Stardrop Saloon", price: 100 }],
 		},
 	},
 	{
@@ -1170,9 +1168,9 @@ exports.recipes = [
 			ingredients: [
 				{ ingredient: "White Algae", type: "Fish", amount: 2 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Marnie", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Marnie", hearts: 3 },
 		},
 	},
 	{
@@ -1195,10 +1193,10 @@ exports.recipes = [
 				{ ingredient: "Egg", type: "Animal Product", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Summer 14" },
-				Shop: { shopName: "Stardrop Saloon", price: 100 },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Summer 14" },
+			Shops: [{ shopName: "Stardrop Saloon", price: 100 }],
 		},
 	},
 	{
@@ -1221,9 +1219,9 @@ exports.recipes = [
 				{ ingredient: "Milk", type: "Animal Product", amount: 1 },
 				{ ingredient: "Vinegar", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Caroline", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Caroline", hearts: 3 },
 		},
 	},
 	{
@@ -1249,9 +1247,9 @@ exports.recipes = [
 				{ ingredient: "Hot Pepper", type: "Crop", amount: 1 },
 				{ ingredient: "Cheese", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Shane", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Shane", hearts: 3 },
 		},
 	},
 	{
@@ -1275,9 +1273,9 @@ exports.recipes = [
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Summer 21" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Summer 21" },
 		},
 	},
 	{
@@ -1300,10 +1298,10 @@ exports.recipes = [
 				{ ingredient: "Cheese", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Spring 7" },
-				Shop: { shopName: "Stardrop Saloon", price: 150 },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Spring 7" },
+			Shops: [{ shopName: "Stardrop Saloon", price: 150 }],
 		},
 	},
 	{
@@ -1326,9 +1324,9 @@ exports.recipes = [
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Winter 7" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Winter 7" },
 		},
 	},
 	{
@@ -1348,9 +1346,9 @@ exports.recipes = [
 		sources: ["Cooking"],
 		Cooking: {
 			ingredients: [{ ingredient: "Taro Root", type: "Crop", amount: 4 }],
-			recipeSources: {
-				Friendship: { friend: "Leo", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Leo", hearts: 3 },
 		},
 	},
 	{
@@ -1373,9 +1371,9 @@ exports.recipes = [
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Winter 7" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Winter 7" },
 		},
 	},
 	{
@@ -1399,9 +1397,9 @@ exports.recipes = [
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Winter 21" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Winter 21" },
 		},
 	},
 	{
@@ -1427,9 +1425,9 @@ exports.recipes = [
 				{ ingredient: "Pumpkin", type: "Crop", amount: 1 },
 				{ ingredient: "Milk", type: "Animal Product", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Robin", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Robin", hearts: 7 },
 		},
 	},
 	{
@@ -1452,9 +1450,9 @@ exports.recipes = [
 				{ ingredient: "Oil", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Vinegar", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Spring 21" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Spring 21" },
 		},
 	},
 	{
@@ -1474,9 +1472,9 @@ exports.recipes = [
 		sources: ["Cooking"],
 		Cooking: {
 			ingredients: [{ ingredient: "Radish", type: "Crop", amount: 1 }],
-			recipeSources: {
-				Friendship: { friend: "Emily", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Emily", hearts: 7 },
 		},
 	},
 	{
@@ -1499,9 +1497,9 @@ exports.recipes = [
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Marnie", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Marnie", hearts: 7 },
 		},
 	},
 	{
@@ -1524,9 +1522,9 @@ exports.recipes = [
 				{ ingredient: "Milk", type: "Animal Product", amount: 1 },
 				{ ingredient: "Sugar", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Evelyn", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Evelyn", hearts: 7 },
 		},
 	},
 	{
@@ -1547,9 +1545,9 @@ exports.recipes = [
 			ingredients: [
 				{ ingredient: "Hazelnut", type: "Forage", amount: 3 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Summer 28" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Summer 28" },
 		},
 	},
 	{
@@ -1572,9 +1570,9 @@ exports.recipes = [
 				{ ingredient: "Cave Carrot", type: "Forage", amount: 1 },
 				{ ingredient: "Winter Root", type: "Forage", amount: 1 },
 			],
-			recipeSources: {
-				Skill: { skill: "Combat", level: 3 },
-			},
+		},
+		recipeSources: {
+			Skill: { skill: "Combat", level: 3 },
 		},
 	},
 	{
@@ -1597,9 +1595,9 @@ exports.recipes = [
 				{ ingredient: "Leek", type: "Forage", amount: 1 },
 				{ ingredient: "Vinegar", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Emily", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Emily", hearts: 3 },
 		},
 	},
 	{
@@ -1622,9 +1620,9 @@ exports.recipes = [
 				{ ingredient: "Amaranth ", type: "Crop", amount: 1 },
 				{ ingredient: "Kale", type: "Crop", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Gus", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Gus", hearts: 3 },
 		},
 	},
 	{
@@ -1643,9 +1641,9 @@ exports.recipes = [
 		sources: ["Cooking"],
 		Cooking: {
 			ingredients: [{ ingredient: "Fish", type: "Fish", amount: 1 }],
-			recipeSources: {
-				Friendship: { friend: "Linus", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Linus", hearts: 3 },
 		},
 	},
 	{
@@ -1670,9 +1668,9 @@ exports.recipes = [
 				{ ingredient: "Midnight Carp", type: "Fish", amount: 1 },
 				{ ingredient: "Squid Ink", type: "Forage", amount: 1 },
 			],
-			recipeSources: {
-				Skill: { skill: "Fishing", level: 9 },
-			},
+		},
+		recipeSources: {
+			Skill: { skill: "Fishing", level: 9 },
 		},
 	},
 	{
@@ -1699,9 +1697,9 @@ exports.recipes = [
 				{ ingredient: "Tomato", type: "Crop", amount: 1 },
 				{ ingredient: "Wild Horseradish", type: "Forage", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 2", date: "Winter 28" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 2", date: "Winter 28" },
 		},
 	},
 	{
@@ -1723,9 +1721,9 @@ exports.recipes = [
 				{ ingredient: "Tomato", type: "Crop", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Lewis", hearts: 3 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Lewis", hearts: 3 },
 		},
 	},
 	{
@@ -1751,9 +1749,9 @@ exports.recipes = [
 				{ ingredient: "Eel", type: "Fish", amount: 1 },
 				{ ingredient: "Hot Pepper", type: "Crop", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "George", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "George", hearts: 7 },
 		},
 	},
 	{
@@ -1777,9 +1775,9 @@ exports.recipes = [
 				{ ingredient: "Tomato", type: "Crop", amount: 1 },
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Skill: { skill: "Combat", level: 9 },
-			},
+		},
+		recipeSources: {
+			Skill: { skill: "Combat", level: 9 },
 		},
 	},
 	{
@@ -1803,9 +1801,9 @@ exports.recipes = [
 				{ ingredient: "Common Mushroom", type: "Forage", amount: 1 },
 				{ ingredient: "Oil", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Spring 7" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Spring 7" },
 		},
 	},
 	{
@@ -1832,9 +1830,9 @@ exports.recipes = [
 				},
 				{ ingredient: "Wheat Flour", type: "Artisan Goods", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Shane", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Shane", hearts: 7 },
 		},
 	},
 	{
@@ -1858,9 +1856,9 @@ exports.recipes = [
 				{ ingredient: "Hazelnut", type: "Forage", amount: 1 },
 				{ ingredient: "Bread", type: "Cooking", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Pam", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Pam", hearts: 7 },
 		},
 	},
 	{
@@ -1887,9 +1885,9 @@ exports.recipes = [
 				{ ingredient: "Bok Choy", type: "Crop", amount: 1 },
 				{ ingredient: "Cranberries", type: "Crop", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Kent", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Kent", hearts: 7 },
 		},
 	},
 	{
@@ -1913,9 +1911,9 @@ exports.recipes = [
 				{ ingredient: "Cave Carrot", type: "Forage", amount: 1 },
 				{ ingredient: "Bread", type: "Cooking", amount: 1 },
 			],
-			recipeSources: {
-				Skill: { skill: "Foraging", level: 2 },
-			},
+		},
+		recipeSources: {
+			Skill: { skill: "Foraging", level: 2 },
 		},
 	},
 	{
@@ -1942,9 +1940,9 @@ exports.recipes = [
 				{ ingredient: "Coconut", type: "Forage", amount: 1 },
 				{ ingredient: "Common Mushroom", type: "Forage", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Sandy", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Sandy", hearts: 7 },
 		},
 	},
 	{
@@ -1963,10 +1961,10 @@ exports.recipes = [
 		sources: ["Cooking"],
 		Cooking: {
 			ingredients: [{ ingredient: "Corn", type: "Crop", amount: 2 }],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Fall 7" },
-				Shop: { shopName: "Stardrop Saloon", price: 100 },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Fall 7" },
+			Shops: [{ shopName: "Stardrop Saloon", price: 100 }],
 		},
 	},
 	{
@@ -1988,9 +1986,9 @@ exports.recipes = [
 			ingredients: [
 				{ ingredient: "Coffee", type: "Artisan Goods", amount: 3 },
 			],
-			recipeSources: {
-				Shop: { shopName: "Stardrop Saloon", price: 5000 },
-			},
+		},
+		recipeSources: {
+			Shops: [{ shopName: "Stardrop Saloon", price: 5000 }],
 		},
 	},
 	{
@@ -2014,9 +2012,9 @@ exports.recipes = [
 				{ ingredient: "Pineapple", type: "Crop", amount: 4 },
 				{ ingredient: "Hot Pepper", type: "Crop", amount: 1 },
 			],
-			recipeSources: {
-				Shop: { shopName: "Ginger Island Resort", price: 2000 },
-			},
+		},
+		recipeSources: {
+			Shops: [{ shopName: "Ginger Island Resort", price: 2000 }],
 		},
 	},
 	{
@@ -2039,9 +2037,9 @@ exports.recipes = [
 				{ ingredient: "Rainbow Trout", type: "Fish", amount: 1 },
 				{ ingredient: "Green Algae", type: "Fish", amount: 1 },
 			],
-			recipeSources: {
-				"The Queen of Sauce": { year: "Year 1", date: "Fall 14" },
-			},
+		},
+		recipeSources: {
+			"The Queen of Sauce": { year: "Year 1", date: "Fall 14" },
 		},
 	},
 	{
@@ -2063,9 +2061,9 @@ exports.recipes = [
 				{ ingredient: "Beet", type: "Crop", amount: 1 },
 				{ ingredient: "Tomato", type: "Crop", amount: 1 },
 			],
-			recipeSources: {
-				Friendship: { friend: "Caroline", hearts: 7 },
-			},
+		},
+		recipeSources: {
+			Friendship: { friend: "Caroline", hearts: 7 },
 		},
 	},
 ];

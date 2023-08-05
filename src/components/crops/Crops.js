@@ -13,7 +13,7 @@ const cropTableData = data.crops.map((crop) => {
 	newCrop.trellis = crop.trellis;
 	newCrop.regeow = crop.regrow;
 	// process info
-	newCrop.season = crop.seasons.join("/");
+	newCrop.season = crop.seasons ? crop.seasons.join("/") : [];
 	newCrop.trellis = crop.trellis ? "Yes" : "No";
 	newCrop.regrow = crop.regrow ? "Yes" : "No";
 	newCrop.giant = crop.giant ? "Yes" : "No";
@@ -38,13 +38,13 @@ const cropTableData = data.crops.map((crop) => {
 	// seed
 	newCrop.seed = crop.seeds;
 	// seed cost
-	newCrop.seedCostSingle =
-		Object.values(crop.buy).length > 0
-			? Object.values(crop.buy).reduce(
-					(min, price) => (price < min ? price : min),
-					Number.MAX_SAFE_INTEGER
-			  )
-			: 0;
+	// newCrop.seedCostSingle =
+	// 	Object.values(crop.buy).length > 0
+	// 		? Object.values(crop.buy).reduce(
+	// 				(min, price) => (price < min ? price : min),
+	// 				Number.MAX_SAFE_INTEGER
+	// 		  )
+	// 		: 0;
 	newCrop.seedCostSinglePerYieldSingle = (
 		newCrop.seedCostSingle / newCrop.yieldSingle
 	).toFixed(2);
