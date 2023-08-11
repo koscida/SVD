@@ -24,20 +24,25 @@ import RenderImg from "../shared/Icons/RenderImg";
 // setSelected = <func>
 
 const StyledCollection = styled.div`
-	display: grid;
-	grid-template-columns: repeat(10, 10%);
-
+	height: calc(100vh - 270px);
+	overflow-y: scroll;
+	border: 1px solid #ddd;
 	> div {
-		padding: 3px;
-		box-sizing: border-box;
-		border: 1px solid transparent;
-	}
-	.selected {
-		border: 1px solid #ddd;
-	}
+		display: grid;
+		grid-template-columns: repeat(10, 10%);
 
-	img {
-		width: 100%;
+		> div {
+			padding: 3px;
+			box-sizing: border-box;
+			border: 1px solid transparent;
+		}
+		.selected {
+			border: 1px solid #ddd;
+		}
+
+		img {
+			width: 100%;
+		}
 	}
 `;
 
@@ -45,25 +50,20 @@ function CollectionView({ collection, selected, setSelected }) {
 	// console.log("--CollectionView-- collection: ", collection);
 	return (
 		<StyledCollection>
-			{collection.map((item) => (
-				<div
-					key={item.id}
-					onClick={setSelected(item.name)}
-					className={
-						selected && item.name === selected.name
-							? "selected"
-							: ""
-					}
-					value={item.id}
-				>
-					{
-						<RenderImg
-							label={item.name}
-							disabled={item.collected === 0}
-						/>
-					}
-				</div>
-			))}
+			<div>
+				{collection.map((item) => (
+					<div
+						key={item.id}
+						onClick={setSelected(item.name)}
+						className={
+							selected && item.name === selected.name ? "selected" : ""
+						}
+						value={item.id}
+					>
+						{<RenderImg label={item.name} disabled={item.collected === 0} />}
+					</div>
+				))}
+			</div>
 		</StyledCollection>
 	);
 }
