@@ -10,6 +10,7 @@ import Chip from "@mui/material/Chip";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import { Divider } from "@mui/material";
+import styled from "styled-components";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -33,6 +34,12 @@ function getStyles(option, selectedOption, theme) {
 		: {};
 }
 
+const StyledFormControl = styled.div`
+	.MuiSelect-select {
+		padding: 0.75em 0.5em 0.5em;
+	}
+`;
+
 export default function MultipleSelectChip({
 	label,
 	options,
@@ -42,7 +49,7 @@ export default function MultipleSelectChip({
 	const theme = useTheme();
 
 	return (
-		<div>
+		<StyledFormControl>
 			<FormControl sx={{ m: 1, width: 300 }}>
 				<InputLabel id={`MultipleSelectChipLabel-${options[0]}`}>
 					{label}
@@ -61,9 +68,7 @@ export default function MultipleSelectChip({
 					}
 					MenuProps={MenuProps}
 					renderValue={(selected) => (
-						<Box
-							sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
-						>
+						<Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
 							{selected.map((value) => (
 								<Chip key={value} label={value} />
 							))}
@@ -72,14 +77,12 @@ export default function MultipleSelectChip({
 				>
 					{options.map((option) => (
 						<MenuItem key={option} value={option}>
-							<Checkbox
-								checked={selectedOption.indexOf(option) > -1}
-							/>
+							<Checkbox checked={selectedOption.indexOf(option) > -1} />
 							<ListItemText primary={option} />
 						</MenuItem>
 					))}
 				</Select>
 			</FormControl>
-		</div>
+		</StyledFormControl>
 	);
 }

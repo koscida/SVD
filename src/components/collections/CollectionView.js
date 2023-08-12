@@ -24,9 +24,6 @@ import RenderImg from "../shared/Icons/RenderImg";
 // setSelected = <func>
 
 const StyledCollection = styled.div`
-	height: calc(100vh - 270px);
-	overflow-y: scroll;
-	border: 1px solid #ddd;
 	> div {
 		display: grid;
 		grid-template-columns: repeat(10, 10%);

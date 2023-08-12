@@ -6,7 +6,7 @@ import { fish, fishTypes } from "../../shared/data/fish";
 // ////
 // FishCaughtHome()
 
-function FishCaughtHome() {
+function FishCollectedHome() {
 	return (
 		<>
 			<CollectionPageGeneric
@@ -20,4 +20,4 @@ function FishCaughtHome() {
 	);
 }
 
-export default FishCaughtHome;
+export default FishCollectedHome;

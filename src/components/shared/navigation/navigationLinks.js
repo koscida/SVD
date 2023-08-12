@@ -9,7 +9,7 @@ import RecipesHome from "../../cooking/recipesHome/RecipesHome";
 import CookingPlannerHome from "../../cooking/cookingPlannerHome/CookingPlannerHome";
 
 import ShippedHome from "../../collections/shipped/ShippedHome";
-import FishCaughtHome from "../../collections/fish/FishCaughtHome";
+import FishCollectedHome from "../../collections/fish/FishCollectedHome";
 import ArtifactsFoundHome from "../../collections/artifacts/ArtifactsFoundHome";
 import MineralsCollectedHome from "../../collections/minerals/MineralsCollectedHome";
 import RecipesCookedHome from "../../collections/cooking/RecipesCookedHome";
@@ -34,9 +34,9 @@ const navigationLinks = {
 			element: <ShippedHome />,
 		},
 		{
-			to: "fish",
+			to: "fishCollected",
 			label: "Fish",
-			element: <FishCaughtHome />,
+			element: <FishCollectedHome />,
 		},
 		{
 			to: "artifacts",

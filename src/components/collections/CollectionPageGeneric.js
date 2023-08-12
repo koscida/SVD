@@ -20,8 +20,10 @@ import useLocalStorage from "../shared/useLocalStorage";
 import RenderImg from "../shared/Icons/RenderImg";
 import CancelImg from "../shared/Icons/CancelImg";
 import CollectionTabs from "./CollectionTabs";
+import CollectionSummary from "./CollectionSummary";
 import MultipleSelectChip from "../shared/inputs/MultipleSelectChip";
 import GenericItem from "../shared/views/GenericItem";
+import styled from "styled-components";
 
 // ////
 // helper functions
@@ -71,6 +73,24 @@ const createCollectionTypeOptions = (filterItemTypes) => [
 ];
 const createSeasonOptions = (seasons) => [...seasons];
 
+const StyledCollectionPage = styled.div`
+	.flexRow {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.collectionContent {
+		display: grid;
+		grid-template-columns: 30% 70%;
+		grid-gap: 1rem;
+
+		> div {
+			height: calc(100vh - 230px);
+			overflow-y: scroll;
+			border: 1px solid #ddd;
+		}
+	}
+`;
 // ////
 // CollectionPageGeneric()
 
@@ -153,8 +173,7 @@ function CollectionPageGeneric({
 		const newItemType =
 			value.length === 0 ||
 			(value.find((x) => x === "All") &&
-				(!itemTypesSelected.find((x) => x === "All") ||
-					value.length === 1))
+				(!itemTypesSelected.find((x) => x === "All") || value.length === 1))
 				? ["All"]
 				: value.filter((x) => x !== "All");
 		setItemTypeSelected(newItemType);
@@ -263,10 +282,7 @@ function CollectionPageGeneric({
 						}}
 					>
 						<div style={{ display: "flex", flexDirection: "row" }}>
-							<RenderImg
-								label={item.name}
-								styles={{ padding: "0 10px 0 0" }}
-							/>
+							<RenderImg label={item.name} styles={{ padding: "0 10px 0 0" }} />
 							<h2>{item.name}</h2>
 						</div>
 						<div
@@ -280,9 +296,7 @@ function CollectionPageGeneric({
 									padding: "15px",
 								}}
 							>
-								<CancelImg
-									handleClick={resetSelectedItemValue}
-								/>
+								<CancelImg handleClick={resetSelectedItemValue} />
 							</Box>
 							<TextField
 								id="shippedItem"
@@ -295,88 +309,89 @@ function CollectionPageGeneric({
 					</div>
 				</Paper>
 
-				{newItem ? (
-					<GenericItem item={newItem} type={itemType} />
-				) : (
-					<></>
-				)}
+				{newItem ? <GenericItem item={newItem} type={itemType} /> : <></>}
 			</>
 		);
 	};
 
 	// //////
 	// render
+	const filteredCollectionData = filterCollectionData(collectionData);
 	return (
-		<>
+		<StyledCollectionPage>
 			<CollectionTabs collectionName={collectionName} />
 			<Box sx={{ padding: "1em" }}>
-				<h1>Collections: {collectionName}</h1>
-				<Box sx={{ display: "grid", gridTemplateColumns: "30% 70%" }}>
+				<div className="flexRow">
+					<h1>Collections: {collectionName}</h1>
+					<Box
+						className="flexRow"
+						sx={{
+							alignItems: "center",
+							margin: "0 1em",
+						}}
+					>
+						{
+							<FormGroup>
+								<FormControlLabel
+									control={
+										<Switch
+											checked={hideCollected}
+											onChange={handleShowCollected}
+											inputProps={{
+												"aria-label": "controlled",
+											}}
+										/>
+									}
+									label={`Hide ${collectionGoal}`}
+								/>
+							</FormGroup>
+						}
+						{filterItemTypes.length > 0 &&
+						collectionTypeOptions &&
+						itemTypesSelected ? (
+							<MultipleSelectChip
+								label={`${collectionItemName} Type`}
+								options={collectionTypeOptions}
+								handleChange={handleItemTypeChange}
+								selectedOption={itemTypesSelected}
+							/>
+						) : (
+							<></>
+						)}
+						{seasonOptions && seasonsSelected ? (
+							<MultipleSelectChip
+								label={"Season"}
+								options={seasonOptions}
+								handleChange={handleSeasonChange}
+								selectedOption={seasonsSelected}
+							/>
+						) : (
+							<></>
+						)}
+					</Box>
+				</div>
+
+				<Box className="collectionContent">
 					<CollectionView
-						collection={filterCollectionData(collectionData)}
+						collection={filteredCollectionData}
 						selected={selectedItem}
 						setSelected={setSelectedItemValue}
 					/>
 					<Box>
-						<Box
-							sx={{
-								display: "flex",
-								flexDirection: "row",
-								alignItems: "center",
-								margin: "0 1em",
-							}}
-						>
-							{
-								<FormGroup>
-									<FormControlLabel
-										control={
-											<Switch
-												checked={hideCollected}
-												onChange={handleShowCollected}
-												inputProps={{
-													"aria-label": "controlled",
-												}}
-											/>
-										}
-										label={`Hide ${collectionGoal}`}
-									/>
-								</FormGroup>
-							}
-							{filterItemTypes.length > 0 &&
-							collectionTypeOptions &&
-							itemTypesSelected ? (
-								<MultipleSelectChip
-									label={`${collectionItemName} Type`}
-									options={collectionTypeOptions}
-									handleChange={handleItemTypeChange}
-									selectedOption={itemTypesSelected}
-								/>
-							) : (
-								<></>
-							)}
-							{seasonOptions && seasonsSelected ? (
-								<MultipleSelectChip
-									label={"Season"}
-									options={seasonOptions}
-									handleChange={handleSeasonChange}
-									selectedOption={seasonsSelected}
-								/>
-							) : (
-								<></>
-							)}
-						</Box>
-						<Divider sx={{ margin: "1em" }} />
 						{selectedItem ? (
 							<CollectionItem item={selectedItem} />
 						) : (
 							<Box sx={{ margin: "1em" }}>
-								select an item from the collection
+								<CollectionSummary
+									collection={filteredCollectionData}
+									collectionName={collectionName}
+								/>
 							</Box>
 						)}
 					</Box>
 				</Box>
 			</Box>
-		</>
+		</StyledCollectionPage>
 	);
 }
 
