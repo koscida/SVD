@@ -23,9 +23,7 @@ const CropView = ({
 					<Divider />
 					<p>
 						{time.time} Days
-						{time.regrow
-							? " (Regrow: " + time.regrowTime + " Days)"
-							: ""}
+						{time.regrow ? " (Regrow: " + time.regrowTime + " Days)" : ""}
 					</p>
 					{amount.Chance ? (
 						<>
@@ -83,57 +81,45 @@ const CookingView = ({ item }) => (
 			</div>
 			<div>
 				<p>Recipe Source</p>
-				{Object.entries(item.recipeSources).map(
-					([source, sourceInfo]) => (
-						<p key={source}>
-							{source === "Friendship" ? (
-								<>
-									<RenderImageSmall
-										label={sourceInfo.friend}
-									/>
-									{sourceInfo.friend}, {sourceInfo.hearts}{" "}
-									hearts
-								</>
-							) : source === "Shop" ? (
-								<>
-									<RenderImageSmall
-										label={sourceInfo.shopName}
-									/>
-									{sourceInfo.shopName},{" "}
-									{sourceInfo.price ? (
-										<>{sourceInfo.price} gold</>
-									) : sourceInfo.artifact ? (
-										<>
-											<RenderImageSmall
-												label={sourceInfo.artifact}
-											/>
-											{sourceInfo.artifact} (
-											{sourceInfo.amount})
-										</>
-									) : (
-										<></>
-									)}
-								</>
-							) : source === "Skill" ? (
-								<>
-									<RenderImageSmall
-										label={sourceInfo.skill}
-									/>{" "}
-									{sourceInfo.skill}, Level {sourceInfo.level}
-								</>
-							) : source === "The Queen of Sauce" ? (
-								<>
-									<RenderImageSmall label={source} />{" "}
-									{sourceInfo.year}, {sourceInfo.date}
-								</>
-							) : source === "Starter" ? (
-								<>Starter</>
-							) : (
-								<>{source}</>
-							)}
-						</p>
-					)
-				)}
+				{Object.entries(item.recipeSources).map(([source, sourceInfo]) => (
+					<p key={source}>
+						{source === "Friendship" ? (
+							<>
+								<RenderImageSmall label={sourceInfo.friend} />
+								{sourceInfo.friend}, {sourceInfo.hearts} hearts
+							</>
+						) : source === "Shop" ? (
+							<>
+								<RenderImageSmall label={sourceInfo.shopName} />
+								{sourceInfo.shopName},{" "}
+								{sourceInfo.price ? (
+									<>{sourceInfo.price} gold</>
+								) : sourceInfo.artifact ? (
+									<>
+										<RenderImageSmall label={sourceInfo.artifact} />
+										{sourceInfo.artifact} ({sourceInfo.amount})
+									</>
+								) : (
+									<></>
+								)}
+							</>
+						) : source === "Skill" ? (
+							<>
+								<RenderImageSmall label={sourceInfo.skill} /> {sourceInfo.skill}
+								, Level {sourceInfo.level}
+							</>
+						) : source === "The Queen of Sauce" ? (
+							<>
+								<RenderImageSmall label={source} /> {sourceInfo.year},{" "}
+								{sourceInfo.date}
+							</>
+						) : source === "Starter" ? (
+							<>Starter</>
+						) : (
+							<>{source}</>
+						)}
+					</p>
+				))}
 			</div>
 		</div>
 	</>
@@ -208,7 +194,7 @@ const StyledItem = styled.div`
 
 //
 export default function GenericItem({ item }) {
-	console.log("--GenericItem-- item: ", item);
+	// console.log("--GenericItem-- item: ", item);
 	return (
 		<StyledItem>
 			<Paper>
@@ -219,9 +205,7 @@ export default function GenericItem({ item }) {
 							<p>
 								<i>
 									{item["type"]}{" "}
-									{item["sub-type"]
-										? `: ${item["sub-type"]}`
-										: ""}
+									{item["sub-type"] ? `: ${item["sub-type"]}` : ""}
 								</i>
 							</p>
 							{item.description ? (
@@ -260,19 +244,14 @@ export default function GenericItem({ item }) {
 													flexDirection: "row",
 												}}
 											>
-												{[
-													"Regular",
-													"Silver",
-													"Gold",
-													"Iridium",
-												].map((quality, i) => (
-													<div key={i}>
-														<RenderImg
-															label={`${quality} Quality`}
-														/>
-														{item.sell[quality]}
-													</div>
-												))}
+												{["Regular", "Silver", "Gold", "Iridium"].map(
+													(quality, i) => (
+														<div key={i}>
+															<RenderImg label={`${quality} Quality`} />
+															{item.sell[quality]}
+														</div>
+													)
+												)}
 											</div>
 										) : (
 											<>{item.sell.type}</>
@@ -293,13 +272,7 @@ export default function GenericItem({ item }) {
 						<CardContent>
 							<>
 								<h4>Edible</h4>
-								<div>
-									{item.edible ? (
-										<>edible</>
-									) : (
-										<>Not edible</>
-									)}
-								</div>
+								<div>{item.edible ? <>edible</> : <>Not edible</>}</div>
 							</>
 						</CardContent>
 					</Card>

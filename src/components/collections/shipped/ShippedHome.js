@@ -12,7 +12,7 @@ import { artisanProducts } from "../../shared/data/artisanProducts";
 
 function ShippedHome() {
 	const dataSource = shipped.map((item) => {
-		item.item =
+		const itemData =
 			item.type === "Crop"
 				? crops.find((x) => x.name === item.name)
 				: item.type === "Forage"
@@ -21,7 +21,9 @@ function ShippedHome() {
 				? artisanProducts.find((x) => x.name === item.name)
 				: item.type === "Animal Product"
 				? animalProducts.find((x) => x.name === item.name)
-				: null;
+				: {};
+		if (itemData)
+			Object.entries(itemData).forEach(([key, value]) => (item[key] = value));
 		return item;
 	});
 	return (

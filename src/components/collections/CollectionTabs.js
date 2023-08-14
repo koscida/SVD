@@ -34,7 +34,12 @@ const CollectionTabs = ({ collectionName }) => {
 				{tabs.map((tab, i) => (
 					<LinkTab
 						key={i}
-						icon={<RenderImg label={tab.label} styles={{ width: "2rem" }} />}
+						icon={
+							<RenderImg
+								label={tab.label}
+								styles={{ height: "2rem", marginBottom: "0.5rem" }}
+							/>
+						}
 						label={tab.label}
 						href={`/${
 							navigationLinks.Collections.find(

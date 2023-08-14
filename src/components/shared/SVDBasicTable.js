@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import { Box } from "@mui/material";
 import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
 import RenderImageSmall from "./Icons/RenderImageSmall";
+import RenderImg from "./Icons/RenderImg";
 
 // function createData(name, calories, fat, carbs, protein) {
 //   return { name, calories, fat, carbs, protein };
@@ -89,8 +90,8 @@ const filterRows = (rows, columnSelected, filterSelected) => {
 
 const getFilterSelected = (columnSelected) => {
 	// console.log("--getFilterSelected-- columnSelected: ", columnSelected);
-	if (columnSelected["filterType"])
-		if (columnSelected.filterType === "sort") return true;
+	if (columnSelected && columnSelected["filterType"])
+		if (columnSelected.filterType === "sort") return false;
 		else if (columnSelected.filterType === "filter")
 			if (columnSelected["filterOptions"])
 				return columnSelected.filterOptions.reduce((options, filterOption) => {
@@ -102,7 +103,9 @@ const getFilterSelected = (columnSelected) => {
 };
 
 export default function SVDBasicTable({ columns, rows }) {
-	const [columnSelected, setColumnSelected] = React.useState(columns[0]);
+	const [columnSelected, setColumnSelected] = React.useState(
+		columns ? columns[0] : null
+	);
 	const [filterSelected, setFilterSelected] = React.useState(
 		getFilterSelected(columnSelected)
 	);
@@ -140,7 +143,9 @@ export default function SVDBasicTable({ columns, rows }) {
 	// display
 
 	// render
-	return (
+	return !columns || !rows ? (
+		<></>
+	) : (
 		<TableContainer component={Paper}>
 			<Table sx={{ minWidth: 650 }} aria-label="simple table">
 				<TableHead>
@@ -205,9 +210,13 @@ export default function SVDBasicTable({ columns, rows }) {
 																	setNewFilterOption(filterOption);
 																}}
 															>
-																<RenderImageSmall
+																<RenderImg
 																	label={filterOption}
 																	disabled={!filterSelected[filterOption]}
+																	styles={{
+																		maxHeight: "1rem",
+																		marginRight: "0.25rem",
+																	}}
 																/>
 															</Box>
 														))

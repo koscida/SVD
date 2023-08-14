@@ -50,11 +50,9 @@ function CollectionView({ collection, selected, setSelected }) {
 			<div>
 				{collection.map((item) => (
 					<div
-						key={item.id}
-						onClick={setSelected(item.name)}
-						className={
-							selected && item.name === selected.name ? "selected" : ""
-						}
+						key={item.name}
+						onClick={() => setSelected(item.name)}
+						className={selected && item.name === selected ? "selected" : ""}
 						value={item.id}
 					>
 						{<RenderImg label={item.name} disabled={item.collected === 0} />}

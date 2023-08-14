@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import CollectionView from "./CollectionView";
+
 import {
 	Typography,
 	Box,
@@ -13,17 +13,20 @@ import {
 	FormControlLabel,
 	Switch,
 } from "@mui/material";
+import styled from "styled-components";
 
 import { seasons } from "../shared/data/collectionShipped";
 
 import useLocalStorage from "../shared/useLocalStorage";
+
+import MultipleSelectChip from "../shared/inputs/MultipleSelectChip";
 import RenderImg from "../shared/Icons/RenderImg";
 import CancelImg from "../shared/Icons/CancelImg";
+
 import CollectionTabs from "./CollectionTabs";
+import CollectionView from "./CollectionView";
 import CollectionSummary from "./CollectionSummary";
-import MultipleSelectChip from "../shared/inputs/MultipleSelectChip";
-import GenericItem from "../shared/views/GenericItem";
-import styled from "styled-components";
+import CollectionItem from "./CollectionItem";
 
 // ////
 // helper functions
@@ -44,8 +47,8 @@ const createCollectionData = (collectedData, collectionName, dataSource) => {
 	let collectionData = dataSource
 		.sort((a, b) => a.id - b.id)
 		.map((item) => {
-			item.collected = collectedData[item.id]
-				? collectedData[item.id].collected
+			item.collected = collectedData[item.name]
+				? collectedData[item.name].collected
 				: 0;
 			return item;
 		});
@@ -141,18 +144,11 @@ function CollectionPageGeneric({
 	// select item
 
 	// selected item in collection
-	const setSelectedItemValue = (itemName) => (e) => {
-		const newItem = dataSource.find((item) => item.name === itemName);
-		// console.log(
-		// 	"---setSelectedItemValue--- itemName: ",
-		// 	itemName,
-		// 	" newItem: ",
-		// 	newItem
-		// );
-		setSelectedItem(newItem);
+	const handleSelectedItem = (itemName) => {
+		setSelectedItem(itemName);
 	};
 	// exit button
-	const resetSelectedItemValue = () => {
+	const handleResetSelectedItem = () => {
 		setSelectedItem(null);
 	};
 
@@ -193,27 +189,33 @@ function CollectionPageGeneric({
 
 	// number of items shipped
 	const handleItemCollectedChanged = (itemName) => (e) => {
-		const collected = parseInt(e.target.value);
-		console.log("itemName: ", itemName, " e: ", collected);
+		const newCollected = parseInt(e.target.value);
+		// console.log("itemName: ", itemName, " newCollected: ", newCollected);
 
 		// update collected data (stored locally)
-		let newCollectedData = JSON.parse(JSON.stringify(collectedData));
-		console.log("newCollectedData: ", newCollectedData);
-		newCollectedData[itemName].collected = collected;
+		let newCollectedData = { ...collectedData };
+		newCollectedData[itemName].collected = newCollected;
 		setCollectedData(newCollectedData);
+		// console.log("newCollectedData: ", newCollectedData);
 
-		// update what is selected
 		// update collection data (what is shown in display)
-		let newCollectionData = JSON.parse(JSON.stringify(collectionData));
-		console.log("newCollectionData: ", newCollectionData);
-		newCollectionData = newCollectionData.map((item) => {
+		let newCollectionData = [...collectionData];
+		let newCollectionData2 = newCollectionData.map((item) => {
 			if (item.name === itemName) {
-				item.collected = collected;
-				setSelectedItem(item);
+				let newItem = { ...item };
+				newItem["collected"] = newCollected;
+				// console.log(
+				// 	"-handleItemCollectedChanged- item.name: ",
+				// 	item.name,
+				// 	" newItem: ",
+				// 	newItem
+				// );
+				return newItem;
 			}
 			return item;
 		});
-		setCollectionData(newCollectionData);
+		setCollectionData(newCollectionData2);
+		// console.log("newCollectionData: ", newCollectionData2);
 	};
 
 	//
@@ -261,62 +263,14 @@ function CollectionPageGeneric({
 			return inHideSelected && inTypeSelected && inSeasons;
 		});
 
-	//
-	//
-	// //////
-	// reuse displays
-
-	const CollectionItem = ({ item }) => {
-		if (!item) return <></>;
-
-		const itemType = item.type;
-		const newItem = !item.item ? item : item.item;
-
-		return (
-			<>
-				<Paper sx={{ padding: "1em", margin: "0 1em 1em" }}>
-					<div
-						style={{
-							display: "grid",
-							gridTemplateColumns: "50% 50%",
-						}}
-					>
-						<div style={{ display: "flex", flexDirection: "row" }}>
-							<RenderImg label={item.name} styles={{ padding: "0 10px 0 0" }} />
-							<h2>{item.name}</h2>
-						</div>
-						<div
-							style={{
-								display: "flex",
-								flexDirection: "row-reverse",
-							}}
-						>
-							<Box
-								sx={{
-									padding: "15px",
-								}}
-							>
-								<CancelImg handleClick={resetSelectedItemValue} />
-							</Box>
-							<TextField
-								id="shippedItem"
-								label={`${collectionItemName} ${collectionGoal}`}
-								variant="outlined"
-								value={item.collected}
-								onChange={handleItemCollectedChanged(item.name)}
-							/>
-						</div>
-					</div>
-				</Paper>
-
-				{newItem ? <GenericItem item={newItem} type={itemType} /> : <></>}
-			</>
-		);
-	};
-
 	// //////
 	// render
 	const filteredCollectionData = filterCollectionData(collectionData);
+	const selectedItemData = collectionData.find((x) => x.name === selectedItem);
+	// console.log(
+	// 	"-above render- filteredCollectionData: ",
+	// 	filteredCollectionData
+	// );
 	return (
 		<StyledCollectionPage>
 			<CollectionTabs collectionName={collectionName} />
@@ -375,16 +329,21 @@ function CollectionPageGeneric({
 					<CollectionView
 						collection={filteredCollectionData}
 						selected={selectedItem}
-						setSelected={setSelectedItemValue}
+						setSelected={handleSelectedItem}
 					/>
 					<Box>
 						{selectedItem ? (
-							<CollectionItem item={selectedItem} />
+							<CollectionItem
+								selected={selectedItemData}
+								collectionItemChange={handleItemCollectedChanged}
+								setSelected={handleSelectedItem}
+							/>
 						) : (
 							<Box sx={{ margin: "1em" }}>
 								<CollectionSummary
 									collection={filteredCollectionData}
 									collectionName={collectionName}
+									collectionItemChange={handleItemCollectedChanged}
 								/>
 							</Box>
 						)}
