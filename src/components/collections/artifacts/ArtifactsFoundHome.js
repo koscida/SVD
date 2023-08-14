@@ -1,7 +1,7 @@
 import React from "react";
 import CollectionPageGeneric from "../CollectionPageGeneric";
 
-import { fish, fishTypes } from "../../shared/data/fish";
+import { artifacts } from "../../shared/data/artifacts";
 
 // ////
 // ArtifactsFoundHome()
@@ -13,8 +13,8 @@ function ArtifactsFoundHome() {
 				collectionName={"Artifacts"}
 				collectionItemName={"Artifact"}
 				collectionGoal={"Collected"}
-				dataSource={fish}
-				filterItemTypes={fishTypes}
+				dataSource={artifacts}
+				filterItemTypes={[]}
 			/>
 		</>
 	);

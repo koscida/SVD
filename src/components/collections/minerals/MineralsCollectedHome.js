@@ -1,7 +1,7 @@
 import React from "react";
 import CollectionPageGeneric from "../CollectionPageGeneric";
 
-import { fish, fishTypes } from "../../shared/data/fish";
+import { minerals, mineralTypes } from "../../shared/data/minerals";
 
 // ////
 // FishCaughtHome()
@@ -13,8 +13,8 @@ function MineralsCollectedHome() {
 				collectionName={"Minerals"}
 				collectionItemName={"Minerals"}
 				collectionGoal={"Collected"}
-				dataSource={fish}
-				filterItemTypes={fishTypes}
+				dataSource={minerals}
+				filterItemTypes={mineralTypes}
 			/>
 		</>
 	);

@@ -53,8 +53,8 @@ const createCollectionData = (collectedData, collectionName, dataSource) => {
 			return item;
 		});
 
-	if (collectionName === "Fish")
-		collectionData = collectionData.filter((f) => f.id > 0);
+	// if (collectionName === "Fish")
+	collectionData = collectionData.filter((f) => f.id > 0);
 
 	// console.log(
 	// 	"-createCollectionData-",
