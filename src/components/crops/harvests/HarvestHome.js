@@ -1,17 +1,20 @@
+import styled from "styled-components";
+
 import useLocalStorage from "../../shared/useLocalStorage";
-import data from "../../shared/data/crops";
 import Plots from "./Plots";
 import Planting from "./Planting";
 import Calendar from "./Calendar";
 import Summary from "./Summary";
 
-// get data from data file
-const { crops } = data;
+import { cropsObj } from "../../shared/data/crops";
+
+// //
+// Data processing
 
 const getSeasonalCrops = (selectedSeason) => {
 	return sortCrops(
-		Object.values(crops).filter(
-			(crop) => crop.season && crop.season.includes(selectedSeason)
+		Object.values(cropsObj).filter(
+			(crop) => crop.seasons && crop.seasons.includes(selectedSeason)
 		)
 	);
 };
@@ -20,9 +23,9 @@ const sortCrops = (crops) => {
 		.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0))
 		.sort((a, b) => a.growTime > b.growTime)
 		.sort((a, b) =>
-			a.season.length < b.season.length
+			a.seasons.length < b.seasons.length
 				? -1
-				: a.season.length > b.season.length
+				: a.seasons.length > b.seasons.length
 				? 1
 				: 0
 		)
@@ -68,9 +71,7 @@ const calcInitHarvests = (crop, seeds) => {
 			newHarvest.yield = seeds;
 
 			// add grow days that the harvest grew
-			newHarvest.growDays = [
-				...Array(newHarvest.harvestDay).keys(),
-			].slice(day);
+			newHarvest.growDays = [...Array(newHarvest.harvestDay).keys()].slice(day);
 
 			// add the harvest
 			harvests.push(newHarvest);
@@ -83,7 +84,7 @@ const calcInitHarvests = (crop, seeds) => {
 };
 
 const calcTotals = (selectedCrop, harvests) => {
-	const seedCost = Object.values(selectedCrop.buy)[0];
+	const seedCost = selectedCrop.Grow.ingredients[0].amount;
 
 	// seed and yield totals
 	let totals = harvests.reduce(
@@ -105,6 +106,27 @@ const calcTotals = (selectedCrop, harvests) => {
 	return totals;
 };
 
+// //
+// Styled
+
+const StyledHarvestHome = styled.div`
+	width: 100%;
+	margin: 1rem 0;
+	display: grid;
+	grid-template-columns: 4fr 5fr 3fr;
+	grid-gap: 1rem;
+	box-sizing: border-box;
+	> div {
+		height: calc(100vh - 65px - 2rem);
+		overflow-y: scroll;
+		border: 1px solid #eee;
+		padding: 0.5rem;
+	}
+`;
+
+// ////
+// HarvestHome()
+
 function HarvestHome() {
 	// init values
 	const startingSeason = "Spring";
@@ -123,19 +145,22 @@ function HarvestHome() {
 		null
 	);
 	// data
-	const initHarvest = calcInitHarvests(crops["Parsnip"], 15);
+	const initHarvest = calcInitHarvests(cropsObj["Parsnip"], 15);
 	const [plots, setPlots] = useLocalStorage("svd-harvest-plots", [
 		{
 			name: "Parsnips",
 			size: 15,
 			selectedCrops: ["Parsnip"],
 			harvests: { Parsnip: initHarvest },
-			totals: { Parsnip: calcTotals(crops["Parsnip"], initHarvest) },
+			totals: { Parsnip: calcTotals(cropsObj["Parsnip"], initHarvest) },
 		},
 	]);
 	// console.log("plots", plots);
 
+	// ////
 	// Handlers
+
+	//
 	// CropFilter handlers
 	const handleChangeSeason = (newSeason) => {
 		// set season
@@ -146,6 +171,7 @@ function HarvestHome() {
 		setCropSeasonalList(seasonalCropNames);
 		// set selected crops ?
 	};
+
 	const handleCropSelect = (name) => {
 		// init
 		const newPlots = [...plots];
@@ -159,24 +185,25 @@ function HarvestHome() {
 		} // else, name was not in selected crops, then add it
 		else {
 			// add to selected crops
-			newPlots[selectedPlot].selectedCrops = [
-				...oldSelectedCrops,
-				name,
-			].sort((a, b) => a < b);
+			newPlots[selectedPlot].selectedCrops = [...oldSelectedCrops, name].sort(
+				(a, b) => a < b
+			);
 			// add to harvests
 			newPlots[selectedPlot].harvests[name] = calcInitHarvests(
-				crops[name],
+				cropsObj[name],
 				newPlots[selectedPlot].size
 			);
 			// update totals
 			newPlots[selectedPlot].totals[name] = calcTotals(
-				crops[name],
+				cropsObj[name],
 				newPlots[selectedPlot].harvests[name]
 			);
 		}
 
 		setPlots(newPlots);
 	};
+
+	//
 	// CropPlot handlers
 	const handleSetPlots = (newPlots) => {
 		// loop and check
@@ -201,12 +228,10 @@ function HarvestHome() {
 
 		setPlots(filteredPlots);
 	};
+
+	//
 	// CropYield handlers
-	const handleSetHarvest = (
-		selectedPlotName,
-		selectedCropName,
-		newHarvest
-	) => {
+	const handleSetHarvest = (selectedPlotName, selectedCropName, newHarvest) => {
 		// copy new crops
 		const newPlots = [...plots];
 
@@ -218,7 +243,7 @@ function HarvestHome() {
 
 		// update totals
 		newPlots[plotInd].totals[selectedCropName] = calcTotals(
-			crops[selectedCropName],
+			cropsObj[selectedCropName],
 			newHarvest
 		);
 
@@ -226,33 +251,42 @@ function HarvestHome() {
 		setPlots(newPlots);
 	};
 
-	return (
-		<div className="cropsApp">
-			<div className="row">
-				<div className="col-4">
-					<Plots
-						selectedSeason={selectedSeason}
-						handleChangeSeason={handleChangeSeason}
-						selectedPlot={selectedPlot}
-						setSelectedPlot={setSelectedPlot}
-						plots={plots}
-						setPlots={handleSetPlots}
-						cropSeasonalList={cropSeasonalList}
-						handleCropSelect={handleCropSelect}
-					/>
-				</div>
+	// ////
+	// Render
 
-				<div className="col-5">
+	return (
+		<StyledHarvestHome>
+			{/* Plots */}
+			<div>
+				<Plots
+					selectedSeason={selectedSeason}
+					handleChangeSeason={handleChangeSeason}
+					selectedPlot={selectedPlot}
+					setSelectedPlot={setSelectedPlot}
+					plots={plots}
+					setPlots={handleSetPlots}
+					cropSeasonalList={cropSeasonalList}
+					handleCropSelect={handleCropSelect}
+				/>
+			</div>
+
+			{/* Planting */}
+			<div>
+				<div>
+					<div>
+						<h2>Planting and Harvesting</h2>
+					</div>
+
+					<hr />
+
 					{(selectedPlot >= 0 && selectedPlot !== null
 						? [plots[selectedPlot]]
 						: plots
 					).map((plot) =>
 						plot.selectedCrops
-							.filter((c) =>
-								crops[c].season.includes(selectedSeason)
-							)
+							.filter((c) => cropsObj[c].seasons.includes(selectedSeason))
 							.map((cropName, i) => {
-								const crop = crops[cropName];
+								const crop = cropsObj[cropName];
 								return (
 									<Planting
 										key={i}
@@ -260,20 +294,13 @@ function HarvestHome() {
 										plot={plot}
 										harvests={plot.harvests[cropName]}
 										setHarvests={(newHarvest) =>
-											handleSetHarvest(
-												plot.name,
-												cropName,
-												newHarvest
-											)
+											handleSetHarvest(plot.name, cropName, newHarvest)
 										}
 										resetHarvests={() =>
 											handleSetHarvest(
 												plot.name,
 												cropName,
-												calcInitHarvests(
-													crop,
-													plot.size
-												)
+												calcInitHarvests(crop, plot.size)
 											)
 										}
 										totals={plot.totals[cropName]}
@@ -282,30 +309,35 @@ function HarvestHome() {
 							})
 					)}
 				</div>
-				<div className="col-3">
+			</div>
+
+			{/* Calendar + Summary */}
+			<div>
+				<div>
 					<div>
-						<Calendar
-							plots={
-								selectedPlot >= 0 && selectedPlot !== null
-									? [plots[selectedPlot]]
-									: plots
-							}
-							selectedSeason={selectedSeason}
-						/>
+						<h2>Harvest Calendar</h2>
 					</div>
-					<div>
-						<Summary
-							plots={
-								selectedPlot >= 0 && selectedPlot !== null
-									? [plots[selectedPlot]]
-									: plots
-							}
-							selectedSeason={selectedSeason}
-						/>
-					</div>
+					<Calendar
+						plots={
+							selectedPlot >= 0 && selectedPlot !== null
+								? [plots[selectedPlot]]
+								: plots
+						}
+						selectedSeason={selectedSeason}
+					/>
+				</div>
+				<div>
+					<Summary
+						plots={
+							selectedPlot >= 0 && selectedPlot !== null
+								? [plots[selectedPlot]]
+								: plots
+						}
+						selectedSeason={selectedSeason}
+					/>
 				</div>
 			</div>
-		</div>
+		</StyledHarvestHome>
 	);
 }
 

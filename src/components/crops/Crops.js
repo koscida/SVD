@@ -7,27 +7,25 @@ import SeasonSelect from "../shared/filters/SeasonSelect";
 
 const cropTableData = data.crops.map((crop) => {
 	const newCrop = {};
+	if (!crop["Grow"]) return newCrop;
 	// crop info
 	newCrop.crop = crop.name;
-	newCrop.seasons = crop.season;
 	newCrop.trellis = crop.trellis;
-	newCrop.regeow = crop.regrow;
+	newCrop.giant = crop.giant;
+	newCrop.regrow = crop.Grow.time.regrow;
 	// process info
-	newCrop.season = crop.seasons ? crop.seasons.join("/") : [];
-	newCrop.trellis = crop.trellis ? "Yes" : "No";
-	newCrop.regrow = crop.regrow ? "Yes" : "No";
-	newCrop.giant = crop.giant ? "Yes" : "No";
+	newCrop.season = crop.seasons ? crop.seasons.join(", ") : [];
 	//
 	// total time
 	let harvests = 0;
-	newCrop.growTimeSingle = crop.growTime;
-	newCrop.reGrowTime = crop.regrow ? crop.regrowTime : "-";
-	newCrop.growTimeTotal = crop.growTime;
+	newCrop.growTimeSingle = crop.Grow.time.time;
+	newCrop.reGrowTime = newCrop.regrow ? crop.Grow.time.regrowTime : "-";
+	newCrop.growTimeTotal = newCrop.growTimeSingle;
 	let day = newCrop.growTimeTotal;
 	while (day < 28) {
 		newCrop.growTimeTotal = day;
 		harvests++;
-		day += crop.regrow ? crop.regrowTime : crop.growTime;
+		day += newCrop.regrow ? newCrop.reGrowTime : newCrop.growTimeSingle;
 	}
 	// harvests
 	newCrop.harvests = harvests;
@@ -36,7 +34,7 @@ const cropTableData = data.crops.map((crop) => {
 	newCrop.yieldTotal = newCrop.yieldSingle * newCrop.harvests;
 	//
 	// seed
-	newCrop.seed = crop.seeds;
+	newCrop.seed = crop.Grow.ingredients[0].ingredient;
 	// seed cost
 	// newCrop.seedCostSingle =
 	// 	Object.values(crop.buy).length > 0
@@ -49,7 +47,7 @@ const cropTableData = data.crops.map((crop) => {
 		newCrop.seedCostSingle / newCrop.yieldSingle
 	).toFixed(2);
 	newCrop.seedCostTotal =
-		newCrop.seedCostSingle * (crop.regrow ? 1 : newCrop.harvests);
+		newCrop.seedCostSingle * (newCrop.regrow ? 1 : newCrop.harvests);
 	newCrop.seedCostTotalPerYieldTotal = (
 		newCrop.seedCostTotal / newCrop.yieldTotal
 	).toFixed(2);
@@ -63,7 +61,7 @@ const cropTableData = data.crops.map((crop) => {
 	).toFixed(2);
 	//
 	// crop sell price - single
-	newCrop.cropSellSingle = crop.sell;
+	newCrop.cropSellSingle = crop.Regular;
 	// crop sell price - total
 	newCrop.cropSellTotal = crop.sell * newCrop.yieldTotal;
 	newCrop.cropSellTotalPerSeedCostTotal = (
@@ -86,52 +84,51 @@ const cropTableData = data.crops.map((crop) => {
 	).toFixed(0);
 	//
 	// preserves price - single
-	newCrop.preservesSellSingle = crop.preserves ? crop.preserves : 0;
-	// preserves price - total
-	newCrop.preservesSellTotal =
-		newCrop.preservesSellSingle * newCrop.yieldTotal;
-	newCrop.preservesSellTotalPerSeedCostTotal = (
-		newCrop.preservesSellTotal / newCrop.seedCostTotal
-	).toFixed(2);
-	newCrop.preservesSellTotalPerGrowTimeTotal = (
-		newCrop.preservesSellTotal / newCrop.growTimeTotal
-	).toFixed(2);
-	// crop profit
-	newCrop.preservesProfitTotal =
-		newCrop.preservesSellTotal - newCrop.seedCostTotal;
-	newCrop.preservesProfitTotalPerSeedCostTotal = (
-		newCrop.preservesProfitTotal / newCrop.seedCostTotal
-	).toFixed(2);
-	// crop productivity
-	newCrop.preservesProductivityTotal = (
-		newCrop.preservesProfitTotal / newCrop.growTimeTotal
-	).toFixed(2);
-	newCrop.preservesProductivityTotalPerMonth = (
-		newCrop.preservesProductivityTotal * 1600
-	).toFixed(0);
+	// newCrop.preservesSellSingle = crop.preserves ? crop.preserves : 0;
+	// // preserves price - total
+	// newCrop.preservesSellTotal = newCrop.preservesSellSingle * newCrop.yieldTotal;
+	// newCrop.preservesSellTotalPerSeedCostTotal = (
+	// 	newCrop.preservesSellTotal / newCrop.seedCostTotal
+	// ).toFixed(2);
+	// newCrop.preservesSellTotalPerGrowTimeTotal = (
+	// 	newCrop.preservesSellTotal / newCrop.growTimeTotal
+	// ).toFixed(2);
+	// // crop profit
+	// newCrop.preservesProfitTotal =
+	// 	newCrop.preservesSellTotal - newCrop.seedCostTotal;
+	// newCrop.preservesProfitTotalPerSeedCostTotal = (
+	// 	newCrop.preservesProfitTotal / newCrop.seedCostTotal
+	// ).toFixed(2);
+	// // crop productivity
+	// newCrop.preservesProductivityTotal = (
+	// 	newCrop.preservesProfitTotal / newCrop.growTimeTotal
+	// ).toFixed(2);
+	// newCrop.preservesProductivityTotalPerMonth = (
+	// 	newCrop.preservesProductivityTotal * 1600
+	// ).toFixed(0);
 	//
 	// keg price - single
-	newCrop.kegSellSingle = crop.keg ? crop.keg : 0;
-	// keg price - total
-	newCrop.kegSellTotal = newCrop.kegSellSingle * newCrop.yieldTotal;
-	newCrop.kegSellTotalPerSeedCostTotal = (
-		newCrop.kegSellTotal / newCrop.seedCostTotal
-	).toFixed(2);
-	newCrop.kegSellTotalPerGrowTimeTotal = (
-		newCrop.kegSellTotal / newCrop.growTimeTotal
-	).toFixed(2);
-	// crop profit
-	newCrop.kegProfitTotal = newCrop.kegSellTotal - newCrop.seedCostTotal;
-	newCrop.kegProfitTotalPerSeedCostTotal = (
-		newCrop.kegProfitTotal / newCrop.seedCostTotal
-	).toFixed(2);
-	// crop productivity
-	newCrop.kegProductivityTotal = (
-		newCrop.kegProfitTotal / newCrop.growTimeTotal
-	).toFixed(2);
-	newCrop.kegProductivityTotalPerMonth = (
-		newCrop.kegProductivityTotal * 1600
-	).toFixed(0);
+	// newCrop.kegSellSingle = crop.keg ? crop.keg : 0;
+	// // keg price - total
+	// newCrop.kegSellTotal = newCrop.kegSellSingle * newCrop.yieldTotal;
+	// newCrop.kegSellTotalPerSeedCostTotal = (
+	// 	newCrop.kegSellTotal / newCrop.seedCostTotal
+	// ).toFixed(2);
+	// newCrop.kegSellTotalPerGrowTimeTotal = (
+	// 	newCrop.kegSellTotal / newCrop.growTimeTotal
+	// ).toFixed(2);
+	// // crop profit
+	// newCrop.kegProfitTotal = newCrop.kegSellTotal - newCrop.seedCostTotal;
+	// newCrop.kegProfitTotalPerSeedCostTotal = (
+	// 	newCrop.kegProfitTotal / newCrop.seedCostTotal
+	// ).toFixed(2);
+	// // crop productivity
+	// newCrop.kegProductivityTotal = (
+	// 	newCrop.kegProfitTotal / newCrop.growTimeTotal
+	// ).toFixed(2);
+	// newCrop.kegProductivityTotalPerMonth = (
+	// 	newCrop.kegProductivityTotal * 1600
+	// ).toFixed(0);
 	//
 	return newCrop;
 });
@@ -379,36 +376,36 @@ const cropTableColumn = [
 
 // table data filters and calculations
 const calcTableData = (selectedSeason, selectedTrellis, selectedRegrow) => {
-	// set table data
-	const newTableData = cropTableData.filter(
-		(crop) =>
-			crop.seasons.includes(selectedSeason) &&
-			selectedTrellis.includes(crop.trellis) &&
-			selectedRegrow.includes(crop.regrow)
-	);
-	return newTableData;
+	return cropTableData;
+	// // set table data
+	// const newTableData = cropTableData.filter(
+	// 	(crop) =>
+	// 		(crop.seasons ? crop.seasons.includes(selectedSeason) : true) &&
+	// 		selectedTrellis.includes(crop.trellis) &&
+	// 		selectedRegrow.includes(crop.regrow)
+	// );
+	// return newTableData;
 };
 const calcColumnData = (selectedProducts, selectedQuantity) => {
-	// set column data
-	const newColumnData = cropTableColumn.reduce(
-		(newCropTable, parentSection, i) => {
-			if (
-				!selectedProductOptions.includes(parentSection.Header) ||
-				(selectedProductOptions.includes(parentSection.Header) &&
-					selectedProducts.includes(parentSection.Header))
-			) {
-				const columns = parentSection.columns.filter((section) =>
-					section.quantity
-						? selectedQuantity.includes(section.quantity)
-						: true
-				);
-				newCropTable.push({ ...parentSection, columns });
-			}
-			return newCropTable;
-		},
-		[]
-	);
-	return newColumnData;
+	return cropTableColumn;
+	// // set column data
+	// const newColumnData = cropTableColumn.reduce(
+	// 	(newCropTable, parentSection, i) => {
+	// 		if (
+	// 			!selectedProductOptions.includes(parentSection.Header) ||
+	// 			(selectedProductOptions.includes(parentSection.Header) &&
+	// 				selectedProducts.includes(parentSection.Header))
+	// 		) {
+	// 			const columns = parentSection.columns.filter((section) =>
+	// 				section.quantity ? selectedQuantity.includes(section.quantity) : true
+	// 			);
+	// 			newCropTable.push({ ...parentSection, columns });
+	// 		}
+	// 		return newCropTable;
+	// 	},
+	// 	[]
+	// );
+	// return newColumnData;
 };
 
 // init filters
@@ -428,64 +425,64 @@ function Crops() {
 		"svd-crops-columndata",
 		calcColumnData(selectedProductOptions, initQuantityOptions)
 	);
-	const [selectedSeason, setSelectedSeason] = useLocalStorage(
-		"svd-crops-selectedseason",
-		initSeason
-	);
-	const [selectedTrellis, setSelectedTrellis] = useLocalStorage(
-		"svd-crops-selectedtrellis",
-		selectedTrellisOptions
-	);
-	const [selectedRegrow, setSelectedRegrow] = useLocalStorage(
-		"svd-crops-selectedregrow",
-		selectedRegrowOptions
-	);
-	const [selectedProducts, setSelectedProducts] = useLocalStorage(
-		"svd-crops-selectedproducts",
-		selectedProductOptions
-	);
-	const [selectedQuantity, setSelectedQuantity] = useLocalStorage(
-		"svd-crops-selectedquantity",
-		initQuantityOptions
-	);
+	// const [selectedSeason, setSelectedSeason] = useLocalStorage(
+	// 	"svd-crops-selectedseason",
+	// 	initSeason
+	// );
+	// const [selectedTrellis, setSelectedTrellis] = useLocalStorage(
+	// 	"svd-crops-selectedtrellis",
+	// 	selectedTrellisOptions
+	// );
+	// const [selectedRegrow, setSelectedRegrow] = useLocalStorage(
+	// 	"svd-crops-selectedregrow",
+	// 	selectedRegrowOptions
+	// );
+	// const [selectedProducts, setSelectedProducts] = useLocalStorage(
+	// 	"svd-crops-selectedproducts",
+	// 	selectedProductOptions
+	// );
+	// const [selectedQuantity, setSelectedQuantity] = useLocalStorage(
+	// 	"svd-crops-selectedquantity",
+	// 	initQuantityOptions
+	// );
+
+	// handlers
 
 	// on change handlers
-	const handleChangeSeason = (newSeason) => {
-		// set season selected
-		setSelectedSeason(newSeason);
-	};
-	const handleSelectInfo = (name, option, selectedOptions, setSelected) => {
-		// set option selected
-		const newSelected = selectedOptions.includes(option)
-			? selectedOptions.filter((x) => x !== option)
-			: [...selectedOptions, option];
-		setSelected(newSelected);
-		// get temp vars
-		const tmp = {
-			selectedSeason,
-			selectedTrellis,
-			selectedRegrow,
-			selectedProducts,
-			selectedQuantity,
-		};
-		tmp[name] = newSelected;
-		// update table data
-		setTableData(
-			calcTableData(
-				tmp.selectedSeason,
-				tmp.selectedTrellis,
-				tmp.selectedRegrow
-			)
-		);
-		// update table columns
-		setColumnData([
-			...calcColumnData(tmp.selectedProducts, tmp.selectedQuantity),
-		]);
-	};
+	// const handleChangeSeason = (newSeason) => {
+	// 	// set season selected
+	// 	setSelectedSeason(newSeason);
+	// };
+	// const handleSelectInfo = (name, option, selectedOptions, setSelected) => {
+	// 	// set option selected
+	// 	const newSelected = selectedOptions.includes(option)
+	// 		? selectedOptions.filter((x) => x !== option)
+	// 		: [...selectedOptions, option];
+	// 	setSelected(newSelected);
+	// 	// get temp vars
+	// 	const tmp = {
+	// 		selectedSeason,
+	// 		selectedTrellis,
+	// 		selectedRegrow,
+	// 		selectedProducts,
+	// 		selectedQuantity,
+	// 	};
+	// 	tmp[name] = newSelected;
+	// 	// update table data
+	// 	setTableData(
+	// 		calcTableData(tmp.selectedSeason, tmp.selectedTrellis, tmp.selectedRegrow)
+	// 	);
+	// 	// update table columns
+	// 	setColumnData([
+	// 		...calcColumnData(tmp.selectedProducts, tmp.selectedQuantity),
+	// 	]);
+	// };
+
+	// display
 
 	return (
 		<div>
-			<div className="d-flex flex-row" style={{ height: "60px" }}>
+			{/* <div className="d-flex flex-row" style={{ height: "60px" }}>
 				<SeasonSelect
 					selectedSeason={selectedSeason}
 					handleChangeSeason={handleChangeSeason}
@@ -520,63 +517,45 @@ function Crops() {
 							selectedOptions: selectedQuantity,
 							setSelected: setSelectedQuantity,
 						},
-					].map(
-						({
-							name,
-							key,
-							options,
-							selectedOptions,
-							setSelected,
-						}) => (
-							<div
-								key={name}
-								className="d-flex flex-column flex-wrap me-3"
-							>
-								<p className="me-1">{name}</p>
-								<div className="d-flex flex-row">
-									{options.map((option) => {
-										const optionLabel = name + option;
-										return (
-											<div
-												className="form-check me-2"
-												key={optionLabel}
-											>
-												<input
-													className="form-check-input"
-													type="checkbox"
-													value={option}
-													id={optionLabel}
-													checked={selectedOptions.includes(
-														option
-													)}
-													onChange={() =>
-														handleSelectInfo(
-															key,
-															option,
-															selectedOptions,
-															setSelected
-														)
-													}
-												/>
-												<label
-													className="form-check-label"
-													htmlFor={optionLabel}
-												>
-													{option}
-												</label>
-											</div>
-										);
-									})}
-								</div>
+					].map(({ name, key, options, selectedOptions, setSelected }) => (
+						<div key={name} className="d-flex flex-column flex-wrap me-3">
+							<p className="me-1">{name}</p>
+							<div className="d-flex flex-row">
+								{options.map((option) => {
+									const optionLabel = name + option;
+									return (
+										<div className="form-check me-2" key={optionLabel}>
+											<input
+												className="form-check-input"
+												type="checkbox"
+												value={option}
+												id={optionLabel}
+												checked={selectedOptions.includes(option)}
+												onChange={() =>
+													handleSelectInfo(
+														key,
+														option,
+														selectedOptions,
+														setSelected
+													)
+												}
+											/>
+											<label className="form-check-label" htmlFor={optionLabel}>
+												{option}
+											</label>
+										</div>
+									);
+								})}
 							</div>
-						)
-					)}
+						</div>
+					))}
 				</div>
-			</div>
+			</div> */}
 			<Table
 				columns={columnData}
 				data={Object.values(tableData)}
 				filterLocation={{ top: 40 }}
+				offset={{ xOffset: 0, yOffset: 40 }}
 			/>
 		</div>
 	);

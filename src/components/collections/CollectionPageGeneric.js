@@ -27,6 +27,7 @@ import CollectionTabs from "./CollectionTabs";
 import CollectionView from "./CollectionView";
 import CollectionSummary from "./CollectionSummary";
 import CollectionItem from "./CollectionItem";
+import SeasonSelect from "../shared/filters/SeasonSelect";
 
 // ////
 // helper functions
@@ -313,13 +314,18 @@ function CollectionPageGeneric({
 							<></>
 						)}
 						{seasonOptions && seasonsSelected ? (
-							<MultipleSelectChip
-								label={"Season"}
-								options={seasonOptions}
-								handleChange={handleSeasonChange}
-								selectedOption={seasonsSelected}
+							<SeasonSelect
+								selectedSeason={seasonsSelected}
+								handleChangeSeason={handleSeasonChange}
+								multiSelect={true}
 							/>
 						) : (
+							// <MultipleSelectChip
+							// 	label={"Season"}
+							// 	options={seasonOptions}
+							// 	handleChange={handleSeasonChange}
+							// 	selectedOption={seasonsSelected}
+							// />
 							<></>
 						)}
 					</Box>

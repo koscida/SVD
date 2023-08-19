@@ -1,11 +1,32 @@
 import { useState } from "react";
-import data from "../../shared/data/crops";
-import useLocalStorage from "../../shared/useLocalStorage";
-import RenderImg from "../../shared/Icons/RenderImg";
-import PlotFilter from "./PlotFilter";
-import SeasonSelect from "../../shared/filters/SeasonSelect";
+import { Chip } from "@mui/material";
+import styled from "styled-components";
 
-const { crops } = data;
+import useLocalStorage from "../../shared/useLocalStorage";
+
+import SeasonSelect from "../../shared/filters/SeasonSelect";
+// import RenderImg from "../../shared/Icons/RenderImg";
+import RenderImageSmall from "../../shared/Icons/RenderImageSmall";
+import RenderImageMedium from "../../shared/Icons/RenderImageMedium";
+
+import { cropsObj } from "../../shared/data/crops";
+
+// ////
+// Styling
+const StyledPlots = styled.div`
+	.plot {
+		background: #f3f3f3;
+		padding: 0.5rem;
+	}
+	.plotDetail {
+		display: grid;
+		grid-template-columns: 4fr 8fr;
+		grid-gap: 0.5rem;
+	}
+`;
+
+// //
+// Plots()
 
 function Plots({
 	selectedSeason,
@@ -22,7 +43,10 @@ function Plots({
 	const [newPlot, setNewPlot] = useState(initPlot);
 	const [showClearConfirm, setShowClearConfirm] = useState(false);
 
-	// handlers
+	// ////
+	// Handlers
+
+	// selecting plot
 	const handleCancel = () => {
 		setSelectedPlot(null);
 	};
@@ -49,6 +73,7 @@ function Plots({
 		// update
 		setPlots(newPlots);
 	};
+
 	// move handlers
 	const moveTop = (i) => {
 		// reset plots
@@ -89,10 +114,14 @@ function Plots({
 		setSelectedPlot(plots.length - 1);
 	};
 
-	const Plot = ({ isNew, i, name, size, harvests }) => {
+	// ////
+	// Displays
+
+	const PlotDetail = ({ isNew, i, name, size, harvests }) => {
 		return (
-			<div className="row">
-				<div className="col-4">
+			<div className="plotDetail">
+				{/* Plot detail */}
+				<div>
 					<div>
 						Name:
 						<input
@@ -107,7 +136,7 @@ function Plots({
 						/>
 					</div>
 					<div>
-						<RenderImg label={"Marker3x2"} />
+						<RenderImageSmall label={"Marker3x2"} />
 						Size:
 						<input
 							type="number"
@@ -126,10 +155,7 @@ function Plots({
 								className="fa-solid fa-angles-up"
 								onClick={() => moveTop(i)}
 							></i>
-							<i
-								className="fa-solid fa-angle-up"
-								onClick={() => moveUp(i)}
-							></i>
+							<i className="fa-solid fa-angle-up" onClick={() => moveUp(i)}></i>
 							<i
 								className="fa-solid fa-angle-down"
 								onClick={() => moveDown(i)}
@@ -141,29 +167,88 @@ function Plots({
 						</div>
 					)}
 				</div>
-				<div className="col-8">
-					<PlotFilter
-						cropSeasonalList={cropSeasonalList}
-						selectedCrops={
-							selectedPlot !== null &&
-							!(isNaN(selectedPlot) || selectedPlot < 0) &&
-							plots[selectedPlot].selectedCrops
-						}
-						handleCropSelect={isNew ? () => {} : handleCropSelect}
-					/>
+
+				{/* Seeds */}
+				<PlotSeeds
+					cropSeasonalList={cropSeasonalList}
+					selectedCrops={
+						selectedPlot !== null &&
+						!(isNaN(selectedPlot) || selectedPlot < 0) &&
+						plots[selectedPlot].selectedCrops
+					}
+					handleCropSelect={isNew ? () => {} : handleCropSelect}
+				/>
+			</div>
+		);
+	};
+
+	const PlotSeeds = ({ cropSeasonalList, selectedCrops, handleCropSelect }) => {
+		// console.log("selectedCrops", selectedCrops);
+		return (
+			<div style={{ display: "flex" }}>
+				<div>
+					{Object.entries(
+						cropSeasonalList.reduce(
+							(newList, seasonalCropName) => {
+								cropsObj[seasonalCropName].Grow.time.regrow
+									? newList.Reproduces.push(seasonalCropName)
+									: newList["Single Harvest"].push(seasonalCropName);
+								return newList;
+							},
+							{ "Single Harvest": [], Reproduces: [] }
+						)
+					).map(([growType, seasonalCropTypeList]) => (
+						<div key={growType}>
+							<div>{growType}: </div>
+							<div
+								style={{
+									display: "flex",
+									alignItems: "center",
+									flexWrap: "wrap",
+								}}
+							>
+								{seasonalCropTypeList.map((seasonalCropName) => {
+									return (
+										<Chip
+											key={seasonalCropName}
+											label={seasonalCropName}
+											avatar={
+												<RenderImageSmall
+													label={seasonalCropName}
+													styles={{ padding: "0", margin: "0 -6px 0 12px" }}
+												/>
+											}
+											onClick={() => handleCropSelect(seasonalCropName)}
+											variant={
+												seasonalCropName &&
+												selectedCrops &&
+												selectedCrops.includes(seasonalCropName)
+													? "outlined"
+													: "filled"
+											}
+											sx={{ margin: "0 3px 3px 0" }}
+										/>
+									);
+								})}
+							</div>
+						</div>
+					))}
 				</div>
 			</div>
 		);
 	};
 
-	// return
+	// ////
+	// Render
+
 	return (
-		<div>
+		<StyledPlots>
 			<div style={{ display: "flex", justifyContent: "space-between" }}>
 				<h2>Plots</h2>
 				<SeasonSelect
 					selectedSeason={selectedSeason}
 					handleChangeSeason={handleChangeSeason}
+					multiSelect={false}
 				/>
 			</div>
 
@@ -171,12 +256,9 @@ function Plots({
 			<div>
 				{plots.map((plot, i) => {
 					const isSelected = selectedPlot === i;
-					const selectedStyles = isSelected && {
-						background: "#eeeefa",
-					};
 					return (
-						<div key={i}>
-							<div style={{ ...selectedStyles }} className="p-2">
+						<div key={i} className="plot">
+							<div className="p-2">
 								<div
 									style={{
 										display: "flex",
@@ -189,22 +271,17 @@ function Plots({
 									<div>
 										{plot.selectedCrops
 											.filter((c) =>
-												crops[c].season.includes(
-													selectedSeason
-												)
+												cropsObj[c].seasons.includes(selectedSeason)
 											)
 											.map((selectedCropName) => (
-												<RenderImg
+												<RenderImageMedium
 													label={selectedCropName}
 													key={selectedCropName}
 												/>
 											))}
 									</div>
 									{isSelected ? (
-										<button
-											className="btn btn-sm"
-											onClick={handleCancel}
-										>
+										<button className="btn btn-sm" onClick={handleCancel}>
 											Close
 										</button>
 									) : (
@@ -216,7 +293,15 @@ function Plots({
 										</button>
 									)}
 								</div>
-								{isSelected && <Plot />}
+								{isSelected && (
+									<PlotDetail
+										isNew={false}
+										i={i}
+										name={plot.name}
+										size={plot.size}
+										harvests={null}
+									/>
+								)}
 							</div>
 						</div>
 					);
@@ -229,7 +314,13 @@ function Plots({
 						New Plot
 					</button>
 				) : (
-					<Plot />
+					<PlotDetail
+						isNew={true}
+						i={-1}
+						name={null}
+						size={null}
+						harvests={null}
+					/>
 				)}
 			</div>
 			<hr />
@@ -246,8 +337,8 @@ function Plots({
 				) : (
 					<div>
 						<p>
-							Confirm - Do you want to clear/delete all plots
-							(this cannot be undone!)
+							Confirm - Do you want to clear/delete all plots (this cannot be
+							undone!)
 						</p>
 						<button
 							className="btn ms-auto"
@@ -269,7 +360,7 @@ function Plots({
 					</div>
 				)}
 			</div>
-		</div>
+		</StyledPlots>
 	);
 }
 

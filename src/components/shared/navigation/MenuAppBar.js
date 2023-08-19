@@ -69,6 +69,9 @@ export default function MenuAppBar() {
 	// });
 	// const [listOpen, setListOpen] = React.useState(listOpenInit);
 
+	// ////
+	// handlers
+
 	const toggleDrawer = (listName, open) => (event) => {
 		if (
 			event.type === "keydown" &&
@@ -104,14 +107,21 @@ export default function MenuAppBar() {
 		setProfileAnchorEl(null);
 	};
 
-	const navigationElements = (navigationLinks) =>
+	// ////
+	// reusable display elements
+
+	// element itself
+	const NavigationElements = ({ navigationLinks }) =>
 		navigationLinks.map(({ to, label }) => (
-			<ListItemButton component="a" href={to} key={label}>
-				<ListItemText primary={label} />
-			</ListItemButton>
+			<ListItem key={label}>
+				<ListItemButton component="a" href={to}>
+					<ListItemText primary={label} />
+				</ListItemButton>
+			</ListItem>
 		));
 
-	const list = (listName) => (
+	// list of elements
+	const NavigationList = ({ listName }) => (
 		// <Box
 		// 	role="presentation"
 		// 	onClick={toggleDrawer(listName, false)}
@@ -135,12 +145,15 @@ export default function MenuAppBar() {
 										unmountOnExit
 									>
 										<List component="div" disablePadding>
-											{navigationElements(navigationLinks)}
+											<NavigationElements navigationLinks={navigationLinks} />
 										</List>
 									</Collapse>
 								</React.Fragment>
 							) : (
-								navigationElements(navigationLinks)
+								<NavigationElements
+									navigationLinks={navigationLinks}
+									key={sectionLabel}
+								/>
 							)
 					)
 				) : listName === "settings" ? (
@@ -255,6 +268,8 @@ export default function MenuAppBar() {
 		</Box>
 	);
 
+	// ////
+	// render
 	return (
 		<Box sx={{ flexGrow: 1 }}>
 			<AppBar position="static">
@@ -275,7 +290,7 @@ export default function MenuAppBar() {
 						open={openState["navigation"]}
 						onClose={toggleDrawer("navigation", false)}
 					>
-						{list("navigation")}
+						<NavigationList listName={"navigation"} />
 					</Drawer>
 
 					<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -300,7 +315,7 @@ export default function MenuAppBar() {
 								open={openState["settings"]}
 								onClose={toggleDrawer("settings", false)}
 							>
-								{list("settings")}
+								<NavigationList listName={"settings"} />
 							</Drawer>
 
 							{/* account drop down */}

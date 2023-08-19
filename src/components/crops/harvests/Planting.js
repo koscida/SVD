@@ -6,6 +6,7 @@ import CalendarImg from "../../shared/Icons/CalendarImg";
 import GoldImg from "../../shared/Icons/GoldImg";
 import ConfirmImg from "../../shared/Icons/ConfirmImg";
 import CancelImg from "../../shared/Icons/CancelImg";
+import RenderImageSmall from "../../shared/Icons/RenderImageSmall";
 
 const reCalcHarvestDays = (crop, harvests, pos) => {
 	const newHarvests = [];
@@ -64,6 +65,8 @@ function Planting({
 	resetHarvests,
 	totals,
 }) {
+	// ////
+	// Handlers
 	const handleChangeValue = (pos, name, value) => {
 		// validation
 		// if not a number
@@ -97,6 +100,8 @@ function Planting({
 		setHarvests(thisHarvest);
 	};
 
+	// //
+	// Views
 	const boxStyles = {
 		border: "1px solid #ccc",
 		borderRadius: "1px",
@@ -111,6 +116,10 @@ function Planting({
 		...boxStyles,
 		border: "1px solid #aaa",
 	};
+
+	// ////
+	// Render
+
 	return (
 		<div>
 			<div className="row">
@@ -118,7 +127,7 @@ function Planting({
 					<div
 						style={{
 							display: "grid",
-							gridTemplateColumns: "30% 30% 20% 20%",
+							gridTemplateColumns: "3fr 3fr 2fr 2fr",
 							textAlign: "center",
 						}}
 					>
@@ -183,7 +192,10 @@ function Planting({
 									<div>
 										{thisHarvest.plantDay && (
 											<div className="d-flex">
-												<RenderImg label={selectedCrop.seeds} />({plot.size})
+												<RenderImg
+													label={selectedCrop.Grow.ingredients[0].ingredient}
+												/>
+												({plot.size})
 												<input
 													type="number"
 													value={thisHarvest.seeds}
@@ -217,19 +229,21 @@ function Planting({
 					<div
 						style={{
 							display: "grid",
-							gridTemplateColumns: "60% 40%",
+							gridTemplateColumns: "6fr 4fr",
 							textAlign: "center",
 						}}
 					>
 						<div>
-							<RenderImg label={selectedCrop.seeds} />
+							<RenderImageSmall
+								label={selectedCrop.Grow.ingredients[0].ingredient}
+							/>
 							Total: {totals.totalSeeds}
-							<GoldImg />
-							Cost: (@{Object.values(selectedCrop.buy)[0]}){" "}
+							<RenderImageSmall label={"gold"} />
+							Cost: (@{selectedCrop.Grow.ingredients[0].amount}){" "}
 							{totals.totalSeedCost}
 						</div>
 						<div>
-							<RenderImg label={selectedCrop.name} />
+							<RenderImageSmall label={selectedCrop.name} />
 							Total: {totals.totalYield}
 						</div>
 					</div>
