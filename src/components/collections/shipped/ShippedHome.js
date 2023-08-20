@@ -2,7 +2,7 @@ import React from "react";
 import CollectionPageGeneric from "../CollectionPageGeneric";
 
 import { shipped, shippedTypes } from "../../shared/data/collectionShipped";
-import { crops } from "../../shared/data/crops";
+import { crops, cropsObj } from "../../shared/data/crops";
 import { foraging } from "../../shared/data/foraging";
 import { animalProducts } from "../../shared/data/animals";
 import { artisanProducts } from "../../shared/data/artisanProducts";
@@ -14,7 +14,7 @@ function ShippedHome() {
 	const dataSource = shipped.map((item) => {
 		const itemData =
 			item.type === "Crop"
-				? crops.find((x) => x.name === item.name)
+				? cropsObj[item.name]
 				: item.type === "Forage"
 				? foraging.find((x) => x.name === item.name)
 				: item.type === "Artisan Product"
@@ -26,6 +26,7 @@ function ShippedHome() {
 			Object.entries(itemData).forEach(([key, value]) => (item[key] = value));
 		return item;
 	});
+	// console.log("--ShippedHome-- dataSource: ", dataSource);
 	return (
 		<>
 			<CollectionPageGeneric

@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import useLocalStorage from "../../shared/useLocalStorage";
 
-import SeasonSelect from "../../shared/filters/SeasonSelect";
+import SeasonSelect from "../../shared/inputs/SeasonSelect";
 // import RenderImg from "../../shared/Icons/RenderImg";
 import RenderImageSmall from "../../shared/Icons/RenderImageSmall";
 import RenderImageMedium from "../../shared/Icons/RenderImageMedium";

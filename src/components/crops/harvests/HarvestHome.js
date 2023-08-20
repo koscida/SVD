@@ -84,7 +84,7 @@ const calcInitHarvests = (crop, seeds) => {
 };
 
 const calcTotals = (selectedCrop, harvests) => {
-	const seedCost = selectedCrop.Grow.ingredients[0].amount;
+	const seedCost = selectedCrop.Farming.seeds[0].amount;
 
 	// seed and yield totals
 	let totals = harvests.reduce(
@@ -121,6 +121,7 @@ const StyledHarvestHome = styled.div`
 		overflow-y: scroll;
 		border: 1px solid #eee;
 		padding: 0.5rem;
+		box-sizing: border-box;
 	}
 `;
 

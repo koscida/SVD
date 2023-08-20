@@ -12,11 +12,11 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 
-import SVDBasicTable from "../../shared/SVDBasicTable";
+import SVDBasicTable from "../../shared/views/SVDBasicTable";
 import Table from "../../shared/react-table/Table";
 import useLocalStorage from "../../shared/useLocalStorage";
-import RadioOption from "../../shared/filters/RadioOption";
-import CheckOption from "../../shared/filters/CheckOption";
+import RadioOption from "../../shared/inputs/RadioOption";
+import CheckOption from "../../shared/inputs/CheckOption";
 import RenderImg from "../../shared/Icons/RenderImg";
 
 import { recipes, ingredientTypes } from "../../shared/data/recipes";

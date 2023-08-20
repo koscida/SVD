@@ -27,7 +27,7 @@ import CollectionTabs from "./CollectionTabs";
 import CollectionView from "./CollectionView";
 import CollectionSummary from "./CollectionSummary";
 import CollectionItem from "./CollectionItem";
-import SeasonSelect from "../shared/filters/SeasonSelect";
+import SeasonSelect from "../shared/inputs/SeasonSelect";
 
 // ////
 // helper functions
@@ -54,8 +54,13 @@ const createCollectionData = (collectedData, collectionName, dataSource) => {
 			return item;
 		});
 
-	// if (collectionName === "Fish")
-	collectionData = collectionData.filter((f) => f.id > 0);
+	// only show those in collection
+	if (
+		collectionName === "Fish" ||
+		collectionName === "Artifacts" ||
+		collectionName === "Minerals"
+	)
+		collectionData = collectionData.filter((f) => f.id > 0);
 
 	// console.log(
 	// 	"-createCollectionData-",
@@ -129,7 +134,7 @@ function CollectionPageGeneric({
 	const [collectionTypeOptions, setCollectionTypeOptions] = useState(
 		createCollectionTypeOptions(filterItemTypes)
 	);
-	const [itemTypesSelected, setItemTypeSelected] = useState(["All"]);
+	const [itemTypesSelected, setItemTypesSelected] = useState(["All"]);
 	// dropdown of seasons
 	const [seasonOptions, setSeasonsOptions] = useState(
 		createSeasonOptions(seasons)
@@ -163,17 +168,12 @@ function CollectionPageGeneric({
 	};
 
 	// filter item types
-	const handleItemTypeChange = (event) => {
-		const {
-			target: { value },
-		} = event;
-		const newItemType =
-			value.length === 0 ||
-			(value.find((x) => x === "All") &&
-				(!itemTypesSelected.find((x) => x === "All") || value.length === 1))
-				? ["All"]
-				: value.filter((x) => x !== "All");
-		setItemTypeSelected(newItemType);
+	const handleItemTypeChange = (selectedTypeOptions) => {
+		console.log(
+			"--handleItemTypeChange-- selectedTypeOptions: ",
+			selectedTypeOptions
+		);
+		setItemTypesSelected(selectedTypeOptions);
 	};
 
 	// filter seasons
@@ -219,19 +219,21 @@ function CollectionPageGeneric({
 		// console.log("newCollectionData: ", newCollectionData2);
 	};
 
-	//
-	//
+	// ////
+	// helpers
+
 	// filter the collection data
-	const filterCollectionData = (collectionData) =>
-		collectionData.filter((item) => {
+	const filterCollectionData = (collectionData) => {
+		return collectionData.filter((item) => {
 			// is collected hidden
 			const inHideSelected = hideCollected ? item.collected < 1 : true;
 
 			// if item type selected
-			const type = !item.item ? item["sub-type"] : item.type;
-			const inTypeSelected = itemTypesSelected.includes("All")
-				? true
-				: itemTypesSelected.includes(type);
+			const itemTypesSelectedStr = itemTypesSelected.join();
+			const inTypeSelected =
+				itemTypesSelectedStr.includes("All") ||
+				(item.type && itemTypesSelectedStr.includes(item.type)) ||
+				(item["sub-type"] && itemTypesSelectedStr.includes(item["sub-type"]));
 
 			// if seasons selected
 			const itemSeasons = !item.seasons
@@ -250,28 +252,28 @@ function CollectionPageGeneric({
 							false
 					  );
 
-			// console.log(
-			// 	"-filterCollectionData- ",
-			// 	" item: ",
-			// 	item,
-			// 	" inHideSelected: ",
-			// 	inHideSelected,
-			// 	" inTypeSelected: ",
-			// 	inTypeSelected,
-			// 	" inSeasons: ",
-			// 	inSeasons
-			// );
+			if (inHideSelected && inTypeSelected && inSeasons)
+				console.log(
+					"-filterCollectionData- ",
+					" item: ",
+					item,
+					" inHideSelected: ",
+					inHideSelected,
+					" inTypeSelected: ",
+					inTypeSelected,
+					" inSeasons: ",
+					inSeasons
+				);
 			return inHideSelected && inTypeSelected && inSeasons;
 		});
+	};
+
+	// filter the item data
+	const filterSelectedItemData = (selectedItem) =>
+		collectionData.find((x) => x.name === selectedItem);
 
 	// //////
 	// render
-	const filteredCollectionData = filterCollectionData(collectionData);
-	const selectedItemData = collectionData.find((x) => x.name === selectedItem);
-	// console.log(
-	// 	"-above render- filteredCollectionData: ",
-	// 	filteredCollectionData
-	// );
 	return (
 		<StyledCollectionPage>
 			<CollectionTabs collectionName={collectionName} />
@@ -285,6 +287,7 @@ function CollectionPageGeneric({
 							margin: "0 1em",
 						}}
 					>
+						{/* show/hide collected filter */}
 						{
 							<FormGroup>
 								<FormControlLabel
@@ -301,6 +304,8 @@ function CollectionPageGeneric({
 								/>
 							</FormGroup>
 						}
+
+						{/* item type filter */}
 						{filterItemTypes.length > 0 &&
 						collectionTypeOptions &&
 						itemTypesSelected ? (
@@ -313,6 +318,8 @@ function CollectionPageGeneric({
 						) : (
 							<></>
 						)}
+
+						{/* season filter */}
 						{seasonOptions && seasonsSelected ? (
 							<SeasonSelect
 								selectedSeason={seasonsSelected}
@@ -320,12 +327,6 @@ function CollectionPageGeneric({
 								multiSelect={true}
 							/>
 						) : (
-							// <MultipleSelectChip
-							// 	label={"Season"}
-							// 	options={seasonOptions}
-							// 	handleChange={handleSeasonChange}
-							// 	selectedOption={seasonsSelected}
-							// />
 							<></>
 						)}
 					</Box>
@@ -333,21 +334,21 @@ function CollectionPageGeneric({
 
 				<Box className="collectionContent">
 					<CollectionView
-						collection={filteredCollectionData}
+						collection={filterCollectionData(collectionData)}
 						selected={selectedItem}
 						setSelected={handleSelectedItem}
 					/>
 					<Box>
 						{selectedItem ? (
 							<CollectionItem
-								selected={selectedItemData}
+								selected={filterSelectedItemData(selectedItem)}
 								collectionItemChange={handleItemCollectedChanged}
 								setSelected={handleSelectedItem}
 							/>
 						) : (
 							<Box sx={{ margin: "1em" }}>
 								<CollectionSummary
-									collection={filteredCollectionData}
+									collection={filterCollectionData(collectionData)}
 									collectionName={collectionName}
 									collectionItemChange={handleItemCollectedChanged}
 								/>

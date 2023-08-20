@@ -8,8 +8,12 @@ import {
 	useAsyncDebounce,
 } from "react-table";
 import { matchSorter } from "match-sorter";
-import TableContainer from "@mui/material/TableContainer";
-import Paper from "@mui/material/Paper";
+
+import { TableContainer, Paper } from "@mui/material";
+import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
+
+// ////
+// Styles
 
 const Styles = styled.div`
 	--border-color: black;
@@ -42,6 +46,9 @@ const Styles = styled.div`
 		}
 	}
 `;
+
+// ////
+// Filters
 
 // Define a default UI for filtering
 function GlobalFilter({
@@ -97,6 +104,9 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 
 // Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = (val) => !val;
+
+// ////
+// Table()
 
 // Our table component
 function Table({ columns, data, offset: { xOffset = 0, yOffset = 0 } }) {
@@ -159,6 +169,9 @@ function Table({ columns, data, offset: { xOffset = 0, yOffset = 0 } }) {
 		sliceSize = firstPageRows.length;
 	}
 
+	// ////
+	// Render
+
 	return (
 		<Styles>
 			<TableContainer component={Paper}>
@@ -188,11 +201,15 @@ function Table({ columns, data, offset: { xOffset = 0, yOffset = 0 } }) {
 											{column.render("Header")}
 											{/* Add a sort direction indicator */}
 											<span>
-												{column.isSorted
-													? column.isSortedDesc
-														? " 🔽"
-														: " 🔼"
-													: ""}
+												{column.isSorted ? (
+													column.isSortedDesc ? (
+														<ArrowDownward />
+													) : (
+														<ArrowUpward />
+													)
+												) : (
+													<></>
+												)}
 											</span>
 										</th>
 									))}

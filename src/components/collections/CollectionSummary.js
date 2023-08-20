@@ -2,10 +2,12 @@ import React from "react";
 import styled from "styled-components";
 
 import RenderImg from "../shared/Icons/RenderImg";
-import SVDBasicTable from "../shared/SVDBasicTable";
+import SVDBasicTable from "../shared/views/SVDBasicTable";
 
 import { locations } from "../shared/data/dataLocations";
 import { Box, TextField } from "@mui/material";
+
+import { shippedTypes, seasons } from "../shared/data/collectionShipped";
 
 const StyledCollectionSummary = styled.div`
 	> div {
@@ -43,16 +45,7 @@ function CollectionSummary({
 					field: "type",
 					label: "Type",
 					filterType: "filter",
-					filterOptions: [
-						"Animal Product",
-						"Artisan Product",
-						"Crafting",
-						"Crop",
-						"Fish",
-						"Forage",
-						"Monster",
-						"Resource",
-					],
+					filterOptions: shippedTypes,
 				},
 				{
 					field: "sources",
@@ -64,7 +57,7 @@ function CollectionSummary({
 					field: "seasons",
 					label: "Seasons",
 					filterType: "filter",
-					filterOptions: ["Spring", "Summer", "Fall", "Winter"],
+					filterOptions: seasons,
 				},
 				{ field: "collected", label: "Collected" },
 			];
