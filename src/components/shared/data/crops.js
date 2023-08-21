@@ -31,7 +31,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -71,7 +71,7 @@ const crops = [
 				regrowTime: 7,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -116,7 +116,7 @@ const crops = [
 				regrowTime: 1,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -157,7 +157,7 @@ const crops = [
 				regrowTime: 1,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -200,7 +200,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -245,7 +245,7 @@ const crops = [
 				regrowTime: 1,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -290,7 +290,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -329,6 +329,9 @@ const crops = [
 				time: 7,
 				regrow: false,
 			},
+			amount: {
+				amount: 0.25,
+			},
 		},
 		recipeSources: {},
 		trellis: "false",
@@ -359,7 +362,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -399,9 +402,10 @@ const crops = [
 				regrowTime: 4,
 			},
 			amount: {
-				min: 3,
+				amount: 3,
 				multiplierChance: 0.02,
 				multiplier: 0.33,
+				"": 3.0198,
 			},
 		},
 		recipeSources: {
@@ -445,7 +449,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -489,7 +493,7 @@ const crops = [
 				regrowTime: 3,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -529,7 +533,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -575,7 +579,7 @@ const crops = [
 				regrowTime: 1,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -613,7 +617,7 @@ const crops = [
 				regrowTime: 2,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -649,7 +653,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				chance: 0.25,
+				amount: 0.25,
 			},
 		},
 		trellis: "false",
@@ -681,7 +685,7 @@ const crops = [
 				regrowTime: 4,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -721,7 +725,7 @@ const crops = [
 				regrowTime: 5,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -763,7 +767,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				chance: 0.25,
+				amount: 0.25,
 			},
 		},
 		trellis: "false",
@@ -803,7 +807,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				chance: 0.25,
+				amount: 0.25,
 			},
 		},
 		trellis: "false",
@@ -838,7 +842,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				chance: 0.25,
+				amount: 0.25,
 			},
 		},
 		trellis: "false",
@@ -872,7 +876,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				chance: 0.25,
+				amount: 0.25,
 			},
 		},
 		trellis: "false",
@@ -904,7 +908,7 @@ const crops = [
 				regrowTime: 5,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -949,7 +953,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -982,7 +986,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		planter: "false",
@@ -1011,7 +1015,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1060,8 +1064,7 @@ const crops = [
 				regrowTime: 3,
 			},
 			amount: {
-				chance: 1,
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1101,7 +1104,7 @@ const crops = [
 				regrowTime: 3,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1148,6 +1151,9 @@ const crops = [
 				time: 7,
 				regrow: false,
 			},
+			amount: {
+				amount: 0.25,
+			},
 		},
 		trellis: "false",
 		giant: "false",
@@ -1178,7 +1184,7 @@ const crops = [
 				regrowTime: 1,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1218,7 +1224,7 @@ const crops = [
 				regrowTime: 3,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1263,7 +1269,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1306,7 +1312,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				chance: 0.25,
+				amount: 0.25,
 			},
 		},
 		trellis: "false",
@@ -1344,7 +1350,7 @@ const crops = [
 				regrowTime: 1,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1389,7 +1395,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1438,7 +1444,7 @@ const crops = [
 				regrowTime: 1,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1475,7 +1481,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1524,7 +1530,7 @@ const crops = [
 				regrowTime: 1,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1568,7 +1574,7 @@ const crops = [
 				regrowTime: 7,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1617,7 +1623,7 @@ const crops = [
 				regrowTime: 1,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1660,7 +1666,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1705,7 +1711,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1744,7 +1750,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1772,12 +1778,16 @@ const crops = [
 			energy: 3,
 			health: 1,
 		},
+		seasons: ["Spring", "Summer", "Fall", "Winter"],
 		sources: [{ type: "Farming", name: "Qi Bean" }],
 		Farming: {
 			seeds: [{ name: "Qi Bean", type: "Seeds", amount: 1 }],
 			time: {
 				time: 4,
 				regrow: false,
+			},
+			amount: {
+				amount: 1,
 			},
 		},
 		recipeSources: {},
@@ -1815,7 +1825,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1860,7 +1870,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1898,7 +1908,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -1941,6 +1951,9 @@ const crops = [
 				time: 7,
 				regrow: false,
 			},
+			amount: {
+				amount: 0.25,
+			},
 		},
 		trellis: "false",
 		giant: "false",
@@ -1980,7 +1993,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				chance: 0.33,
+				amount: 0.33,
 			},
 		},
 		recipeSources: {},
@@ -2018,7 +2031,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -2060,7 +2073,7 @@ const crops = [
 				regrowTime: 4,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -2101,7 +2114,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -2146,7 +2159,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -2179,7 +2192,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -2208,7 +2221,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				chance: 0.33,
+				amount: 0.33,
 			},
 		},
 		trellis: "false",
@@ -2245,7 +2258,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -2279,7 +2292,7 @@ const crops = [
 				regrowTime: 1,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {},
@@ -2313,7 +2326,7 @@ const crops = [
 				regrowTime: 4,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -2352,7 +2365,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -2392,7 +2405,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -2424,7 +2437,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -2467,7 +2480,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				chance: 0.25,
+				amount: 0.25,
 			},
 		},
 		trellis: "false",
@@ -2508,7 +2521,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				chance: 0.25,
+				amount: 0.25,
 			},
 		},
 		recipeSources: {},
@@ -2541,6 +2554,9 @@ const crops = [
 			time: {
 				time: 7,
 				regrow: false,
+			},
+			amount: {
+				amount: 0.25,
 			},
 		},
 		trellis: "false",
@@ -2577,7 +2593,7 @@ const crops = [
 				regrow: false,
 			},
 			amount: {
-				min: 1,
+				amount: 1,
 			},
 		},
 		recipeSources: {
@@ -2612,7 +2628,7 @@ exports.cropSubTypes = [
 	"Seed",
 	"Vegetable",
 ];
-exports.cropSeasons = ["Spring", "Summer", "Fall"];
+exports.cropSeasons = ["Spring", "Summer", "Fall", "Winter"];
 exports.cropSources = [
 	"Pierre",
 	"JojaMart",

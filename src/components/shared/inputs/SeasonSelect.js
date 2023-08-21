@@ -1,6 +1,6 @@
 import { seasonsNames } from "../data/dataSeasons";
 
-import MultipleSelectChip from "./MultipleSelectChip";
+import MultipleSelectChips from "./MultipleSelectChips";
 import { Stack, Chip } from "@mui/material";
 import SingleSelectChip from "./SingleSelectChip";
 
@@ -16,11 +16,11 @@ function SeasonSelect({
 	multiSelect = true,
 }) {
 	return multiSelect ? (
-		<MultipleSelectChip
+		<MultipleSelectChips
 			label={"Season"}
 			options={seasonsNames}
 			handleChange={handleChangeSeason}
-			selectedOption={selectedSeason}
+			selectedOptions={selectedSeason}
 		/>
 	) : (
 		<SingleSelectChip

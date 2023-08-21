@@ -64,26 +64,23 @@ export default function MultipleSelectChips({
 }) {
 	const theme = useTheme();
 
-	const includesAll = options.join("").includes("All");
-	const selectedOptionsStr = selectedOptions.join();
+	const includesAll = options.includes("All");
 
 	const handleClick = (optionClicked) => {
-		const selectedOptionsStr = selectedOptions.join();
-
 		//	if includesAll
 
 		const newOptions = includesAll
 			? optionClicked === "All" ||
-			  (selectedOptionsStr.includes(optionClicked) &&
+			  (selectedOptions.includes(optionClicked) &&
 					selectedOptions.length === 2)
 				? ["All"]
-				: selectedOptionsStr.includes(optionClicked)
+				: selectedOptions.includes(optionClicked)
 				? selectedOptions.filter((x) => x !== optionClicked && x !== "All")
 				: [...selectedOptions, optionClicked].filter((x) => x !== "All")
-			: selectedOptionsStr.includes(optionClicked)
+			: selectedOptions.includes(optionClicked)
 			? selectedOptions.length === 1
 				? [options[0]]
-				: selectedOptions
+				: selectedOptions.filter((x) => x !== optionClicked)
 			: [...selectedOptions, optionClicked];
 
 		console.log("--MultipleSelectChip:handleClick-- newOptions: ", newOptions);
@@ -98,9 +95,7 @@ export default function MultipleSelectChips({
 					label={optionName}
 					key={optionName}
 					onClick={() => handleClick(optionName)}
-					variant={
-						selectedOptionsStr.includes(optionName) ? "outlined" : "filled"
-					}
+					variant={selectedOptions.includes(optionName) ? "outlined" : "filled"}
 					sx={{ margin: "0 5px 3px 0" }}
 				/>
 			))}

@@ -9,17 +9,14 @@ import {
 } from "react-table";
 import { matchSorter } from "match-sorter";
 
-import { TableContainer, Paper } from "@mui/material";
+import { TableContainer, Paper, Box } from "@mui/material";
 import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
 
 // ////
 // Styles
 
 const Styles = styled.div`
-	--border-color: black;
-	@media (prefers-color-scheme: dark) {
-		--border-color: #eee;
-	}
+	--border-color: #999;
 	table {
 		border-spacing: 0;
 		border: 0;
@@ -177,11 +174,11 @@ function Table({ columns, data, offset: { xOffset = 0, yOffset = 0 } }) {
 			<TableContainer component={Paper}>
 				<div
 					className="tableWrapper"
-					style={{
-						height: `calc(100vh - ${yOffset})`,
-						width: `calc(100vw - ${xOffset})`,
-						overflow: "scroll",
-					}}
+					// style={{
+					// 	height: `calc(100vh - ${yOffset})`,
+					// 	width: `calc(100vw - ${xOffset})`,
+					// 	overflow: "scroll",
+					// }}
 				>
 					<table {...getTableProps()}>
 						<thead>
@@ -193,24 +190,24 @@ function Table({ columns, data, offset: { xOffset = 0, yOffset = 0 } }) {
 										<th
 											{...column.getHeaderProps(column.getSortByToggleProps())}
 											style={{
-												position: "sticky",
-												top: 0,
 												background: "#eaf0f9",
 											}}
 										>
-											{column.render("Header")}
-											{/* Add a sort direction indicator */}
-											<span>
-												{column.isSorted ? (
-													column.isSortedDesc ? (
-														<ArrowDownward />
+											<Box sx={{ position: "sticky", top: 0 }}>
+												{column.render("Header")}
+												{/* Add a sort direction indicator */}
+												<span>
+													{column.isSorted ? (
+														column.isSortedDesc ? (
+															<ArrowDownward />
+														) : (
+															<ArrowUpward />
+														)
 													) : (
-														<ArrowUpward />
-													)
-												) : (
-													<></>
-												)}
-											</span>
+														<></>
+													)}
+												</span>
+											</Box>
 										</th>
 									))}
 								</tr>

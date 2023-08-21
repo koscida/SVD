@@ -6,7 +6,12 @@ import useLocalStorage from "../shared/useLocalStorage";
 import Table from "../shared/react-table/Table";
 import SeasonSelect from "../shared/inputs/SeasonSelect";
 
-import { crops, cropsObj, cropSubTypes } from "../shared/data/crops";
+import {
+	crops,
+	cropsObj,
+	cropSubTypes,
+	cropSeasons,
+} from "../shared/data/crops";
 import MultipleSelectChip from "../shared/inputs/MultipleSelectChip";
 import MultipleSelectChips from "../shared/inputs/MultipleSelectChips";
 
@@ -24,30 +29,43 @@ const calcInitTableData = (crops) => {
 
 		// format data
 
-		//
+		// ////
 		// crop info
+
+		// name
 		newCrop.name = crop.name;
-		// process info
+		// seasons
 		newCrop.seasons = crop.seasons ? crop.seasons.join(", ") : [];
 
-		//
-		// // total time
-		// let harvests = 0;
-		// newCrop.growTimeSingle = crop.Grow.time.time;
-		// newCrop.reGrowTime = newCrop.regrow ? crop.Grow.time.regrowTime : "-";
-		// newCrop.growTimeTotal = newCrop.growTimeSingle;
-		// let day = newCrop.growTimeTotal;
-		// while (day < 28) {
-		// 	newCrop.growTimeTotal = day;
-		// 	harvests++;
-		// 	day += newCrop.regrow ? newCrop.reGrowTime : newCrop.growTimeSingle;
-		// }
-		// // harvests
-		// newCrop.harvests = harvests;
+		// ////
+		// time
+		newCrop.growTime = crop.Farming.time.time;
+		newCrop.regrow = crop.Farming.time.regrow ? "Yes" : "No";
+		newCrop.regrowTime =
+			newCrop.regrow === "Yes" ? crop.Farming.time.regrowTime : "-";
+
+		// ////
 		// // yields
 		// newCrop.yieldSingle = 1;
-		// newCrop.yieldTotal = newCrop.yieldSingle * newCrop.harvests;
-		// //
+		newCrop.avgYield =
+			crop.Farming.amount.amount *
+			(crop.Farming.amount.multiplierChance
+				? 1 +
+				  crop.Farming.amount.multiplierChance * crop.Farming.amount.multiplier
+				: 1);
+
+		// ////
+		// // harvests
+		// newCrop.harvests = harvests;
+		newCrop.harvests =
+			newCrop.regrow === "Yes"
+				? 1 +
+				  Math.floor(
+						(crop.seasons.length * 28 - newCrop.growTime) / newCrop.regrowTime
+				  )
+				: Math.floor((crop.seasons.length * 28) / newCrop.growTime);
+
+		// ////
 		// // seed
 		// newCrop.seed = crop.Grow.ingredients[0].ingredient;
 		// // seed cost
@@ -74,9 +92,18 @@ const calcInitTableData = (crops) => {
 		// newCrop.growTimeTotalPerYieldTotal = (
 		// 	newCrop.growTimeTotal / newCrop.yieldTotal
 		// ).toFixed(2);
-		// //
-		// // crop sell price - single
-		// newCrop.cropSellSingle = crop.Regular;
+		//
+
+		// ////
+		// crop sell price
+
+		// single
+		newCrop.sell =
+			crop.sell.type === "Quality"
+				? crop.sell.Regular
+				: crop.sell.type === "Flat"
+				? crop.sell.price
+				: 0;
 		// // crop sell price - total
 		// newCrop.cropSellTotal = crop.sell * newCrop.yieldTotal;
 		// newCrop.cropSellTotalPerSeedCostTotal = (
@@ -409,6 +436,41 @@ const calcInitColumnData = (crops) => {
 					Header: "Type",
 					accessor: "sub-type",
 				},
+				{
+					Header: "Sell",
+					accessor: "sell",
+					quantity: "Single",
+				},
+			],
+		},
+		{
+			Header: "Growing",
+			columns: [
+				{
+					Header: "Grow Time",
+					accessor: "growTime",
+					quantity: "single",
+				},
+				{
+					Header: "Regrow",
+					accessor: "regrow",
+					quantity: "single",
+				},
+				{
+					Header: "Regrow Time",
+					accessor: "regrowTime",
+					quantity: "single",
+				},
+				{
+					Header: "Yield",
+					accessor: "avgYield",
+					quantity: "single",
+				},
+				{
+					Header: "Harvests",
+					accessor: "harvests",
+					quantity: "single",
+				},
 			],
 		},
 	];
@@ -417,7 +479,6 @@ const calcInitColumnData = (crops) => {
 };
 
 // init filters
-const initSeason = "Spring";
 const selectedTrellisOptions = ["Yes", "No"];
 const selectedRegrowOptions = ["Yes", "No"];
 const selectedProductOptions = ["Crop", "Preserves", "Keg"];
@@ -451,7 +512,7 @@ function Crops() {
 	const [typeOptions, setTypeOptions] = useState(["All", ...cropSubTypes]);
 
 	// filters
-	const [selectedSeason, setSelectedSeason] = useState(initSeason);
+	const [selectedSeasons, setSelectedSeasons] = useState(cropSeasons);
 	const [selectedTypes, setSelectedTypes] = useState(["All"]);
 
 	// const [selectedTrellis, setSelectedTrellis] = useLocalStorage(
@@ -477,7 +538,7 @@ function Crops() {
 	// on change handlers
 	const handleChangeSeason = (newSeason) => {
 		// set season selected
-		setSelectedSeason(newSeason);
+		setSelectedSeasons(newSeason);
 	};
 	const handleTypeChange = (typeSelected) => {
 		setSelectedTypes(typeSelected);
@@ -512,15 +573,22 @@ function Crops() {
 
 	// calc what table data will be displayed
 	const filterTableData = (tableData) => {
-		const selectedTypesStr = selectedTypes.join();
 		const filteredTableData = tableData.filter((crop) => {
-			const inSeasons = crop.seasons && crop.seasons.includes(selectedSeason);
+			// filter seasons
+			const inSeasons = crop.seasons
+				? selectedSeasons.reduce(
+						(inSeason, season) => inSeason || crop.seasons.includes(season),
+						false
+				  )
+				: true;
 
+			// filter type
 			const inType =
-				selectedTypesStr.includes("All") ||
-				(crop["sub-type"] && selectedTypesStr.includes(crop["sub-type"])) ||
-				(crop["type"] && selectedTypesStr.includes(crop["type"]));
+				selectedTypes.includes("All") ||
+				(crop["sub-type"] && selectedTypes.includes(crop["sub-type"])) ||
+				(crop["type"] && selectedTypes.includes(crop["type"]));
 
+			// determine filter
 			return inSeasons && inType;
 		});
 		return filteredTableData;
@@ -538,9 +606,9 @@ function Crops() {
 			<div>
 				<p>Season</p>
 				<SeasonSelect
-					selectedSeason={selectedSeason}
+					selectedSeason={selectedSeasons}
 					handleChangeSeason={handleChangeSeason}
-					multiSelect={false}
+					multiSelect={true}
 				/>
 				<p>Type</p>
 				<MultipleSelectChips
@@ -613,7 +681,7 @@ function Crops() {
 					))}
 				</div> */}
 			</div>
-			<div>
+			<div style={{ padding: 0 }}>
 				<Table
 					columns={filterColumnData(columnData)}
 					data={filterTableData(tableData)}
