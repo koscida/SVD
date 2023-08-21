@@ -15,7 +15,7 @@ import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import SVDBasicTable from "../../shared/views/SVDBasicTable";
 import Table from "../../shared/react-table/Table";
 import useLocalStorage from "../../shared/useLocalStorage";
-import RadioOption from "../../shared/inputs/RadioOption";
+import RadioOption from "../../shared/inputs/SingleSwitch";
 import CheckOption from "../../shared/inputs/CheckOption";
 import RenderImg from "../../shared/Icons/RenderImg";
 

@@ -14,6 +14,10 @@ import {
 } from "../shared/data/crops";
 import MultipleSelectChip from "../shared/inputs/MultipleSelectChip";
 import MultipleSelectChips from "../shared/inputs/MultipleSelectChips";
+import RenderImageMedium from "../shared/Icons/RenderImageMedium";
+import RenderImageSmall from "../shared/Icons/RenderImageSmall";
+import SingleSwitch from "../shared/inputs/SingleSwitch";
+import RadioOption from "../shared/inputs/RadioOption";
 
 // ////
 // Process data
@@ -30,44 +34,64 @@ const calcInitTableData = (crops) => {
 		// format data
 
 		// ////
-		// crop info
+		// Info
 
 		// name
-		newCrop.name = crop.name;
+		newCrop.name = (
+			<>
+				<RenderImageSmall label={crop.name} />
+				{crop.name}
+			</>
+		);
+		// trellis and planter and giant
+		["trellis", "planter", "giant"].forEach(
+			(label) =>
+				(newCrop[label] =
+					(typeof crop[label] === "string" && crop[label] === "true") ||
+					(typeof crop[label] === "boolean" && crop[label]) ? (
+						<RenderImageSmall
+							label={
+								label === "giant"
+									? `Giant_${crop.name}`
+									: label === "trellis"
+									? `${crop.name} Stage 1`
+									: label
+							}
+						/>
+					) : (
+						<></>
+					))
+		);
+		// regrow
+		newCrop.regrow = crop.Farming.time.regrow ? "Yes" : "No";
+
+		// ////
+		// Grow
+
+		// seeds
+		newCrop.seeds = crop.Farming.seeds[0].name;
 		// seasons
 		newCrop.seasons = crop.seasons ? crop.seasons.join(", ") : [];
-
-		// ////
 		// time
-		newCrop.growTime = crop.Farming.time.time;
-		newCrop.regrow = crop.Farming.time.regrow ? "Yes" : "No";
-		newCrop.regrowTime =
-			newCrop.regrow === "Yes" ? crop.Farming.time.regrowTime : "-";
-
-		// ////
-		// // yields
-		// newCrop.yieldSingle = 1;
+		newCrop.growTime =
+			crop.Farming.time.time +
+			(crop.Farming.time.regrow ? ` (${crop.Farming.time.regrowTime})` : "");
+		// yields
 		newCrop.avgYield =
 			crop.Farming.amount.amount *
 			(crop.Farming.amount.multiplierChance
 				? 1 +
 				  crop.Farming.amount.multiplierChance * crop.Farming.amount.multiplier
 				: 1);
+		// harvests
+		newCrop.harvests = crop.Farming.time.regrow
+			? 1 +
+			  Math.floor(
+					(crop.seasons.length * 28 - crop.Farming.time.time) /
+						crop.Farming.time.regrowTime
+			  )
+			: Math.floor((crop.seasons.length * 28) / crop.Farming.time.time);
 
-		// ////
-		// // harvests
-		// newCrop.harvests = harvests;
-		newCrop.harvests =
-			newCrop.regrow === "Yes"
-				? 1 +
-				  Math.floor(
-						(crop.seasons.length * 28 - newCrop.growTime) / newCrop.regrowTime
-				  )
-				: Math.floor((crop.seasons.length * 28) / newCrop.growTime);
-
-		// ////
-		// // seed
-		// newCrop.seed = crop.Grow.ingredients[0].ingredient;
 		// // seed cost
 		// // newCrop.seedCostSingle =
 		// // 	Object.values(crop.buy).length > 0
@@ -179,247 +203,6 @@ const calcInitTableData = (crops) => {
 
 // calc column data
 const calcInitColumnData = (crops) => {
-	const initColumnsOLD = [
-		{
-			Header: "Crop Info",
-			columns: [
-				{
-					Header: "Crop",
-					accessor: "crop",
-				},
-				{
-					Header: "Seed",
-					accessor: "seed",
-				},
-				{
-					Header: "Season",
-					accessor: "season",
-				},
-				{
-					Header: "Trellis",
-					accessor: "trellis",
-				},
-				{
-					Header: "Re-Grow",
-					accessor: "regrow",
-				},
-				{
-					Header: "Giant",
-					accessor: "giant",
-				},
-			],
-		},
-		{
-			Header: "Seed Cost",
-			columns: [
-				{
-					Header: "Single Seed",
-					accessor: "seedCostSingle",
-					quantity: "Single",
-				},
-				{
-					Header: "Cost/Yield",
-					accessor: "seedCostSinglePerYieldSingle",
-					quantity: "Single",
-				},
-				{
-					Header: "Total Seeds",
-					accessor: "seedCostTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Cost/Yield",
-					accessor: "seedCostTotalPerYieldTotal",
-					quantity: "Total",
-				},
-			],
-		},
-		{
-			Header: "Grow Time",
-			columns: [
-				{
-					Header: "Grow Time",
-					accessor: "growTimeSingle",
-					quantity: "Single",
-				},
-				{
-					Header: "Re-Grow Time",
-					accessor: "reGrowTime",
-					quantity: "Single",
-				},
-				{
-					Header: "Time/Yield",
-					accessor: "growTimeSinglePerYieldSingle",
-					quantity: "Single",
-				},
-				{
-					Header: "Grow Time",
-					accessor: "growTimeTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Time/Yield",
-					accessor: "growTimeTotalPerYieldTotal",
-					quantity: "Total",
-				},
-			],
-		},
-		{
-			Header: "Yield",
-			columns: [
-				{
-					Header: "Single Yield",
-					accessor: "yieldSingle",
-					quantity: "Single",
-				},
-				{
-					Header: "Harvests",
-					accessor: "harvests",
-					quantity: "Total",
-				},
-				{
-					Header: "Total Yield",
-					accessor: "yieldTotal",
-					quantity: "Total",
-				},
-			],
-		},
-		{
-			Header: "Crop",
-			columns: [
-				{
-					Header: "Crop",
-					accessor: "cropSellSingle",
-					quantity: "Single",
-				},
-				{
-					Header: "Total Crop",
-					accessor: "cropSellTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Sell/Cost",
-					accessor: "cropSellTotalPerSeedCostTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Sell/Time",
-					accessor: "cropSellTotalPerGrowTimeTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Profit (Sell - Cost)",
-					accessor: "cropProfitTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Profit/Cost",
-					accessor: "cropProfitTotalPerSeedCostTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Productivity (Profit/Time)",
-					accessor: "cropProductivityTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Productivity/Month",
-					accessor: "cropProductivityTotalPerMonth",
-					quantity: "Total",
-				},
-			],
-		},
-		{
-			Header: "Preserves",
-			columns: [
-				{
-					Header: "Preserves",
-					accessor: "preservesSellSingle",
-					quantity: "Single",
-				},
-				{
-					Header: "Total Preserves",
-					accessor: "preservesSellTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Sell/Cost",
-					accessor: "preservesSellTotalPerSeedCostTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Sell/Time",
-					accessor: "preservesSellTotalPerGrowTimeTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Profit (Sell - Cost)",
-					accessor: "preservesProfitTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Profit/Cost",
-					accessor: "preservesProfitTotalPerSeedCostTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Productivity (Profit/Time)",
-					accessor: "preservesProductivityTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Productivity/Month",
-					accessor: "preservesProductivityTotalPerMonth",
-					quantity: "Total",
-				},
-			],
-		},
-		{
-			Header: "Keg",
-			columns: [
-				{
-					Header: "Keg",
-					accessor: "kegSellSingle",
-					quantity: "Single",
-				},
-				{
-					Header: "Total Keg",
-					accessor: "kegSellTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Sell/Cost",
-					accessor: "kegSellTotalPerSeedCostTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Sell/Time",
-					accessor: "kegSellTotalPerGrowTimeTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Profit (Sell - Cost)",
-					accessor: "kegProfitTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Profit/Cost",
-					accessor: "kegProfitTotalPerSeedCostTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Productivity (Profit/Time)",
-					accessor: "kegProductivityTotal",
-					quantity: "Total",
-				},
-				{
-					Header: "Productivity/Month",
-					accessor: "kegProductivityTotalPerMonth",
-					quantity: "Total",
-				},
-			],
-		},
-	];
 	const initColumns = [
 		{
 			Header: "Crop Info",
@@ -429,36 +212,45 @@ const calcInitColumnData = (crops) => {
 					accessor: "name",
 				},
 				{
-					Header: "Season(s)",
-					accessor: "seasons",
-				},
-				{
 					Header: "Type",
 					accessor: "sub-type",
 				},
 				{
-					Header: "Sell",
-					accessor: "sell",
-					quantity: "Single",
+					Header: "Trellis",
+					accessor: "trellis",
+					category: "detailedCropInfo",
 				},
-			],
-		},
-		{
-			Header: "Growing",
-			columns: [
 				{
-					Header: "Grow Time",
-					accessor: "growTime",
-					quantity: "single",
+					Header: "Planter",
+					accessor: "planter",
+					category: "detailedCropInfo",
+				},
+				{
+					Header: "Giant",
+					accessor: "giant",
+					category: "detailedCropInfo",
 				},
 				{
 					Header: "Regrow",
 					accessor: "regrow",
-					quantity: "single",
+					category: "detailedCropInfo",
+				},
+			],
+		},
+		{
+			Header: "Grow",
+			columns: [
+				{
+					Header: "Seeds",
+					accessor: "seeds",
 				},
 				{
-					Header: "Regrow Time",
-					accessor: "regrowTime",
+					Header: "Season(s)",
+					accessor: "seasons",
+				},
+				{
+					Header: "Grow Time (Regrow Time)",
+					accessor: "growTime",
 					quantity: "single",
 				},
 				{
@@ -473,6 +265,16 @@ const calcInitColumnData = (crops) => {
 				},
 			],
 		},
+		{
+			Header: "Profit",
+			columns: [
+				{
+					Header: "Crop",
+					accessor: "sell",
+					quantity: "Single",
+				},
+			],
+		},
 	];
 
 	return initColumns;
@@ -484,6 +286,11 @@ const selectedRegrowOptions = ["Yes", "No"];
 const selectedProductOptions = ["Crop", "Preserves", "Keg"];
 const initQuantityOptions = ["Total"];
 const selectedQuantityOptions = ["Total", "Single"];
+const seedTypes = [
+	{ value: 0, label: "Ignore seed cost" },
+	{ value: 1, label: "Include seed cost" },
+	{ value: 2, label: "Include seed maker cost" },
+];
 
 // ////
 // Styled components
@@ -514,6 +321,11 @@ function Crops() {
 	// filters
 	const [selectedSeasons, setSelectedSeasons] = useState(cropSeasons);
 	const [selectedTypes, setSelectedTypes] = useState(["All"]);
+	// seed
+	const [selectedSeedType, setSelectedSeedType] = useState(0);
+	// display filters
+	const [selectedShowDetailedCropInfo, setSelectedShowDetailedCropInfo] =
+		useState(false);
 
 	// const [selectedTrellis, setSelectedTrellis] = useLocalStorage(
 	// 	"svd-crops-selectedtrellis",
@@ -571,7 +383,7 @@ function Crops() {
 	// ////
 	// helpers -- filters data before being displayed
 
-	// calc what table data will be displayed
+	// filter the table data
 	const filterTableData = (tableData) => {
 		const filteredTableData = tableData.filter((crop) => {
 			// filter seasons
@@ -591,11 +403,42 @@ function Crops() {
 			// determine filter
 			return inSeasons && inType;
 		});
+
+		// console.log(
+		// 	"--Crops:filterTableData-- filteredTableData: ",
+		// 	filteredTableData
+		// );
 		return filteredTableData;
 	};
 
+	// filter the columns
 	const filterColumnData = (columnData) => {
-		return columnData;
+		const filteredColumnData = columnData.map((columnSection) => {
+			const filteredColumnSection = { ...columnSection };
+
+			filteredColumnSection.columns = [
+				...columnSection.columns.filter((column) => {
+					// filter columns
+					const showDetailedCropInfo =
+						column.category === "detailedCropInfo"
+							? selectedShowDetailedCropInfo
+							: true;
+
+					// return result of all filters
+					return showDetailedCropInfo;
+				}),
+			];
+
+			return filteredColumnSection;
+		});
+
+		// console.log(
+		// 	"--Crops:filterTableData-- filteredColumnData: ",
+		// 	filteredColumnData,
+		// 	" columnData: ",
+		// 	columnData
+		// );
+		return filteredColumnData;
 	};
 
 	// ////
@@ -610,6 +453,7 @@ function Crops() {
 					handleChangeSeason={handleChangeSeason}
 					multiSelect={true}
 				/>
+
 				<p>Type</p>
 				<MultipleSelectChips
 					label={"Type"}
@@ -617,70 +461,28 @@ function Crops() {
 					handleChange={handleTypeChange}
 					selectedOptions={selectedTypes}
 				/>
-				{/* <div className="d-flex flex-column flex-wrap">
-					{[
-						{
-							name: "Trellis",
-							key: "selectedTrellis",
-							options: selectedTrellisOptions,
-							selectedOptions: selectedTrellis,
-							setSelected: setSelectedTrellis,
-						},
-						{
-							name: "Re-Grow",
-							key: "selectedRegrow",
-							options: selectedRegrowOptions,
-							selectedOptions: selectedRegrow,
-							setSelected: setSelectedRegrow,
-						},
-						{
-							name: "Products",
-							key: "selectedProducts",
-							options: selectedProductOptions,
-							selectedOptions: selectedProducts,
-							setSelected: setSelectedProducts,
-						},
-						{
-							name: "Quantity",
-							key: "selectedQuantity",
-							options: selectedQuantityOptions,
-							selectedOptions: selectedQuantity,
-							setSelected: setSelectedQuantity,
-						},
-					].map(({ name, key, options, selectedOptions, setSelected }) => (
-						<div key={name} className="d-flex flex-column flex-wrap me-3">
-							<p className="me-1">{name}</p>
-							<div className="d-flex flex-row">
-								{options.map((option) => {
-									const optionLabel = name + option;
-									return (
-										<div className="form-check me-2" key={optionLabel}>
-											<input
-												className="form-check-input"
-												type="checkbox"
-												value={option}
-												id={optionLabel}
-												checked={selectedOptions.includes(option)}
-												onChange={() =>
-													handleSelectInfo(
-														key,
-														option,
-														selectedOptions,
-														setSelected
-													)
-												}
-											/>
-											<label className="form-check-label" htmlFor={optionLabel}>
-												{option}
-											</label>
-										</div>
-									);
-								})}
-							</div>
-						</div>
-					))}
-				</div> */}
+
+				<SingleSwitch
+					label={"Show detailed Crop Info"}
+					checked={selectedShowDetailedCropInfo}
+					handleChange={(value) =>
+						setSelectedShowDetailedCropInfo(!selectedShowDetailedCropInfo)
+					}
+				/>
+
+				<hr />
+
+				<p>Profit</p>
+				<RadioOption
+					label={"Seed Cost"}
+					selected={selectedSeedType}
+					handleChange={(value) => setSelectedSeedType(value)}
+					options={seedTypes}
+				/>
+
+				<hr />
 			</div>
+
 			<div style={{ padding: 0 }}>
 				<Table
 					columns={filterColumnData(columnData)}

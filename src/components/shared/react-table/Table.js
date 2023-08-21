@@ -194,19 +194,29 @@ function Table({ columns, data, offset: { xOffset = 0, yOffset = 0 } }) {
 											}}
 										>
 											<Box sx={{ position: "sticky", top: 0 }}>
-												{column.render("Header")}
-												{/* Add a sort direction indicator */}
-												<span>
+												<div
+													style={{
+														display: "flex",
+														flexDirection: "row",
+														alignItems: "center",
+													}}
+												>
+													{column.render("Header")}
+													{/* Add a sort direction indicator */}
 													{column.isSorted ? (
 														column.isSortedDesc ? (
-															<ArrowDownward />
+															<ArrowDownward
+																sx={{ maxWidth: "1rem", maxHeight: "1rem" }}
+															/>
 														) : (
-															<ArrowUpward />
+															<ArrowUpward
+																sx={{ maxWidth: "1rem", maxHeight: "1rem" }}
+															/>
 														)
 													) : (
 														<></>
 													)}
-												</span>
+												</div>
 											</Box>
 										</th>
 									))}
