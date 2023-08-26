@@ -12,6 +12,7 @@ import {
 	ListItemText,
 	Checkbox,
 	Divider,
+	FormLabel,
 } from "@mui/material";
 import styled from "styled-components";
 
@@ -89,16 +90,21 @@ export default function MultipleSelectChips({
 	};
 
 	return (
-		<Stack direction="row" spacing={0} sx={{ flexWrap: "wrap" }}>
-			{options.map((optionName) => (
-				<Chip
-					label={optionName}
-					key={optionName}
-					onClick={() => handleClick(optionName)}
-					variant={selectedOptions.includes(optionName) ? "outlined" : "filled"}
-					sx={{ margin: "0 5px 3px 0" }}
-				/>
-			))}
-		</Stack>
+		<FormControl>
+			<FormLabel>{label}</FormLabel>
+			<Stack direction="row" spacing={0} sx={{ flexWrap: "wrap" }}>
+				{options.map((optionName) => (
+					<Chip
+						label={optionName}
+						key={optionName}
+						onClick={() => handleClick(optionName)}
+						variant={
+							selectedOptions.includes(optionName) ? "outlined" : "filled"
+						}
+						sx={{ margin: "0 5px 3px 0" }}
+					/>
+				))}
+			</Stack>
+		</FormControl>
 	);
 }

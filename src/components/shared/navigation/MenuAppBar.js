@@ -113,8 +113,12 @@ export default function MenuAppBar() {
 	// element itself
 	const NavigationElements = ({ navigationLinks }) =>
 		navigationLinks.map(({ to, label }) => (
-			<ListItem key={label}>
-				<ListItemButton component="a" href={to}>
+			<ListItem key={label} sx={{ padding: "0 8px 0 16px" }}>
+				<ListItemButton
+					component="a"
+					href={to}
+					sx={{ padding: "4px 8px", lineHeight: "1rem" }}
+				>
 					<ListItemText primary={label} />
 				</ListItemButton>
 			</ListItem>
@@ -134,7 +138,10 @@ export default function MenuAppBar() {
 						([sectionLabel, navigationLinks]) =>
 							navigationLinks.length > 1 ? (
 								<React.Fragment key={sectionLabel}>
-									<ListItemButton onClick={toggleNavGroup(sectionLabel)}>
+									<ListItemButton
+										onClick={toggleNavGroup(sectionLabel)}
+										sx={{ padding: "8px" }}
+									>
 										<ListItemText primary={sectionLabel} />
 										{openState[sectionLabel] ? <ExpandLess /> : <ExpandMore />}
 									</ListItemButton>
@@ -153,6 +160,7 @@ export default function MenuAppBar() {
 								<NavigationElements
 									navigationLinks={navigationLinks}
 									key={sectionLabel}
+									sx={{ padding: "8px" }}
 								/>
 							)
 					)

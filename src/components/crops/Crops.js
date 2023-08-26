@@ -9,6 +9,7 @@ import SeasonSelect from "../shared/inputs/SeasonSelect";
 import {
 	crops,
 	cropsObj,
+	cropTypes,
 	cropSubTypes,
 	cropSeasons,
 } from "../shared/data/crops";
@@ -18,9 +19,153 @@ import RenderImageMedium from "../shared/Icons/RenderImageMedium";
 import RenderImageSmall from "../shared/Icons/RenderImageSmall";
 import SingleSwitch from "../shared/inputs/SingleSwitch";
 import RadioOption from "../shared/inputs/RadioOption";
+import RenderImg from "../shared/Icons/RenderImg";
 
 // ////
 // Process data
+
+// calc column data
+const calcInitColumnData = (crops) => {
+	const initColumns = [
+		{
+			Header: "Crop Info",
+			columns: [
+				{
+					Header: "Crop",
+					accessor: "nameDisplay",
+				},
+				{
+					Header: "Type",
+					accessor: "sub-type",
+				},
+				{
+					Header: "Trellis",
+					accessor: "trellis",
+					category: "detailedCropInfo",
+				},
+				{
+					Header: "Planter",
+					accessor: "planter",
+					category: "detailedCropInfo",
+				},
+				{
+					Header: "Giant",
+					accessor: "giant",
+					category: "detailedCropInfo",
+				},
+				{
+					Header: "Regrow",
+					accessor: "regrow",
+					category: "detailedCropInfo",
+				},
+				{
+					Header: "Season(s)",
+					accessor: "seasons",
+				},
+				{
+					Header: "Seeds",
+					accessor: "seeds",
+				},
+				{
+					Header: "Grow Time (Regrow)",
+					accessor: "growTimeDisplay",
+				},
+			],
+		},
+		{
+			Header: "Grow",
+			columns: [
+				{
+					Header: "Harvests",
+					accessor: "harvestDisplaySeason",
+					harvestType: 1,
+				},
+				{
+					Header: "Harvests",
+					accessor: "harvestDisplayYear",
+					harvestType: 2,
+				},
+
+				{
+					Header: "Seed Cost",
+					accessor: "seedCost",
+					seedType: 1,
+				},
+
+				{
+					Header: "Yield",
+					accessor: "yieldDisplaySingle",
+					harvestType: 0,
+				},
+				{
+					Header: (
+						<>
+							Total Yield
+							<br />
+							(Yield x Harvests)
+						</>
+					),
+					accessor: "yieldDisplaySeason",
+					harvestType: 1,
+				},
+				{
+					Header: (
+						<>
+							Total Yield
+							<br />
+							(Yield x Harvests)
+						</>
+					),
+					accessor: "yieldDisplayYear",
+					harvestType: 2,
+				},
+			],
+		},
+		{
+			Header: "Profit",
+			columns: [
+				{
+					Header: "Crop",
+					accessor: "sellSingle",
+					harvestType: 0,
+					seedType: 0,
+				},
+				{
+					Header: "Crop",
+					accessor: "sellSeason",
+					harvestType: 1,
+					seedType: 0,
+				},
+				{
+					Header: "Crop",
+					accessor: "sellYear",
+					harvestType: 2,
+					seedType: 0,
+				},
+				{
+					Header: "Profit",
+					accessor: "profitSeedSingle",
+					harvestType: 0,
+					seedType: 1,
+				},
+				{
+					Header: "Profit",
+					accessor: "profitSeedSeason",
+					harvestType: 1,
+					seedType: 1,
+				},
+				{
+					Header: "Profit",
+					accessor: "profitSeedYear",
+					harvestType: 2,
+					seedType: 1,
+				},
+			],
+		},
+	];
+
+	return initColumns;
+};
 
 // calc table data
 const calcInitTableData = (crops) => {
@@ -37,7 +182,7 @@ const calcInitTableData = (crops) => {
 		// Info
 
 		// name
-		newCrop.name = (
+		newCrop.nameDisplay = (
 			<>
 				<RenderImageSmall label={crop.name} />
 				{crop.name}
@@ -68,228 +213,290 @@ const calcInitTableData = (crops) => {
 		// ////
 		// Grow
 
+		//
 		// seeds
 		newCrop.seeds = crop.Farming.seeds[0].name;
 		// seasons
 		newCrop.seasons = crop.seasons ? crop.seasons.join(", ") : [];
-		// time
-		newCrop.growTime =
-			crop.Farming.time.time +
-			(crop.Farming.time.regrow ? ` (${crop.Farming.time.regrowTime})` : "");
-		// yields
-		newCrop.avgYield =
+
+		//
+		// time (store for later)
+		newCrop.growTime = crop.Farming.time.time;
+		newCrop.regrow = crop.Farming.time.regrow;
+		newCrop.regrowTime = crop.Farming.time.regrowTime;
+
+		//
+		// harvests (store for later)
+		const calcHarvestDays = (growTime, regrow, regrowTime, seasonDays) => {
+			let days = [];
+			let d = growTime + 1;
+			while (d <= seasonDays) {
+				//days.push(((d - 1) % 28) + 1);
+				days.push(d);
+				d = regrow ? d + regrowTime : d + growTime;
+			}
+			return days;
+		};
+		newCrop.harvestDaysSeason = calcHarvestDays(
+			newCrop.growTime,
+			newCrop.regrow,
+			newCrop.regrowTime,
+			28
+		);
+		newCrop.harvestsSeason = newCrop.harvestDaysSeason.length;
+		newCrop.harvestDaysYear = calcHarvestDays(
+			newCrop.growTime,
+			newCrop.regrow,
+			newCrop.regrowTime,
+			crop.seasons.length * 28
+		);
+		newCrop.harvestsYear = newCrop.harvestDaysYear.length;
+
+		//
+		// harvests display
+		const createHarvestDisplay = (regrow, days, seasonDays) => (
+			<div
+				style={{
+					display: "grid",
+					gridTemplateColumns: "repeat(7, 1fr)",
+					gridTemplateRows: (
+						"1rem repeat(" +
+						(seasonDays / 7).toString() +
+						", 1fr)"
+					).toString(),
+				}}
+			>
+				{["M", "T", "W", "Th", "F", "Sa", "Su"].map((day) => (
+					<div
+						style={{
+							border: "1px solid black",
+							boxSizing: "border-box",
+							textAlign: "center",
+							background: "#ddd",
+						}}
+						key={day}
+					>
+						{day}
+					</div>
+				))}
+				{[...Array(seasonDays + 1).keys()].slice(1).map((day) => (
+					<div
+						style={{
+							border: "1px solid black",
+							boxSizing: "border-box",
+						}}
+						key={day}
+					>
+						<p style={{ fontSize: "0.5rem" }}>{((day - 1) % 28) + 1}</p>
+						<div
+							style={{
+								display: "flex",
+								flexDirection: "row",
+								textAlign: "center",
+							}}
+						>
+							{day === 1 ||
+							(!regrow &&
+								days.includes(day) &&
+								day != days[days.length - 1]) ? (
+								<RenderImageSmall label={newCrop.seeds} />
+							) : (
+								<></>
+							)}
+
+							{days.includes(day) ? (
+								<RenderImageSmall label={newCrop.name} />
+							) : (
+								<></>
+							)}
+						</div>
+					</div>
+				))}
+			</div>
+		);
+
+		newCrop.harvestDisplaySeason = createHarvestDisplay(
+			newCrop.regrow,
+			newCrop.harvestDaysSeason,
+			28
+		);
+		newCrop.harvestDisplayYear = createHarvestDisplay(
+			newCrop.regrow,
+			newCrop.harvestDaysYear,
+			28 * crop.seasons.length
+		);
+
+		//
+		// yields (store for later)
+		newCrop.yieldSingle =
 			crop.Farming.amount.amount *
 			(crop.Farming.amount.multiplierChance
 				? 1 +
 				  crop.Farming.amount.multiplierChance * crop.Farming.amount.multiplier
 				: 1);
-		// harvests
-		newCrop.harvests = crop.Farming.time.regrow
-			? 1 +
-			  Math.floor(
-					(crop.seasons.length * 28 - crop.Farming.time.time) /
-						crop.Farming.time.regrowTime
-			  )
-			: Math.floor((crop.seasons.length * 28) / crop.Farming.time.time);
+		newCrop.yieldSeason = newCrop.yieldSingle * newCrop.harvestsSeason;
+		newCrop.yieldYear = newCrop.yieldSingle * newCrop.harvestsYear;
 
-		// // seed cost
-		// // newCrop.seedCostSingle =
-		// // 	Object.values(crop.buy).length > 0
-		// // 		? Object.values(crop.buy).reduce(
-		// // 				(min, price) => (price < min ? price : min),
-		// // 				Number.MAX_SAFE_INTEGER
-		// // 		  )
-		// // 		: 0;
-		// newCrop.seedCostSinglePerYieldSingle = (
-		// 	newCrop.seedCostSingle / newCrop.yieldSingle
-		// ).toFixed(2);
-		// newCrop.seedCostTotal =
-		// 	newCrop.seedCostSingle * (newCrop.regrow ? 1 : newCrop.harvests);
-		// newCrop.seedCostTotalPerYieldTotal = (
-		// 	newCrop.seedCostTotal / newCrop.yieldTotal
-		// ).toFixed(2);
-		// //
-		// // grow time
-		// newCrop.growTimeSinglePerYieldSingle = (
-		// 	newCrop.growTime / newCrop.yieldSingle
-		// ).toFixed(2);
-		// newCrop.growTimeTotalPerYieldTotal = (
-		// 	newCrop.growTimeTotal / newCrop.yieldTotal
-		// ).toFixed(2);
 		//
+		// yield display
+		newCrop.yieldDisplaySingle = newCrop.yieldSingle;
+		newCrop.yieldDisplaySeason =
+			newCrop.yieldSeason +
+			" (" +
+			newCrop.yieldSingle +
+			" x " +
+			newCrop.harvestsSeason +
+			")";
+		newCrop.yieldDisplayYear =
+			newCrop.yieldYear +
+			" (" +
+			newCrop.yieldSingle +
+			" x " +
+			newCrop.harvestsYear +
+			")";
 
+		//
+		// grow time (save)
+		newCrop.growTimeSingle = newCrop.growTime;
+		newCrop.growTimeSeason = newCrop.regrow
+			? newCrop.growTime + 1 + newCrop.regrow * (newCrop.harvestsSeason - 1)
+			: newCrop.growTime * newCrop.harvestsSeason;
+		newCrop.growTimeYear = newCrop.regrow
+			? newCrop.growTime + 1 + newCrop.regrow * (newCrop.harvestsYear - 1)
+			: newCrop.growTime * newCrop.harvestsYear;
+
+		//
+		// grow time display
+		newCrop.growTimeDisplay =
+			newCrop.growTime + (newCrop.regrow ? ` (${newCrop.regrowTime})` : "");
+		newCrop.growTimeDisplaySingle =
+			newCrop.growTimeSingle +
+			(newCrop.regrow ? ` (${newCrop.regrowTime})` : "");
+		newCrop.growTimeDisplaySeason =
+			newCrop.growTimeSeason +
+			" (" +
+			(newCrop.regrow
+				? `${newCrop.growTime} + ( ${newCrop.regrowTime} x ${
+						newCrop.harvestsSeason - 1
+				  })`
+				: `${newCrop.growTime} x ${newCrop.harvestsSeason}`) +
+			")";
+		newCrop.growTimeDisplayYear =
+			newCrop.growTimeYear +
+			" (" +
+			(newCrop.regrow
+				? `${newCrop.growTime} + [${newCrop.regrowTime} x ${
+						newCrop.harvestsYear - 1
+				  }]`
+				: `${newCrop.growTime} x ${newCrop.harvestsYear}`) +
+			")";
+
+		//
 		// ////
-		// crop sell price
+		// Profit
 
-		// single
-		newCrop.sell =
+		//
+		// sell
+		newCrop.sellSingle =
 			crop.sell.type === "Quality"
 				? crop.sell.Regular
 				: crop.sell.type === "Flat"
 				? crop.sell.price
 				: 0;
-		// // crop sell price - total
-		// newCrop.cropSellTotal = crop.sell * newCrop.yieldTotal;
-		// newCrop.cropSellTotalPerSeedCostTotal = (
-		// 	newCrop.cropSellTotal / newCrop.seedCostTotal
-		// ).toFixed(2);
-		// newCrop.cropSellTotalPerGrowTimeTotal = (
-		// 	newCrop.cropSellTotal / newCrop.growTimeTotal
-		// ).toFixed(2);
-		// // crop profit
-		// newCrop.cropProfitTotal = newCrop.cropSellTotal - newCrop.seedCostTotal;
-		// newCrop.cropProfitTotalPerSeedCostTotal = (
-		// 	newCrop.cropProfitTotal / newCrop.seedCostTotal
-		// ).toFixed(2);
-		// // crop productivity
-		// newCrop.cropProductivityTotal = (
-		// 	newCrop.cropProfitTotal / newCrop.growTimeTotal
-		// ).toFixed(2);
-		// newCrop.cropProductivityTotalPerMonth = (
-		// 	newCrop.cropProductivityTotal * 1600
-		// ).toFixed(0);
+		newCrop.sellSeason =
+			(newCrop.sellSingle * newCrop.yieldSeason).toFixed(0) +
+			" (" +
+			newCrop.sellSingle +
+			" x " +
+			newCrop.yieldSeason +
+			")";
+		newCrop.sellYear =
+			(newCrop.sellSingle * newCrop.yieldYear).toFixed(0) +
+			" (" +
+			newCrop.sellSingle +
+			" x " +
+			newCrop.yieldYear +
+			")";
+
 		//
-		// preserves price - single
-		// newCrop.preservesSellSingle = crop.preserves ? crop.preserves : 0;
-		// // preserves price - total
-		// newCrop.preservesSellTotal = newCrop.preservesSellSingle * newCrop.yieldTotal;
-		// newCrop.preservesSellTotalPerSeedCostTotal = (
-		// 	newCrop.preservesSellTotal / newCrop.seedCostTotal
-		// ).toFixed(2);
-		// newCrop.preservesSellTotalPerGrowTimeTotal = (
-		// 	newCrop.preservesSellTotal / newCrop.growTimeTotal
-		// ).toFixed(2);
-		// // crop profit
-		// newCrop.preservesProfitTotal =
-		// 	newCrop.preservesSellTotal - newCrop.seedCostTotal;
-		// newCrop.preservesProfitTotalPerSeedCostTotal = (
-		// 	newCrop.preservesProfitTotal / newCrop.seedCostTotal
-		// ).toFixed(2);
-		// // crop productivity
-		// newCrop.preservesProductivityTotal = (
-		// 	newCrop.preservesProfitTotal / newCrop.growTimeTotal
-		// ).toFixed(2);
-		// newCrop.preservesProductivityTotalPerMonth = (
-		// 	newCrop.preservesProductivityTotal * 1600
-		// ).toFixed(0);
+		// seed cost
+		if (crop.recipeSources && crop.recipeSources.Shops) {
+			if (typeof crop.recipeSources.Shops[0].price === "object") {
+				// seed cost item
+				newCrop.seedCost = crop.recipeSources.Shops[0].price.amount;
+				newCrop.seedCostObject = crop.recipeSources.Shops[0].price.artifact;
+			} else {
+				// seed cost gold
+				newCrop.seedCost = crop.recipeSources.Shops[0].price;
+				newCrop.seedCostObject = "Gold";
+			}
+		} else {
+			// no known seed cost
+			newCrop.seedCostSingle = 0;
+			newCrop.seedCostObject = null;
+		}
 		//
-		// keg price - single
-		// newCrop.kegSellSingle = crop.keg ? crop.keg : 0;
-		// // keg price - total
-		// newCrop.kegSellTotal = newCrop.kegSellSingle * newCrop.yieldTotal;
-		// newCrop.kegSellTotalPerSeedCostTotal = (
-		// 	newCrop.kegSellTotal / newCrop.seedCostTotal
-		// ).toFixed(2);
-		// newCrop.kegSellTotalPerGrowTimeTotal = (
-		// 	newCrop.kegSellTotal / newCrop.growTimeTotal
-		// ).toFixed(2);
-		// // crop profit
-		// newCrop.kegProfitTotal = newCrop.kegSellTotal - newCrop.seedCostTotal;
-		// newCrop.kegProfitTotalPerSeedCostTotal = (
-		// 	newCrop.kegProfitTotal / newCrop.seedCostTotal
-		// ).toFixed(2);
-		// // crop productivity
-		// newCrop.kegProductivityTotal = (
-		// 	newCrop.kegProfitTotal / newCrop.growTimeTotal
-		// ).toFixed(2);
-		// newCrop.kegProductivityTotalPerMonth = (
-		// 	newCrop.kegProductivityTotal * 1600
-		// ).toFixed(0);
+		newCrop.seedCostSingle = (
+			<>
+				{newCrop.seedCost} {newCrop.seedCostObject}
+			</>
+		);
+		newCrop.seedCostSeason = (
+			<>
+				{newCrop.seedCost * (newCrop.regrow ? 1 : newCrop.harvestsSeason)}{" "}
+				{newCrop.seedCostObject}
+			</>
+		);
+		newCrop.seedCostYear = (
+			<>
+				{newCrop.seedCost * (newCrop.regrow ? 1 : newCrop.yieldYear)}{" "}
+				{newCrop.seedCostObject}
+			</>
+		);
+
 		//
+		// profit
+		newCrop.profitSeedSingle = (
+			newCrop.sellSingle -
+			(newCrop.seedCostObject === "Gold" ? newCrop.seedCost : 0)
+		).toFixed(0);
+		newCrop.profitSeedSeason = (
+			newCrop.sellSeason -
+			(newCrop.seedCostObject === "Gold"
+				? newCrop.seedCost * newCrop.yieldSeason
+				: 0)
+		).toFixed(0);
+		newCrop.profitSeedYear = (
+			newCrop.sellYear -
+			(newCrop.seedCostObject === "Gold"
+				? newCrop.seedCost * newCrop.yieldYear
+				: 0)
+		).toFixed(0);
+
+		//
+		// ////
+		// return
 		return newCrop;
 	});
 	return initTableData;
 };
 
-// calc column data
-const calcInitColumnData = (crops) => {
-	const initColumns = [
-		{
-			Header: "Crop Info",
-			columns: [
-				{
-					Header: "Crop",
-					accessor: "name",
-				},
-				{
-					Header: "Type",
-					accessor: "sub-type",
-				},
-				{
-					Header: "Trellis",
-					accessor: "trellis",
-					category: "detailedCropInfo",
-				},
-				{
-					Header: "Planter",
-					accessor: "planter",
-					category: "detailedCropInfo",
-				},
-				{
-					Header: "Giant",
-					accessor: "giant",
-					category: "detailedCropInfo",
-				},
-				{
-					Header: "Regrow",
-					accessor: "regrow",
-					category: "detailedCropInfo",
-				},
-			],
-		},
-		{
-			Header: "Grow",
-			columns: [
-				{
-					Header: "Seeds",
-					accessor: "seeds",
-				},
-				{
-					Header: "Season(s)",
-					accessor: "seasons",
-				},
-				{
-					Header: "Grow Time (Regrow Time)",
-					accessor: "growTime",
-					quantity: "single",
-				},
-				{
-					Header: "Yield",
-					accessor: "avgYield",
-					quantity: "single",
-				},
-				{
-					Header: "Harvests",
-					accessor: "harvests",
-					quantity: "single",
-				},
-			],
-		},
-		{
-			Header: "Profit",
-			columns: [
-				{
-					Header: "Crop",
-					accessor: "sell",
-					quantity: "Single",
-				},
-			],
-		},
-	];
+// /////
+// filter options
 
-	return initColumns;
-};
+const typeOptions = [...cropSubTypes];
+const categoryOptions = [...cropTypes];
 
 // init filters
-const selectedTrellisOptions = ["Yes", "No"];
-const selectedRegrowOptions = ["Yes", "No"];
-const selectedProductOptions = ["Crop", "Preserves", "Keg"];
-const initQuantityOptions = ["Total"];
-const selectedQuantityOptions = ["Total", "Single"];
 const seedTypes = [
-	{ value: 0, label: "Ignore seed cost" },
-	{ value: 1, label: "Include seed cost" },
-	{ value: 2, label: "Include seed maker cost" },
+	{ value: 0, label: "Ignore" },
+	{ value: 1, label: "Shop" },
+	{ value: 2, label: "Seed maker" },
+];
+const harvestTypes = [
+	{ value: 0, label: "Single" },
+	{ value: 1, label: "Season" },
+	{ value: 2, label: "Year" },
 ];
 
 // ////
@@ -315,70 +522,37 @@ function Crops() {
 	// table data
 	const [tableData, setTableData] = useState(calcInitTableData(crops));
 	const [columnData, setColumnData] = useState(calcInitColumnData(crops));
-	//
-	const [typeOptions, setTypeOptions] = useState(["All", ...cropSubTypes]);
 
 	// filters
-	const [selectedSeasons, setSelectedSeasons] = useState(cropSeasons);
-	const [selectedTypes, setSelectedTypes] = useState(["All"]);
-	// seed
-	const [selectedSeedType, setSelectedSeedType] = useState(0);
+	//	save all the filters to local storage
+	const [selectedSeasons, setSelectedSeasons] = useLocalStorage(
+		"svd-crops-filter-selectedSeasons",
+		cropSeasons
+	);
+	const [selectedCategories, setSelectedCategories] = useLocalStorage(
+		"svd-crops-filter-selectedCategories",
+		categoryOptions
+	);
+	const [selectedTypes, setSelectedTypes] = useLocalStorage(
+		"svd-crops-filter-selectedTypes",
+		typeOptions
+	);
+
+	// profit filters
+	const [selectedHarvestType, setSelectedHarvestType] = useLocalStorage(
+		"svd-crops-filter-selectedHarvestType",
+		0
+	);
+	const [selectedSeedType, setSelectedSeedType] = useLocalStorage(
+		"svd-crops-filter-selectedSeedType",
+		0
+	);
 	// display filters
 	const [selectedShowDetailedCropInfo, setSelectedShowDetailedCropInfo] =
-		useState(false);
-
-	// const [selectedTrellis, setSelectedTrellis] = useLocalStorage(
-	// 	"svd-crops-selectedtrellis",
-	// 	selectedTrellisOptions
-	// );
-	// const [selectedRegrow, setSelectedRegrow] = useLocalStorage(
-	// 	"svd-crops-selectedregrow",
-	// 	selectedRegrowOptions
-	// );
-	// const [selectedProducts, setSelectedProducts] = useLocalStorage(
-	// 	"svd-crops-selectedproducts",
-	// 	selectedProductOptions
-	// );
-	// const [selectedQuantity, setSelectedQuantity] = useLocalStorage(
-	// 	"svd-crops-selectedquantity",
-	// 	initQuantityOptions
-	// );
+		useLocalStorage("svd-crops-filter-selectedShowDetailedCropInfo", false);
 
 	// ////
 	// handlers
-
-	// on change handlers
-	const handleChangeSeason = (newSeason) => {
-		// set season selected
-		setSelectedSeasons(newSeason);
-	};
-	const handleTypeChange = (typeSelected) => {
-		setSelectedTypes(typeSelected);
-	};
-	// const handleSelectInfo = (name, option, selectedOptions, setSelected) => {
-	// 	// set option selected
-	// 	const newSelected = selectedOptions.includes(option)
-	// 		? selectedOptions.filter((x) => x !== option)
-	// 		: [...selectedOptions, option];
-	// 	setSelected(newSelected);
-	// 	// get temp vars
-	// 	const tmp = {
-	// 		selectedSeason,
-	// 		selectedTrellis,
-	// 		selectedRegrow,
-	// 		selectedProducts,
-	// 		selectedQuantity,
-	// 	};
-	// 	tmp[name] = newSelected;
-	// 	// update table data
-	// 	setTableData(
-	// 		calcTableData(tmp.selectedSeason, tmp.selectedTrellis, tmp.selectedRegrow)
-	// 	);
-	// 	// update table columns
-	// 	setColumnData([
-	// 		...calcColumnData(tmp.selectedProducts, tmp.selectedQuantity),
-	// 	]);
-	// };
 
 	// ////
 	// helpers -- filters data before being displayed
@@ -394,14 +568,14 @@ function Crops() {
 				  )
 				: true;
 
+			// filter category
+			const inCategory = selectedCategories.includes(crop["type"]);
+
 			// filter type
-			const inType =
-				selectedTypes.includes("All") ||
-				(crop["sub-type"] && selectedTypes.includes(crop["sub-type"])) ||
-				(crop["type"] && selectedTypes.includes(crop["type"]));
+			const inType = selectedTypes.includes(crop["sub-type"]);
 
 			// determine filter
-			return inSeasons && inType;
+			return inSeasons && inCategory && inType;
 		});
 
 		// console.log(
@@ -418,14 +592,38 @@ function Crops() {
 
 			filteredColumnSection.columns = [
 				...columnSection.columns.filter((column) => {
+					// ////
 					// filter columns
+
+					// show crop detail info
 					const showDetailedCropInfo =
 						column.category === "detailedCropInfo"
 							? selectedShowDetailedCropInfo
 							: true;
 
+					// harvest type
+					const showHarvestType =
+						typeof column.harvestType === "number"
+							? column.harvestType === selectedHarvestType
+							: true;
+
+					// seed type
+					const showSeedType = column.seedType
+						? column.seedType === selectedSeedType
+						: true;
+
 					// return result of all filters
-					return showDetailedCropInfo;
+					// console.log(
+					// 	"-filtercolumns column: ",
+					// 	column,
+					// 	" showSeedType: ",
+					// 	showSeedType,
+					// 	" selectedSeedType: ",
+					// 	selectedSeedType,
+					// 	" column.seedType: ",
+					// 	column.seedType
+					// );
+					return showDetailedCropInfo && showHarvestType && showSeedType;
 				}),
 			];
 
@@ -447,20 +645,34 @@ function Crops() {
 	return (
 		<StyledCropsHome>
 			<div>
-				<p>Season</p>
 				<SeasonSelect
 					selectedSeason={selectedSeasons}
-					handleChangeSeason={handleChangeSeason}
+					handleChangeSeason={(newSeason) => {
+						// set season selected
+						setSelectedSeasons(newSeason);
+					}}
 					multiSelect={true}
 				/>
 
-				<p>Type</p>
+				<MultipleSelectChips
+					label={"Category"}
+					options={categoryOptions}
+					handleChange={(value) => {
+						setSelectedCategories(value);
+					}}
+					selectedOptions={selectedCategories}
+				/>
+
 				<MultipleSelectChips
 					label={"Type"}
 					options={typeOptions}
-					handleChange={handleTypeChange}
+					handleChange={(value) => {
+						setSelectedTypes(value);
+					}}
 					selectedOptions={selectedTypes}
 				/>
+
+				<hr />
 
 				<SingleSwitch
 					label={"Show detailed Crop Info"}
@@ -472,15 +684,19 @@ function Crops() {
 
 				<hr />
 
-				<p>Profit</p>
+				<RadioOption
+					label={"Harvests"}
+					selected={selectedHarvestType}
+					handleChange={(value) => setSelectedHarvestType(parseInt(value))}
+					options={harvestTypes}
+				/>
+
 				<RadioOption
 					label={"Seed Cost"}
 					selected={selectedSeedType}
-					handleChange={(value) => setSelectedSeedType(value)}
+					handleChange={(value) => setSelectedSeedType(parseInt(value))}
 					options={seedTypes}
 				/>
-
-				<hr />
 			</div>
 
 			<div style={{ padding: 0 }}>
@@ -488,7 +704,7 @@ function Crops() {
 					columns={filterColumnData(columnData)}
 					data={filterTableData(tableData)}
 					filterLocation={{ top: 40 }}
-					offset={{ xOffset: 0, yOffset: 40 }}
+					styles={{ height: "350px" }}
 				/>
 			</div>
 		</StyledCropsHome>

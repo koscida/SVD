@@ -15,7 +15,7 @@ import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
 // ////
 // Styles
 
-const Styles = styled.div`
+const StyledTable = styled.div`
 	--border-color: #999;
 	table {
 		border-spacing: 0;
@@ -27,6 +27,16 @@ const Styles = styled.div`
 				td {
 					border-bottom: 0;
 				}
+			}
+		}
+
+		th {
+			background: #eaf0f9;
+
+			div {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
 			}
 		}
 
@@ -106,7 +116,7 @@ fuzzyTextFilterFn.autoRemove = (val) => !val;
 // Table()
 
 // Our table component
-function Table({ columns, data, offset: { xOffset = 0, yOffset = 0 } }) {
+function Table({ columns, data, styles = {} }) {
 	const filterTypes = React.useMemo(
 		() => ({
 			// Add a new fuzzyTextFilterFn filter type.
@@ -170,54 +180,43 @@ function Table({ columns, data, offset: { xOffset = 0, yOffset = 0 } }) {
 	// Render
 
 	return (
-		<Styles>
+		<StyledTable>
 			<TableContainer component={Paper}>
-				<div
-					className="tableWrapper"
-					// style={{
-					// 	height: `calc(100vh - ${yOffset})`,
-					// 	width: `calc(100vw - ${xOffset})`,
-					// 	overflow: "scroll",
-					// }}
-				>
+				<div className="tableWrapper" style={styles}>
 					<table {...getTableProps()}>
 						<thead>
-							{headerGroups.map((headerGroup) => (
-								<tr {...headerGroup.getHeaderGroupProps()}>
+							{headerGroups.map((headerGroup, i) => (
+								<tr
+									{...headerGroup.getHeaderGroupProps()}
+									style={
+										i === headerGroups.length - 1
+											? { position: "sticky", top: 0 }
+											: {}
+									}
+								>
 									{headerGroup.headers.map((column) => (
 										// Add the sorting props to control sorting. For this example
 										// we can add them into the header props
 										<th
 											{...column.getHeaderProps(column.getSortByToggleProps())}
-											style={{
-												background: "#eaf0f9",
-											}}
 										>
-											<Box sx={{ position: "sticky", top: 0 }}>
-												<div
-													style={{
-														display: "flex",
-														flexDirection: "row",
-														alignItems: "center",
-													}}
-												>
-													{column.render("Header")}
-													{/* Add a sort direction indicator */}
-													{column.isSorted ? (
-														column.isSortedDesc ? (
-															<ArrowDownward
-																sx={{ maxWidth: "1rem", maxHeight: "1rem" }}
-															/>
-														) : (
-															<ArrowUpward
-																sx={{ maxWidth: "1rem", maxHeight: "1rem" }}
-															/>
-														)
+											<div>
+												{column.render("Header")}
+												{/* Add a sort direction indicator */}
+												{column.isSorted ? (
+													column.isSortedDesc ? (
+														<ArrowDownward
+															sx={{ maxWidth: "1rem", maxHeight: "1rem" }}
+														/>
 													) : (
-														<></>
-													)}
-												</div>
-											</Box>
+														<ArrowUpward
+															sx={{ maxWidth: "1rem", maxHeight: "1rem" }}
+														/>
+													)
+												) : (
+													<></>
+												)}
+											</div>
 										</th>
 									))}
 								</tr>
@@ -240,7 +239,7 @@ function Table({ columns, data, offset: { xOffset = 0, yOffset = 0 } }) {
 					</table>
 				</div>
 			</TableContainer>
-		</Styles>
+		</StyledTable>
 	);
 }
 
