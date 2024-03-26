@@ -16,8 +16,14 @@ import RenderImg from "../Icons/RenderImg";
 // SVDBasicTable
 //
 // input params:
-// columns = [{label, field, sx},{label, field}]
-// rows = [{[field]: value, [field]: value},{[field]: value, [field]: value}]
+// columns = [
+//		{label, field, sx},
+//		{label, field}
+//	]
+// rows = [
+//		{[field]: value, [field]: value},
+//		{[field]: value, [field]: value}
+//	]
 
 const _isObj = (varToTest) =>
 	typeof varToTest === "object" && varToTest !== null;
@@ -57,7 +63,8 @@ const filterRows = (rows, columnSelected, filterSelected) => {
 								? row[field].data
 								: row[field].split(",")
 						  ).reduce(
-								(shown, rowOption) => shown || filterSelected[rowOption],
+								(shown, rowOption) =>
+									shown || filterSelected[rowOption],
 								false
 						  )
 						: true;
@@ -82,10 +89,13 @@ const getFilterSelected = (columnSelected) => {
 		if (columnSelected.filterType === "sort") return false;
 		else if (columnSelected.filterType === "filter")
 			if (columnSelected["filterOptions"])
-				return columnSelected.filterOptions.reduce((options, filterOption) => {
-					options[filterOption] = true;
-					return options;
-				}, {});
+				return columnSelected.filterOptions.reduce(
+					(options, filterOption) => {
+						options[filterOption] = true;
+						return options;
+					},
+					{}
+				);
 
 	return null;
 };
@@ -110,7 +120,10 @@ export default function SVDBasicTable({ columns, rows }) {
 		if (newColumn["filterType"])
 			if (newColumn.filterType === "sort") setFilterSelected(false);
 			else if (newColumn.filterType === "filter")
-				if (newColumn["filterOptions"] && newColumn["filterOptions"].length > 0)
+				if (
+					newColumn["filterOptions"] &&
+					newColumn["filterOptions"].length > 0
+				)
 					setFilterSelected(getFilterSelected(newColumn));
 		setFilteredRows(filterRows(rows, newColumn, filterSelected));
 	};
@@ -160,7 +173,10 @@ export default function SVDBasicTable({ columns, rows }) {
 									{field === columnSelected.field ? (
 										filterType === "sort" ? (
 											<Box
-												sx={{ display: "flex", flexDirection: "row" }}
+												sx={{
+													display: "flex",
+													flexDirection: "row",
+												}}
 												onClick={() => {
 													// console.log("onclick-sortBox");
 													setNewSort(!filterSelected);
@@ -170,16 +186,20 @@ export default function SVDBasicTable({ columns, rows }) {
 													<ArrowUpward
 														sx={{
 															width: "1rem",
-															marginRight: "0.25rem",
-															lineHeight: "1.5rem",
+															marginRight:
+																"0.25rem",
+															lineHeight:
+																"1.5rem",
 														}}
 													/>
 												) : (
 													<ArrowDownward
 														sx={{
 															width: "1rem",
-															marginRight: "0.25rem",
-															lineHeight: "1.5rem",
+															marginRight:
+																"0.25rem",
+															lineHeight:
+																"1.5rem",
 														}}
 													/>
 												)}
@@ -188,26 +208,45 @@ export default function SVDBasicTable({ columns, rows }) {
 										) : filterType === "filter" ? (
 											<Box>
 												<span>{label}</span>
-												<Box sx={{ display: "flex", flexDirection: "row" }}>
+												<Box
+													sx={{
+														display: "flex",
+														flexDirection: "row",
+													}}
+												>
 													{filterOptions ? (
-														filterOptions.map((filterOption) => (
-															<Box
-																key={filterOption}
-																onClick={() => {
-																	// console.log("onclick-filterRenderImageSmall");
-																	setNewFilterOption(filterOption);
-																}}
-															>
-																<RenderImg
-																	label={filterOption}
-																	disabled={!filterSelected[filterOption]}
-																	styles={{
-																		maxHeight: "1rem",
-																		marginRight: "0.25rem",
+														filterOptions.map(
+															(filterOption) => (
+																<Box
+																	key={
+																		filterOption
+																	}
+																	onClick={() => {
+																		// console.log("onclick-filterRenderImageSmall");
+																		setNewFilterOption(
+																			filterOption
+																		);
 																	}}
-																/>
-															</Box>
-														))
+																>
+																	<RenderImg
+																		label={
+																			filterOption
+																		}
+																		disabled={
+																			!filterSelected[
+																				filterOption
+																			]
+																		}
+																		styles={{
+																			maxHeight:
+																				"1rem",
+																			marginRight:
+																				"0.25rem",
+																		}}
+																	/>
+																</Box>
+															)
+														)
 													) : (
 														<></>
 													)}
@@ -220,7 +259,10 @@ export default function SVDBasicTable({ columns, rows }) {
 										<span
 											onClick={() => {
 												// console.log("onclick-span");
-												if (field !== columnSelected.field)
+												if (
+													field !==
+													columnSelected.field
+												)
 													setNewColumn(column);
 											}}
 										>
@@ -236,11 +278,16 @@ export default function SVDBasicTable({ columns, rows }) {
 					{filteredRows.map((row, i) => (
 						<TableRow
 							key={i}
-							sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+							sx={{
+								"&:last-child td, &:last-child th": {
+									border: 0,
+								},
+							}}
 						>
 							{columns.map(({ field, sx }) => (
 								<TableCell key={field} style={sx}>
-									{typeof row[field] === "object" && row[field] !== null
+									{typeof row[field] === "object" &&
+									row[field] !== null
 										? row[field].cell
 										: row[field]}
 								</TableCell>

@@ -1,7 +1,7 @@
 import React from "react";
 import CollectionPageGeneric from "../CollectionPageGeneric";
 
-import { recipes } from "../../shared/data/recipes";
+import { recipes } from "../../../data/recipes";
 
 // ////
 // RecipesCookedHome()

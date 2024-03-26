@@ -18,6 +18,7 @@ import LettersReceivedHome from "../../collections/letters/LettersReceivedHome";
 import SecretNotesHome from "../../collections/secretNotes/SecretNotesHome";
 import JournalScrapsFoundHome from "../../collections/journalScraps/JournalScrapsFoundHome";
 import PerfectionHome from "../../collections/perfection/PerfectionHome";
+import Testing from "../../testing/Testing";
 
 const navigationLinks = {
 	Home: [
@@ -130,6 +131,7 @@ const navigationLinks = {
 			element: <CookingPlannerHome />,
 		},
 	],
+	Testing: [{ to: "testing", label: "Testing", element: <Testing /> }],
 };
 
 export default navigationLinks;

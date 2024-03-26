@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import styled from "styled-components";
 
-import { seasons } from "../shared/data/collectionShipped";
+import { seasons } from "../../data/collectionShipped";
 
 import useLocalStorage from "../shared/useLocalStorage";
 
@@ -233,7 +233,8 @@ function CollectionPageGeneric({
 			const inTypeSelected =
 				itemTypesSelectedStr.includes("All") ||
 				(item.type && itemTypesSelectedStr.includes(item.type)) ||
-				(item["sub-type"] && itemTypesSelectedStr.includes(item["sub-type"]));
+				(item["sub-type"] &&
+					itemTypesSelectedStr.includes(item["sub-type"]));
 
 			// if seasons selected
 			const itemSeasons = !item.seasons
@@ -342,15 +343,21 @@ function CollectionPageGeneric({
 						{selectedItem ? (
 							<CollectionItem
 								selected={filterSelectedItemData(selectedItem)}
-								collectionItemChange={handleItemCollectedChanged}
+								collectionItemChange={
+									handleItemCollectedChanged
+								}
 								setSelected={handleSelectedItem}
 							/>
 						) : (
 							<Box sx={{ margin: "1em" }}>
 								<CollectionSummary
-									collection={filterCollectionData(collectionData)}
+									collection={filterCollectionData(
+										collectionData
+									)}
 									collectionName={collectionName}
-									collectionItemChange={handleItemCollectedChanged}
+									collectionItemChange={
+										handleItemCollectedChanged
+									}
 								/>
 							</Box>
 						)}

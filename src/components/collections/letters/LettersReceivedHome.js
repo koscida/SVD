@@ -1,7 +1,7 @@
 import React from "react";
 import CollectionPageGeneric from "../CollectionPageGeneric";
 
-import { fish, fishTypes } from "../../shared/data/fish";
+import { fish, fishTypes } from "../../../data/fish";
 
 // ////
 // LettersReceivedHome()

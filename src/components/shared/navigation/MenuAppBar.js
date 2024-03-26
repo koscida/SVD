@@ -34,16 +34,11 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 
 import RenderImg from "../Icons/RenderImg";
 import navigationLinks from "./navigationLinks";
-import { skills, professions } from "../data/professions";
+import { skills, professions } from "../../../data/professions";
 
-// settings init holds the profession settings init
-const professionInfo = Object.entries(professions);
-const settingsInit = professionInfo.reduce((init, [name]) => {
-	init[name] = false;
-	return init;
-}, {});
-settingsInit["isModsAllowed"] = false;
-settingsInit["version"] = 1.4;
+import { useGameContext } from "../../../app/GameContext";
+import RenderImageSmall from "../Icons/RenderImageSmall";
+import RenderImageMedium from "../Icons/RenderImageMedium";
 
 // state init holds the initial menu states
 let stateInit = {};
@@ -58,10 +53,14 @@ stateInit["navigation"] = false;
 stateInit["settings"] = false;
 
 export default function MenuAppBar() {
-	const [settings, setSettings] = React.useState(settingsInit);
 	const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
 
 	const [openState, setOpenState] = React.useState(stateInit);
+
+	const {
+		gameData: { settings, professionInfo, month },
+		setSettings,
+	} = useGameContext();
 
 	// const [drawerState, setDrawerState] = React.useState({
 	// 	navigation: false,
@@ -93,18 +92,24 @@ export default function MenuAppBar() {
 		});
 	};
 
-	const handleSettingsChange = (settingName, value) => (event) => {
-		setOpenState({ ...openState, settings: true });
-		if (value === null) value = event.target.value;
-		setSettings({ ...settings, [settingName]: value });
-	};
-
 	const handleProfileOpen = (event) => {
 		setProfileAnchorEl(event.currentTarget);
 	};
 
 	const handleProfileClose = (event) => {
 		setProfileAnchorEl(null);
+	};
+
+	// handle data change
+
+	const handleSettingsChange = (settingName, value) => (event) => {
+		setOpenState({ ...openState, settings: true });
+		if (value === null) value = event.target.value;
+		setSettings({ ...settings, [settingName]: value });
+	};
+
+	const handleMonthChange = (e) => {
+		setSettings({ ...settings, [month]: e.target.value });
 	};
 
 	// ////
@@ -143,7 +148,11 @@ export default function MenuAppBar() {
 										sx={{ padding: "8px" }}
 									>
 										<ListItemText primary={sectionLabel} />
-										{openState[sectionLabel] ? <ExpandLess /> : <ExpandMore />}
+										{openState[sectionLabel] ? (
+											<ExpandLess />
+										) : (
+											<ExpandMore />
+										)}
 									</ListItemButton>
 
 									<Collapse
@@ -152,7 +161,11 @@ export default function MenuAppBar() {
 										unmountOnExit
 									>
 										<List component="div" disablePadding>
-											<NavigationElements navigationLinks={navigationLinks} />
+											<NavigationElements
+												navigationLinks={
+													navigationLinks
+												}
+											/>
 										</List>
 									</Collapse>
 								</React.Fragment>
@@ -164,7 +177,7 @@ export default function MenuAppBar() {
 								/>
 							)
 					)
-				) : listName === "settings" ? (
+				) : listName === "settings" && settings ? (
 					<>
 						<ListItem>
 							<FormControl
@@ -179,20 +192,27 @@ export default function MenuAppBar() {
 								<Select
 									labelId="select-version-label"
 									id="select-version"
-									value={settings["version"]}
+									value={settings.version}
 									label="Version"
 									autowidth="true"
-									onChange={handleSettingsChange("version", null)}
+									onChange={handleSettingsChange(
+										"version",
+										null
+									)}
 								>
-									{[1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6].map((ver) => (
-										<MenuItem
-											value={ver}
-											key={ver}
-											default={ver === settings["version"]}
-										>
-											{ver}
-										</MenuItem>
-									))}
+									{[1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6].map(
+										(ver) => (
+											<MenuItem
+												value={ver}
+												key={ver}
+												default={
+													ver === settings["version"]
+												}
+											>
+												{ver}
+											</MenuItem>
+										)
+									)}
 								</Select>
 							</FormControl>
 						</ListItem>
@@ -218,19 +238,24 @@ export default function MenuAppBar() {
 						</ListItem>
 
 						<Divider />
+
 						{skills.map((skill) => (
 							<React.Fragment key={skill}>
-								<ListItem>
+								<ListItem sx={{ background: "#f3f3f3" }}>
 									<ListItemIcon>
-										<RenderImg label={skill} />
+										<RenderImageMedium label={skill} />
 									</ListItemIcon>
 									<ListItemText
 										id={`switch-list-label-${skill}`}
 										primary={skill}
+										sx={{ fontWeight: "bold" }}
 									/>
 								</ListItem>
 								{professionInfo
-									.filter(([name]) => professions[name].skill === skill)
+									.filter(
+										([name]) =>
+											professions[name].skill === skill
+									)
 									.map(([name, data]) => {
 										// disable if: !mods &&
 										//		this is not selected and another current level is selected
@@ -238,15 +263,29 @@ export default function MenuAppBar() {
 										// if mode enabled, never disable
 										const disabled =
 											!settings["isModsAllowed"] &&
-											((!settings[name] && settings[data["alternative"]]) ||
+											((!settings[name] &&
+												settings[
+													data["alternative"]
+												]) ||
 												(data.level === "Level 10" &&
 													!settings[data["Level 5"]]))
 												? true
 												: false;
 										return (
-											<ListItem key={name}>
+											<ListItem
+												key={name}
+												sx={{
+													paddingLeft:
+														data.level ===
+														"Level 10"
+															? "2rem"
+															: "1rem",
+												}}
+											>
 												<ListItemIcon>
-													<RenderImg label={name} />
+													<RenderImageSmall
+														label={name}
+													/>
 												</ListItemIcon>
 												<ListItemText
 													id={`switch-list-label-${name}`}
@@ -255,7 +294,10 @@ export default function MenuAppBar() {
 												/>
 												<Switch
 													edge="end"
-													onChange={handleSettingsChange(name, !settings[name])}
+													onChange={handleSettingsChange(
+														name,
+														!settings[name]
+													)}
 													checked={settings[name]}
 													inputProps={{
 														"aria-labelledby": `switch-list-label-${name}`,
@@ -279,34 +321,67 @@ export default function MenuAppBar() {
 	// ////
 	// render
 	return (
-		<Box sx={{ flexGrow: 1 }}>
-			<AppBar position="static">
-				<Toolbar>
-					<IconButton
-						size="large"
-						edge="start"
-						color="inherit"
-						aria-label="menu"
-						sx={{ mr: 2 }}
-						onClick={toggleDrawer("navigation", true)}
-					>
-						<MenuIcon />
-					</IconButton>
+		<Box sx={{ marginTop: "64px" }}>
+			<Box sx={{ flexGrow: 1 }}>
+				<AppBar position="fixed">
+					<Toolbar>
+						<IconButton
+							size="large"
+							edge="start"
+							color="inherit"
+							aria-label="menu"
+							sx={{ mr: 2 }}
+							onClick={toggleDrawer("navigation", true)}
+						>
+							<MenuIcon />
+						</IconButton>
 
-					<Drawer
-						anchor={"left"}
-						open={openState["navigation"]}
-						onClose={toggleDrawer("navigation", false)}
-					>
-						<NavigationList listName={"navigation"} />
-					</Drawer>
+						<Drawer
+							anchor={"left"}
+							open={openState["navigation"]}
+							onClose={toggleDrawer("navigation", false)}
+						>
+							<NavigationList listName={"navigation"} />
+						</Drawer>
 
-					<Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-						SVD
-					</Typography>
-					{
+						<Typography
+							variant="h6"
+							component="div"
+							sx={{ flexGrow: 1 }}
+						>
+							SVD
+						</Typography>
+
 						<div>
-							{/* Right Drawer */}
+							{/* Date - dropdown */}
+							<FormControl
+								sx={{ m: 1, minWidth: 120 }}
+								size="small"
+							>
+								<InputLabel id="month-select-small-label">
+									Month
+								</InputLabel>
+								<Select
+									labelId="demo-select-small-label"
+									id="demo-select-small"
+									value={month}
+									label="Age"
+									onChange={handleMonthChange}
+								>
+									{["Spring", "Summer", "Fall", "Winter"].map(
+										(season) => (
+											<MenuItem
+												value={season}
+												key={season}
+											>
+												{season}
+											</MenuItem>
+										)
+									)}
+								</Select>
+							</FormControl>
+
+							{/* Settings - Right Drawer */}
 							<IconButton
 								size="large"
 								aria-label="settings"
@@ -326,7 +401,7 @@ export default function MenuAppBar() {
 								<NavigationList listName={"settings"} />
 							</Drawer>
 
-							{/* account drop down */}
+							{/* Profile - account drop down */}
 							<IconButton
 								size="large"
 								aria-label="account of current user"
@@ -353,13 +428,17 @@ export default function MenuAppBar() {
 								open={Boolean(profileAnchorEl)}
 								onClose={handleProfileClose}
 							>
-								<MenuItem onClick={handleProfileClose}>Profile</MenuItem>
-								<MenuItem onClick={handleProfileClose}>My account</MenuItem>
+								<MenuItem onClick={handleProfileClose}>
+									Profile
+								</MenuItem>
+								<MenuItem onClick={handleProfileClose}>
+									My account
+								</MenuItem>
 							</Menu>
 						</div>
-					}
-				</Toolbar>
-			</AppBar>
+					</Toolbar>
+				</AppBar>
+			</Box>
 		</Box>
 	);
 }

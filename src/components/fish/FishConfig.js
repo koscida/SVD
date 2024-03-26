@@ -1,6 +1,6 @@
-import data from "../shared/data/fish";
-import _dataSeasons from "../shared/data/dataSeasons";
-import _dataWeather from "../shared/data/dataWeather";
+import data from "../../data/fish";
+import _dataSeasons from "../../data/dataSeasons";
+import _dataWeather from "../../data/dataWeather";
 
 const dataShowGridOptions = ["Timeline", "Location"];
 const dataShowTypeOptions = ["Regular", "Special", "Legendary"];

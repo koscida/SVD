@@ -1,4 +1,4 @@
-import data from "../shared/data/dataWeather";
+import data from "../../data/dataWeather";
 
 const dataWeather = data.weather;
 
@@ -21,8 +21,11 @@ function GridCell({ seasonName, seasonWeather, fishWeather, classStyle }) {
 					// what image and text is shown
 					// const imgShown = included && cellWLen === 1
 					const imgShown = true;
-					const src = imgShown && dataWeather[weatherStatus].images[seasonName];
-					const imgName = !imgShown && dataWeather[weatherStatus].name;
+					const src =
+						imgShown &&
+						dataWeather[weatherStatus].images[seasonName];
+					const imgName =
+						!imgShown && dataWeather[weatherStatus].name;
 					// class
 					const weatherClass =
 						"weatherStatus h-100 " +

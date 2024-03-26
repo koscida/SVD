@@ -1,4 +1,4 @@
-import { animals, animalProducts } from "../shared/data/animals";
+import { animals, animalProducts } from "../../data/animals";
 
 const filterValues = ["single", "daily", "monthly", "all"];
 

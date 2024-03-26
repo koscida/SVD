@@ -9,7 +9,7 @@ import SeasonSelect from "../../shared/inputs/SeasonSelect";
 import RenderImageSmall from "../../shared/Icons/RenderImageSmall";
 import RenderImageMedium from "../../shared/Icons/RenderImageMedium";
 
-import { cropsObj } from "../../shared/data/crops";
+import { cropsObj } from "../../../data/crops";
 
 // ////
 // Styling
@@ -155,7 +155,10 @@ function Plots({
 								className="fa-solid fa-angles-up"
 								onClick={() => moveTop(i)}
 							></i>
-							<i className="fa-solid fa-angle-up" onClick={() => moveUp(i)}></i>
+							<i
+								className="fa-solid fa-angle-up"
+								onClick={() => moveUp(i)}
+							></i>
 							<i
 								className="fa-solid fa-angle-down"
 								onClick={() => moveDown(i)}
@@ -182,7 +185,11 @@ function Plots({
 		);
 	};
 
-	const PlotSeeds = ({ cropSeasonalList, selectedCrops, handleCropSelect }) => {
+	const PlotSeeds = ({
+		cropSeasonalList,
+		selectedCrops,
+		handleCropSelect,
+	}) => {
 		// console.log("selectedCrops", selectedCrops);
 		return (
 			<div style={{ display: "flex" }}>
@@ -192,7 +199,9 @@ function Plots({
 							(newList, seasonalCropName) => {
 								cropsObj[seasonalCropName].Grow.time.regrow
 									? newList.Reproduces.push(seasonalCropName)
-									: newList["Single Harvest"].push(seasonalCropName);
+									: newList["Single Harvest"].push(
+											seasonalCropName
+									  );
 								return newList;
 							},
 							{ "Single Harvest": [], Reproduces: [] }
@@ -207,29 +216,40 @@ function Plots({
 									flexWrap: "wrap",
 								}}
 							>
-								{seasonalCropTypeList.map((seasonalCropName) => {
-									return (
-										<Chip
-											key={seasonalCropName}
-											label={seasonalCropName}
-											avatar={
-												<RenderImageSmall
-													label={seasonalCropName}
-													styles={{ padding: "0", margin: "0 -6px 0 12px" }}
-												/>
-											}
-											onClick={() => handleCropSelect(seasonalCropName)}
-											variant={
-												seasonalCropName &&
-												selectedCrops &&
-												selectedCrops.includes(seasonalCropName)
-													? "outlined"
-													: "filled"
-											}
-											sx={{ margin: "0 3px 3px 0" }}
-										/>
-									);
-								})}
+								{seasonalCropTypeList.map(
+									(seasonalCropName) => {
+										return (
+											<Chip
+												key={seasonalCropName}
+												label={seasonalCropName}
+												avatar={
+													<RenderImageSmall
+														label={seasonalCropName}
+														styles={{
+															padding: "0",
+															margin: "0 -6px 0 12px",
+														}}
+													/>
+												}
+												onClick={() =>
+													handleCropSelect(
+														seasonalCropName
+													)
+												}
+												variant={
+													seasonalCropName &&
+													selectedCrops &&
+													selectedCrops.includes(
+														seasonalCropName
+													)
+														? "outlined"
+														: "filled"
+												}
+												sx={{ margin: "0 3px 3px 0" }}
+											/>
+										);
+									}
+								)}
 							</div>
 						</div>
 					))}
@@ -271,7 +291,9 @@ function Plots({
 									<div>
 										{plot.selectedCrops
 											.filter((c) =>
-												cropsObj[c].seasons.includes(selectedSeason)
+												cropsObj[c].seasons.includes(
+													selectedSeason
+												)
 											)
 											.map((selectedCropName) => (
 												<RenderImageMedium
@@ -281,7 +303,10 @@ function Plots({
 											))}
 									</div>
 									{isSelected ? (
-										<button className="btn btn-sm" onClick={handleCancel}>
+										<button
+											className="btn btn-sm"
+											onClick={handleCancel}
+										>
 											Close
 										</button>
 									) : (
@@ -337,8 +362,8 @@ function Plots({
 				) : (
 					<div>
 						<p>
-							Confirm - Do you want to clear/delete all plots (this cannot be
-							undone!)
+							Confirm - Do you want to clear/delete all plots
+							(this cannot be undone!)
 						</p>
 						<button
 							className="btn ms-auto"

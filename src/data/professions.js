@@ -6,14 +6,6 @@ const professions = {
 		description: "Animal products worth 20% more.",
 		alternative: "Tiller",
 	},
-	Tiller: {
-		level: "Level 5",
-		profession: "Tiller",
-		skill: "Farming",
-		description:
-			"Crops worth 10% more.(Bonus applies to all Vegetables and Flowers, plus any Fruit that has not been foraged) ",
-		alternative: "Rancher",
-	},
 	Coopmaster: {
 		level: "Level 10",
 		profession: "Coopmaster",
@@ -27,9 +19,18 @@ const professions = {
 		level: "Level 10",
 		profession: "Shepherd",
 		skill: "Farming",
-		description: "Befriend barn animals quicker. Sheep produce wool faster.",
+		description:
+			"Befriend barn animals quicker. Sheep produce wool faster.",
 		alternative: "Coopmaster",
 		"Level 5": "Rancher",
+	},
+	Tiller: {
+		level: "Level 5",
+		profession: "Tiller",
+		skill: "Farming",
+		description:
+			"Crops worth 10% more.(Bonus applies to all Vegetables and Flowers, plus any Fruit that has not been foraged) ",
+		alternative: "Rancher",
 	},
 	Artisan: {
 		level: "Level 10",
@@ -47,19 +48,13 @@ const professions = {
 		alternative: "Artisan",
 		"Level 5": "Tiller",
 	},
+
 	Miner: {
 		level: "Level 5",
 		profession: "Miner",
 		skill: "Mining",
 		description: " +1 ore per vein.",
 		alternative: "Geologist",
-	},
-	Geologist: {
-		level: "Level 5",
-		profession: "Geologist",
-		skill: "Mining",
-		description: "Chance for gems to appear in pairs.",
-		alternative: "Miner",
 	},
 	Blacksmith: {
 		level: "Level 10",
@@ -77,6 +72,13 @@ const professions = {
 		alternative: "Blacksmith",
 		"Level 5": "Miner",
 	},
+	Geologist: {
+		level: "Level 5",
+		profession: "Geologist",
+		skill: "Mining",
+		description: "Chance for gems to appear in pairs.",
+		alternative: "Miner",
+	},
 	Prospector: {
 		level: "Level 10",
 		profession: "Prospector",
@@ -93,19 +95,13 @@ const professions = {
 		alternative: "Prospector",
 		"Level 5": "Geologist",
 	},
+
 	Forester: {
 		level: "Level 5",
 		profession: "Forester",
 		skill: "Foraging",
 		description: "Gain 25% more wood when chopping",
 		alternative: "Gatherer",
-	},
-	Gatherer: {
-		level: "Level 5",
-		profession: "Gatherer",
-		skill: "Foraging",
-		description: "Chance for double harvest of foraged items.",
-		alternative: "Forester",
 	},
 	Lumberjack: {
 		level: "Level 10",
@@ -123,6 +119,13 @@ const professions = {
 		alternative: "Lumberjack",
 		"Level 5": "Forester",
 	},
+	Gatherer: {
+		level: "Level 5",
+		profession: "Gatherer",
+		skill: "Foraging",
+		description: "Chance for double harvest of foraged items.",
+		alternative: "Forester",
+	},
 	Botanist: {
 		level: "Level 10",
 		profession: "Botanist",
@@ -139,19 +142,13 @@ const professions = {
 		alternative: "Botanist",
 		"Level 5": "Gatherer",
 	},
+
 	Fisher: {
 		level: "Level 5",
 		profession: "Fisher",
 		skill: "Fishing",
 		description: "Fish worth 25% more.",
 		alternative: "Trapper",
-	},
-	Trapper: {
-		level: "Level 5",
-		profession: "Trapper",
-		skill: "Fishing",
-		description: "Resources required to craft crab pots reduced.",
-		alternative: "Fisher",
 	},
 	Angler: {
 		level: "Level 10",
@@ -169,6 +166,13 @@ const professions = {
 		alternative: "Angler",
 		"Level 5": "Fisher",
 	},
+	Trapper: {
+		level: "Level 5",
+		profession: "Trapper",
+		skill: "Fishing",
+		description: "Resources required to craft crab pots reduced.",
+		alternative: "Fisher",
+	},
 	Mariner: {
 		level: "Level 10",
 		profession: "Mariner",
@@ -185,6 +189,7 @@ const professions = {
 		alternative: "Mariner",
 		"Level 5": "Trapper",
 	},
+
 	Fighter: {
 		level: "Level 5",
 		profession: "Fighter",
@@ -192,14 +197,6 @@ const professions = {
 		description: " All attacks deal 10% more damage.",
 		hp: 15,
 		alternative: "Scout",
-	},
-	Scout: {
-		level: "Level 5",
-		profession: "Scout",
-		skill: "Combat",
-		description: "Critical strike chance increased by 50%.",
-		hp: 0,
-		alternative: "Fighter",
 	},
 	Brute: {
 		level: "Level 10",
@@ -218,6 +215,14 @@ const professions = {
 		hp: 0,
 		alternative: "Brute",
 		"Level 5": "Fighter",
+	},
+	Scout: {
+		level: "Level 5",
+		profession: "Scout",
+		skill: "Combat",
+		description: "Critical strike chance increased by 50%.",
+		hp: 0,
+		alternative: "Fighter",
 	},
 	Defender: {
 		level: "Level 10",

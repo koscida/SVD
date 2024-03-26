@@ -1,70 +1,39 @@
-import FishDisplay from "./FishDisplay";
-import _dataSeasons from "../shared/data/dataSeasons";
-import _dataWeather from "../shared/data/dataWeather";
-import FishConfig from "./FishConfig";
-import useLocalStorage from "../shared/useLocalStorage";
-
-// get data from data file
-const dataSeasons = _dataSeasons.seasons;
-const dataWeather = _dataWeather.weather;
+import React from "react";
+import FishGridDisplay from "./FishGridDisplay";
+import { Box } from "@mui/material";
+import { useGameContext } from "../../app/GameContext";
+import SVDCollectionTable from "../shared/views/SVDCollectionTable";
+import FindRemainingFish from "./FindRemainingFish";
 
 function Fish() {
-	const [filterShowBy, setFilterShowBy] = useLocalStorage(
-		"svd-fish-filter-showBy",
-		"Timeline"
-	);
-	const [showType, setShowType] = useLocalStorage("svd-fish-filter-showType", [
-		"Regular",
-	]);
-	const [filterSeasons, setFilterSeasons] = useLocalStorage(
-		"svd-fish-filter-seasons",
-		[Object.values(dataSeasons)[0]]
-	);
-	const [filterWeather, setFilterWeather] = useLocalStorage(
-		"svd-fish-filter-weather",
-		[Object.values(dataWeather)[0]]
-	);
-	const [filterCaught, setFilterCaught] = useLocalStorage(
-		"svd-fish-filter-caught",
-		[{ name: "Caught" }, { name: "Not Caught" }]
-	);
-	const [caughtFish, setCaughtFish] = useLocalStorage(
-		"svd-fish-caught",
-		[1, 2, 3]
-	);
+	const {
+		gameData: {
+			svdData: { fish, fishTypes },
+			userData,
+		},
+		setUserData,
+	} = useGameContext();
 
-	// Main Display
+	// handlers
+
+	const handleItemClick = (fish) => {
+		const newFishCaught = userData.fishCaught.map((f) =>
+			f.name === fish.name ? fish : f
+		);
+		setUserData({ ...userData, fishCaught: newFishCaught });
+	};
+
+	// render
 	return (
-		<div className="fishApp">
-			<div className="row">
-				<div className="col-2">
-					<FishConfig
-						filterShowBy={filterShowBy}
-						setFilterShowBy={setFilterShowBy}
-						showType={showType}
-						setShowType={setShowType}
-						filterSeasons={filterSeasons}
-						setFilterSeasons={setFilterSeasons}
-						filterWeather={filterWeather}
-						setFilterWeather={setFilterWeather}
-						filterCaught={filterCaught}
-						setFilterCaught={setFilterCaught}
-					/>
-				</div>
-
-				<div className="col-10">
-					<FishDisplay
-						filterShowBy={filterShowBy}
-						showType={showType}
-						filterSeasons={filterSeasons}
-						filterWeather={filterWeather}
-						filterCaught={filterCaught}
-						caughtFish={caughtFish}
-						setCaughtFish={setCaughtFish}
-					/>
-				</div>
-			</div>
-		</div>
+		<Box>
+			<SVDCollectionTable
+				data={fish}
+				userData={userData.fishCaught}
+				handleItemClick={handleItemClick}
+				collectionTerm={"caught"}
+			/>
+			<FindRemainingFish />
+		</Box>
 	);
 }
 

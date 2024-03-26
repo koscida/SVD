@@ -5,7 +5,7 @@ import getTableData from "../../animals/AnimalsHomeGetTableData";
 import RadioOption from "../../shared/inputs/SingleSwitch";
 import CheckOption from "../../shared/inputs/CheckOption";
 
-import recipies from "../../shared/data/recipes";
+import recipies from "../../../data/recipes";
 
 // ////
 // RecipiesHome()

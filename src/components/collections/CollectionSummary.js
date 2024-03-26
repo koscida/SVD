@@ -4,10 +4,10 @@ import styled from "styled-components";
 import RenderImg from "../shared/Icons/RenderImg";
 import SVDBasicTable from "../shared/views/SVDBasicTable";
 
-import { locations } from "../shared/data/dataLocations";
+import { locations } from "../../data/dataLocations";
 import { Box, TextField } from "@mui/material";
 
-import { shippedTypes, seasons } from "../shared/data/collectionShipped";
+import { shippedTypes, seasons } from "../../data/collectionShipped";
 
 const StyledCollectionSummary = styled.div`
 	> div {
@@ -72,7 +72,10 @@ function CollectionSummary({
 								<div className="flexRow">
 									<RenderImg
 										label={item.name}
-										styles={{ width: "2em", marginRight: "0.5em" }}
+										styles={{
+											width: "2em",
+											marginRight: "0.5em",
+										}}
 									/>
 									{item.name}
 								</div>
@@ -135,7 +138,13 @@ function CollectionSummary({
 					field: "location",
 					label: "Locations",
 					filterType: "filter",
-					filterOptions: ["Ocean", "River", "Pond", "Special", "Ginger Island"],
+					filterOptions: [
+						"Ocean",
+						"River",
+						"Pond",
+						"Special",
+						"Ginger Island",
+					],
 				},
 				{ field: "collected", label: "Collected" },
 			];
@@ -148,7 +157,10 @@ function CollectionSummary({
 							<div className="flexRow">
 								<RenderImg
 									label={item.name}
-									styles={{ width: "2em", marginRight: "0.5em" }}
+									styles={{
+										width: "2em",
+										marginRight: "0.5em",
+									}}
 								/>
 								{item.name}
 							</div>
@@ -178,21 +190,27 @@ function CollectionSummary({
 						// list
 						if (i !== 0) times += ", ";
 						// if all day
-						if (time.start === 6 && time.end === 26) times += "All day";
+						if (time.start === 6 && time.end === 26)
+							times += "All day";
 						else {
 							// start time
 							if (time.start < 12) times += time.start + "am";
-							else if (time.start === 12) times += time.start + "pm";
-							else if (time.start < 24) times += time.start - 12 + "pm";
-							else if (time.start === 24) times += time.start - 12 + "am";
+							else if (time.start === 12)
+								times += time.start + "pm";
+							else if (time.start < 24)
+								times += time.start - 12 + "pm";
+							else if (time.start === 24)
+								times += time.start - 12 + "am";
 							else times += time.start - 24 + "am";
 							// spacer
 							times += " - ";
 							// end time
 							if (time.end < 12) times += time.end + "am";
 							else if (time.end === 12) times += time.end + "pm";
-							else if (time.end < 24) times += time.end - 12 + "pm";
-							else if (time.end === 24) times += time.end - 12 + "am";
+							else if (time.end < 24)
+								times += time.end - 12 + "pm";
+							else if (time.end === 24)
+								times += time.end - 12 + "am";
 							else times += time.end - 24 + "am";
 						}
 						// return
@@ -200,7 +218,9 @@ function CollectionSummary({
 					}, ""),
 					location: {
 						cell: item.locations.join(", "),
-						data: item.locations.map((location) => locations[location].group),
+						data: item.locations.map(
+							(location) => locations[location].group
+						),
 					},
 					collected: {
 						cell: (

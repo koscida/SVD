@@ -1,4 +1,4 @@
-import { seasonsNames } from "../data/dataSeasons";
+import { seasonsNames } from "../../../data/dataSeasons";
 
 import MultipleSelectChips from "./MultipleSelectChips";
 import { Stack, Chip } from "@mui/material";

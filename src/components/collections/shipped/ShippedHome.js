@@ -1,11 +1,11 @@
 import React from "react";
 import CollectionPageGeneric from "../CollectionPageGeneric";
 
-import { shipped, shippedTypes } from "../../shared/data/collectionShipped";
-import { crops, cropsObj } from "../../shared/data/crops";
-import { foraging } from "../../shared/data/foraging";
-import { animalProducts } from "../../shared/data/animals";
-import { artisanProducts } from "../../shared/data/artisanProducts";
+import { shipped, shippedTypes } from "../../../data/collectionShipped";
+import { crops, cropsObj } from "../../../data/crops";
+import { foraging } from "../../../data/foraging";
+import { animalProducts } from "../../../data/animals";
+import { artisanProducts } from "../../../data/artisanProducts";
 
 // ////
 // ShippedHome()
@@ -23,7 +23,9 @@ function ShippedHome() {
 				? animalProducts.find((x) => x.name === item.name)
 				: {};
 		if (itemData)
-			Object.entries(itemData).forEach(([key, value]) => (item[key] = value));
+			Object.entries(itemData).forEach(
+				([key, value]) => (item[key] = value)
+			);
 		return item;
 	});
 	// console.log("--ShippedHome-- dataSource: ", dataSource);

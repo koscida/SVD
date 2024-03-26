@@ -1,7 +1,7 @@
 import React from "react";
 import CollectionPageGeneric from "../CollectionPageGeneric";
 
-import { minerals, mineralTypes } from "../../shared/data/minerals";
+import { minerals, mineralTypes } from "../../../data/minerals";
 
 // ////
 // FishCaughtHome()

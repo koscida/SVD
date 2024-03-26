@@ -1,7 +1,7 @@
 import React from "react";
 import CollectionPageGeneric from "../CollectionPageGeneric";
 
-import { artifacts } from "../../shared/data/artifacts";
+import { artifacts } from "../../../data/artifacts";
 
 // ////
 // ArtifactsFoundHome()
