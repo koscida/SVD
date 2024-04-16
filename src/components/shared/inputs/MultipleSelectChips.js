@@ -13,12 +13,14 @@ import {
 	Checkbox,
 	Divider,
 	FormLabel,
+	Button,
 } from "@mui/material";
 import styled from "styled-components";
 
 // /////////////////////////////////////////////////
 //
 // 		MultipleSelectChips
+// Creates a list of chips that can be multi-selected
 //
 //	Material multi-select chip options
 //
@@ -63,20 +65,31 @@ export default function MultipleSelectChips({
 	handleChange,
 	selectedOptions,
 }) {
-	const theme = useTheme();
-
+	if (!options) return <></>;
 	const includesAll = options.includes("All");
+
+	const smallBtnStyles = {
+		fontSize: "0.6rem",
+		padding: "1px 5px",
+		lineHeight: "1rem",
+		minWidth: 0,
+	};
+
+	//
+	// handlers
 
 	const handleClick = (optionClicked) => {
 		//	if includesAll
 
-		const newOptions = includesAll
+		const newOptionsSelected = includesAll
 			? optionClicked === "All" ||
 			  (selectedOptions.includes(optionClicked) &&
 					selectedOptions.length === 2)
 				? ["All"]
 				: selectedOptions.includes(optionClicked)
-				? selectedOptions.filter((x) => x !== optionClicked && x !== "All")
+				? selectedOptions.filter(
+						(x) => x !== optionClicked && x !== "All"
+				  )
 				: [...selectedOptions, optionClicked].filter((x) => x !== "All")
 			: selectedOptions.includes(optionClicked)
 			? selectedOptions.length === 1
@@ -84,27 +97,80 @@ export default function MultipleSelectChips({
 				: selectedOptions.filter((x) => x !== optionClicked)
 			: [...selectedOptions, optionClicked];
 
-		console.log("--MultipleSelectChip:handleClick-- newOptions: ", newOptions);
+		// console.log(
+		// 	"--MultipleSelectChip:handleClick-- newOptionsSelected: ",
+		// 	newOptionsSelected
+		// );
 
-		handleChange(newOptions);
+		handleChange(newOptionsSelected);
 	};
 
+	const handleClickAll = () => {
+		handleChange(includesAll ? ["All"] : options);
+	};
+
+	const handleClickNone = () => {
+		handleChange([]);
+	};
+
+	//
+	// render
+
 	return (
-		<FormControl>
-			<FormLabel>{label}</FormLabel>
-			<Stack direction="row" spacing={0} sx={{ flexWrap: "wrap" }}>
-				{options.map((optionName) => (
-					<Chip
-						label={optionName}
-						key={optionName}
-						onClick={() => handleClick(optionName)}
-						variant={
-							selectedOptions.includes(optionName) ? "outlined" : "filled"
-						}
-						sx={{ margin: "0 5px 3px 0" }}
-					/>
-				))}
-			</Stack>
-		</FormControl>
+		<Box>
+			<FormControl style={{ width: "100%" }}>
+				<Box
+					sx={{
+						display: "flex",
+						flexDirection: "row",
+						justifyContent: "space-between",
+						marginBottom: "3px",
+					}}
+				>
+					<FormLabel>{label}</FormLabel>
+					<Box
+						sx={{
+							display: "flex",
+							flexDirection: "row",
+							alignItems: "end",
+							gap: "5px",
+						}}
+					>
+						<Button
+							variant="outlined"
+							size="small"
+							sx={smallBtnStyles}
+							onClick={() => handleClickAll()}
+						>
+							Select All
+						</Button>
+						<Button
+							variant="outlined"
+							size="small"
+							sx={smallBtnStyles}
+							onClick={() => handleClickNone()}
+						>
+							Clear
+						</Button>
+					</Box>
+				</Box>
+
+				<Stack direction="row" spacing={0} sx={{ flexWrap: "wrap" }}>
+					{options.map((optionName) => (
+						<Chip
+							label={optionName}
+							key={optionName}
+							onClick={() => handleClick(optionName)}
+							variant={
+								selectedOptions.includes(optionName)
+									? "filled"
+									: "outlined"
+							}
+							sx={{ margin: "0 5px 3px 0" }}
+						/>
+					))}
+				</Stack>
+			</FormControl>
+		</Box>
 	);
 }

@@ -29,6 +29,8 @@ const StyledRadioGroup = styled.div`
 `;
 
 function RadioOption({ label, selected, handleChange, options }) {
+	if (!options) return <></>;
+
 	// handlers
 	const handleOnChange = (e) => {
 		handleChange(e.target.value);
@@ -38,7 +40,9 @@ function RadioOption({ label, selected, handleChange, options }) {
 	return (
 		<StyledRadioGroup>
 			<FormControl>
-				<FormLabel id="demo-controlled-radio-buttons-group">{label}</FormLabel>
+				<FormLabel id="demo-controlled-radio-buttons-group">
+					{label}
+				</FormLabel>
 				<RadioGroup
 					aria-labelledby="demo-controlled-radio-buttons-group"
 					name="controlled-radio-buttons-group"
