@@ -41,7 +41,7 @@ export default function CropsOptions({
 			/>
 
 			<MultipleSelectChips
-				label={"Category"}
+				label={"Seed Category"}
 				selectedOptions={selectedFilters.selectedCategories}
 				options={filtersOptions.categoryOptions}
 				handleChange={(value) => {
@@ -53,7 +53,7 @@ export default function CropsOptions({
 			/>
 
 			<MultipleSelectChips
-				label={"Type"}
+				label={"Crop Type"}
 				selectedOptions={selectedFilters.selectedTypes}
 				options={filtersOptions.typeOptions}
 				handleChange={(value) => {

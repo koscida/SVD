@@ -76,7 +76,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Flower",
 		description: "",
-		sell: { type: "Quality", Regular: 50, Silver: 62, Gold: 75, Iridium: 100 },
+		sell: {
+			type: "Quality",
+			Regular: 50,
+			Silver: 62,
+			Gold: 75,
+			Iridium: 100,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 45, health: 20 },
@@ -247,7 +253,7 @@ const crops = [
 		name: "Tea Leaves",
 		id: "Tulip",
 		version: 1.4,
-		type: "Crop",
+		type: "Special",
 		"sub-type": "Flower",
 		description: "",
 		sell: { type: "Flat", price: 50 },
@@ -278,7 +284,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Flower",
 		description: "",
-		sell: { type: "Quality", Regular: 30, Silver: 37, Gold: 45, Iridium: 60 },
+		sell: {
+			type: "Quality",
+			Regular: 30,
+			Silver: 37,
+			Gold: 45,
+			Iridium: 60,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 45, health: 20 },
@@ -314,7 +326,7 @@ const crops = [
 		name: "Ancient Fruit",
 		id: "Ancient Fruit",
 		version: 1.4,
-		type: "Crop",
+		type: "Special",
 		"sub-type": "Fruit",
 		description: "",
 		sell: {
@@ -353,7 +365,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Fruit",
 		description: "",
-		sell: { type: "Quality", Regular: 50, Silver: 62, Gold: 75, Iridium: 100 },
+		sell: {
+			type: "Quality",
+			Regular: 50,
+			Silver: 62,
+			Gold: 75,
+			Iridium: 100,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 25, health: 11 },
@@ -395,7 +413,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Fruit",
 		description: "",
-		sell: { type: "Quality", Regular: 75, Silver: 93, Gold: 112, Iridium: 150 },
+		sell: {
+			type: "Quality",
+			Regular: 75,
+			Silver: 93,
+			Gold: 112,
+			Iridium: 150,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 75, health: 33 },
@@ -434,7 +458,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Fruit",
 		description: "",
-		sell: { type: "Quality", Regular: 75, Silver: 93, Gold: 112, Iridium: 150 },
+		sell: {
+			type: "Quality",
+			Regular: 75,
+			Silver: 93,
+			Gold: 112,
+			Iridium: 150,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 38, health: 17 },
@@ -569,7 +599,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Fruit",
 		description: "",
-		sell: { type: "Quality", Regular: 40, Silver: 50, Gold: 60, Iridium: 80 },
+		sell: {
+			type: "Quality",
+			Regular: 40,
+			Silver: 50,
+			Gold: 60,
+			Iridium: 80,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 13, health: 5 },
@@ -606,7 +642,7 @@ const crops = [
 		name: "Pomegranate",
 		id: "Pomegranate",
 		version: 1.4,
-		type: "Crop",
+		type: "Tree",
 		"sub-type": "Fruit",
 		description: "",
 		sell: {
@@ -653,7 +689,7 @@ const crops = [
 		name: "Qi Fruit",
 		id: "Qi Fruit",
 		version: 1.5,
-		type: "Crop",
+		type: "Special",
 		"sub-type": "Fruit",
 		description: "",
 		sell: { type: "Flat", price: 1 },
@@ -801,7 +837,7 @@ const crops = [
 		name: "Sweet Gem Berry",
 		id: "Coconut",
 		version: 1.4,
-		type: "Crop",
+		type: "Special",
 		"sub-type": "Rare",
 		description: "",
 		sell: { type: "Unsellable" },
@@ -958,7 +994,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Vegetable",
 		description: "",
-		sell: { type: "Quality", Regular: 40, Silver: 50, Gold: 60, Iridium: 80 },
+		sell: {
+			type: "Quality",
+			Regular: 40,
+			Silver: 50,
+			Gold: 60,
+			Iridium: 80,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 25, health: 11 },
@@ -1129,7 +1171,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Vegetable",
 		description: "",
-		sell: { type: "Quality", Regular: 50, Silver: 62, Gold: 75, Iridium: 100 },
+		sell: {
+			type: "Quality",
+			Regular: 50,
+			Silver: 62,
+			Gold: 75,
+			Iridium: 100,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 25, health: 11 },
@@ -1169,7 +1217,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Vegetable",
 		description: "",
-		sell: { type: "Quality", Regular: 60, Silver: 75, Gold: 90, Iridium: 120 },
+		sell: {
+			type: "Quality",
+			Regular: 60,
+			Silver: 75,
+			Gold: 90,
+			Iridium: 120,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 20, health: 9 },
@@ -1209,7 +1263,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Vegetable",
 		description: "",
-		sell: { type: "Quality", Regular: 60, Silver: 75, Gold: 90, Iridium: 120 },
+		sell: {
+			type: "Quality",
+			Regular: 60,
+			Silver: 75,
+			Gold: 90,
+			Iridium: 120,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 20, health: 9 },
@@ -1247,7 +1307,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Vegetable",
 		description: "",
-		sell: { type: "Quality", Regular: 25, Silver: 31, Gold: 37, Iridium: 50 },
+		sell: {
+			type: "Quality",
+			Regular: 25,
+			Silver: 31,
+			Gold: 37,
+			Iridium: 50,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 45, health: 20 },
@@ -1332,7 +1398,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Vegetable",
 		description: "",
-		sell: { type: "Quality", Regular: 35, Silver: 43, Gold: 52, Iridium: 70 },
+		sell: {
+			type: "Quality",
+			Regular: 35,
+			Silver: 43,
+			Gold: 52,
+			Iridium: 70,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 25, health: 11 },
@@ -1544,7 +1616,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Vegetable",
 		description: "",
-		sell: { type: "Quality", Regular: 30, Silver: 37, Gold: 45, Iridium: 60 },
+		sell: {
+			type: "Quality",
+			Regular: 30,
+			Silver: 37,
+			Gold: 45,
+			Iridium: 60,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 3, health: 1 },
@@ -1580,7 +1658,7 @@ const crops = [
 		name: "Taro Root",
 		id: "Tomato",
 		version: 1.5,
-		type: "Crop",
+		type: "Special",
 		"sub-type": "Vegetable",
 		description: "",
 		sell: {
@@ -1628,7 +1706,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Vegetable",
 		description: "",
-		sell: { type: "Quality", Regular: 60, Silver: 75, Gold: 90, Iridium: 120 },
+		sell: {
+			type: "Quality",
+			Regular: 60,
+			Silver: 75,
+			Gold: 90,
+			Iridium: 120,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 20, health: 9 },
@@ -1668,7 +1752,13 @@ const crops = [
 		type: "Crop",
 		"sub-type": "Vegetable",
 		description: "",
-		sell: { type: "Quality", Regular: 25, Silver: 31, Gold: 37, Iridium: 50 },
+		sell: {
+			type: "Quality",
+			Regular: 25,
+			Silver: 31,
+			Gold: 37,
+			Iridium: 50,
+		},
 		edible: false,
 		seasons: ["Summer"],
 		sources: [{ type: "Farming", name: "Wheat Seeds" }],
@@ -1746,7 +1836,13 @@ const crops = [
 		type: "Tree",
 		"sub-type": "Fruit",
 		description: "",
-		sell: { type: "Quality", Regular: 50, Silver: 62, Gold: 75, Iridium: 100 },
+		sell: {
+			type: "Quality",
+			Regular: 50,
+			Silver: 62,
+			Gold: 75,
+			Iridium: 100,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 38, health: 17 },
@@ -2150,7 +2246,13 @@ const crops = [
 		type: "Wild Seeds",
 		"sub-type": "Forage",
 		description: "Slightly nutty, with good texture. ",
-		sell: { type: "Quality", Regular: 40, Silver: 50, Gold: 60, Iridium: 80 },
+		sell: {
+			type: "Quality",
+			Regular: 40,
+			Silver: 50,
+			Gold: 60,
+			Iridium: 80,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 38, health: 17 },
@@ -2182,7 +2284,13 @@ const crops = [
 		type: "Wild Seeds",
 		"sub-type": "Forage",
 		description: "A traditional spring flower that makes a nice gift.",
-		sell: { type: "Quality", Regular: 30, Silver: 37, Gold: 45, Iridium: 60 },
+		sell: {
+			type: "Quality",
+			Regular: 30,
+			Silver: 37,
+			Gold: 45,
+			Iridium: 60,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 0, health: 0 },
@@ -2216,8 +2324,15 @@ const crops = [
 		version: 1.4,
 		type: "Wild Seeds",
 		"sub-type": "Forage",
-		description: "Not the prettiest flower, but the leaves make a good salad.",
-		sell: { type: "Quality", Regular: 40, Silver: 50, Gold: 60, Iridium: 80 },
+		description:
+			"Not the prettiest flower, but the leaves make a good salad.",
+		sell: {
+			type: "Quality",
+			Regular: 40,
+			Silver: 50,
+			Gold: 60,
+			Iridium: 80,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 25, health: 11 },
@@ -2251,7 +2366,13 @@ const crops = [
 		type: "Wild Seeds",
 		"sub-type": "Forage",
 		description: "A tasty relative of the onion.",
-		sell: { type: "Quality", Regular: 60, Silver: 75, Gold: 90, Iridium: 120 },
+		sell: {
+			type: "Quality",
+			Regular: 60,
+			Silver: 75,
+			Gold: 90,
+			Iridium: 120,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 40, health: 18 },
@@ -2286,7 +2407,13 @@ const crops = [
 		type: "Wild Seeds",
 		"sub-type": "Forage",
 		description: "A spicy root found in the spring.",
-		sell: { type: "Quality", Regular: 50, Silver: 62, Gold: 75, Iridium: 100 },
+		sell: {
+			type: "Quality",
+			Regular: 50,
+			Silver: 62,
+			Gold: 75,
+			Iridium: 100,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 13, health: 5 },
@@ -2321,7 +2448,13 @@ const crops = [
 		type: "Wild Seeds",
 		"sub-type": "Forage",
 		description: "A fragrant summer flower. ",
-		sell: { type: "Quality", Regular: 50, Silver: 62, Gold: 75, Iridium: 100 },
+		sell: {
+			type: "Quality",
+			Regular: 50,
+			Silver: 62,
+			Gold: 75,
+			Iridium: 100,
+		},
 		edible: false,
 		seasons: ["Summer"],
 		sources: [{ type: "Farming", name: "Summer Seeds" }],
@@ -2346,7 +2479,13 @@ const crops = [
 		type: "Wild Seeds",
 		"sub-type": "Forage",
 		description: "",
-		sell: { type: "Quality", Regular: 60, Silver: 75, Gold: 90, Iridium: 120 },
+		sell: {
+			type: "Quality",
+			Regular: 60,
+			Silver: 75,
+			Gold: 90,
+			Iridium: 120,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 0, health: 0 },
@@ -2420,7 +2559,13 @@ const crops = [
 		type: "Wild Seeds",
 		"sub-type": "Forage",
 		description: "",
-		sell: { type: "Quality", Regular: 70, Silver: 87, Gold: 105, Iridium: 140 },
+		sell: {
+			type: "Quality",
+			Regular: 70,
+			Silver: 87,
+			Gold: 105,
+			Iridium: 140,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 25, health: 11 },
@@ -2454,7 +2599,13 @@ const crops = [
 		type: "Wild Seeds",
 		"sub-type": "Fruit",
 		description: "An early-fall treat. ",
-		sell: { type: "Quality", Regular: 20, Silver: 25, Gold: 30, Iridium: 40 },
+		sell: {
+			type: "Quality",
+			Regular: 20,
+			Silver: 25,
+			Gold: 30,
+			Iridium: 40,
+		},
 		edible: true,
 		edibleStats: {
 			regular: { energy: 25, health: 11 },
@@ -2619,7 +2770,7 @@ exports.cropsObj = crops.reduce((cropsObj, crop) => {
 
 // //////
 // crop types
-exports.cropTypes = ["Crop", "Tree", "Wild Seeds"];
+exports.cropTypes = ["Crop", "Tree", "Wild Seeds", "Special"];
 exports.cropSubTypes = [
 	"Flower",
 	"Forage",

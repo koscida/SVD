@@ -1,6 +1,7 @@
 import RenderImg from "../../shared/Icons/RenderImg";
 
 import { cropsObj } from "../../../data/crops";
+import RenderImageSmall from "../../shared/Icons/RenderImageSmall";
 
 function Calendar({ plots, selectedSeason }) {
 	// console.log("plots", plots);
@@ -106,7 +107,6 @@ function Calendar({ plots, selectedSeason }) {
 								return Object.entries(crops).map(
 									([cropName, cropData], k) => {
 										const crop = cropsObj[cropName];
-										const cropGrow = crop.Grow;
 
 										// const harvestOpacity = 1;
 										// const seedOpacity = 1;
@@ -115,12 +115,14 @@ function Calendar({ plots, selectedSeason }) {
 
 										// set opacity
 										// if planting
-										let seedOpacity = !cropGrow.time.regrow
-											? 1 / (cropGrow.time.time + 1)
+										let seedOpacity = !crop.Farming.time
+											.regrow
+											? 1 / (crop.Farming.time.time + 1)
 											: 1 /
-											  (cropGrow.time.regrowTime + 1);
+											  (crop.Farming.time.regrowTime +
+													1);
 										let growOpacity =
-											1 / (cropGrow.time.time + 1);
+											1 / (crop.Farming.time.time + 1);
 										// if harvesting
 										let harvestOpacity = 1;
 										//
@@ -159,18 +161,18 @@ function Calendar({ plots, selectedSeason }) {
 															}
 															color={cropColor}
 														/>
-														<RenderImg
+														<RenderImageSmall
 															label={crop.name}
 														/>
 													</>
 												)}
 												{cropData.isPlanting && (
 													<>
-														<RenderImg
+														<RenderImageSmall
 															label={
-																cropGrow
-																	.ingredients[0]
-																	.ingredient
+																crop.Farming
+																	.seeds[0]
+																	.name
 															}
 														/>
 														<RenderBand

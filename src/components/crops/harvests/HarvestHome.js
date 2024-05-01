@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import useLocalStorage from "../../shared/useLocalStorage";
-import Plots from "./Plots";
+import Plots from "./plots/Plots";
 import Planting from "./Planting";
 import Calendar from "./Calendar";
 import Summary from "./Summary";
@@ -48,17 +48,17 @@ const calcInitHarvests = (crop, seeds) => {
 		let growingTime;
 
 		// init harvest, or regrowing, plant
-		if (harvests.length === 0 || !crop.regrow) {
+		if (harvests.length === 0 || !crop.Farming.time.regrow) {
 			// plant or replant
 			newHarvest.plantDay = day;
 			newHarvest.seeds = seeds;
 			// set growing time
-			growingTime = crop.growTime;
+			growingTime = crop.Farming.time.time;
 			// set diff between growing periods
 			newHarvest.plantOffset = 0;
 		} else {
 			// set growing time
-			growingTime = crop.regrowTime + 1;
+			growingTime = crop.Farming.time.regrowTime + 1;
 		}
 
 		// get harvest day
@@ -151,7 +151,7 @@ function HarvestHome() {
 	const initHarvest = calcInitHarvests(cropsObj["Parsnip"], 15);
 	const [plots, setPlots] = useLocalStorage("svd-harvest-plots", [
 		{
-			name: "Parsnips",
+			name: "Plot 1",
 			size: 15,
 			selectedCrops: ["Parsnip"],
 			harvests: { Parsnip: initHarvest },

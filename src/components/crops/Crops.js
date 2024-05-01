@@ -70,6 +70,10 @@ const calcInitColumnData = (crops) => {
 					accessor: "nameDisplay",
 				},
 				{
+					Header: "Category",
+					accessor: "type",
+				},
+				{
 					Header: "Type",
 					accessor: "sub-type",
 				},
@@ -354,7 +358,7 @@ const calcInitTableData = (crops) =>
 		// ////////////////////
 		// ////////////////////
 		// Info
-		{
+		if (true) {
 			// name
 			newCrop.nameDisplay = (
 				<>
@@ -397,7 +401,7 @@ const calcInitTableData = (crops) =>
 		// ////////////////////
 		// ////////////////////
 		// Harvesting
-		{
+		if (true) {
 			//
 			// time (store for later)
 			newCrop.growTime = crop.Farming.time.time;
@@ -535,7 +539,7 @@ const calcInitTableData = (crops) =>
 		// ////////////////////
 		// ////////////////////
 		// Profit
-		{
+		if (true) {
 			//
 			// sell calculations
 			newCrop.sellCropSingle =
@@ -552,20 +556,21 @@ const calcInitTableData = (crops) =>
 				newCrop.sellCropSingle * newCrop.yieldYear
 			).toFixed(0);
 
-			newCrop.sellCropSeason =
-				newCrop.sellCropSeasonTotal +
-				" (" +
-				newCrop.sellCropSingle +
-				" x " +
-				newCrop.yieldSeason +
-				")";
-			newCrop.sellCropYear =
-				newCrop.sellCropYearTotal +
-				" (" +
-				newCrop.sellCropSingle +
-				" x " +
-				newCrop.yieldYear +
-				")";
+			newCrop.sellCropSeason = (
+				<>
+					{newCrop.sellCropSeasonTotal}
+					<br />({newCrop.sellCropSingle}
+					{" x "}
+					{newCrop.yieldSeason})
+				</>
+			);
+			newCrop.sellCropYear = (
+				<>
+					{newCrop.sellCropYearTotal} <br />({newCrop.sellCropSingle}
+					{" x "}
+					{newCrop.yieldYear})
+				</>
+			);
 
 			//
 			// seed cost (save for later)
@@ -597,13 +602,15 @@ const calcInitTableData = (crops) =>
 				(newCrop.regrow === "Yes" ? 1 : newCrop.yieldYear);
 			newCrop.seedCostShopSeason = (
 				<>
-					{newCrop.seedCostShopSeasonTotal} ({newCrop.seedCost} x{" "}
+					{newCrop.seedCostShopSeasonTotal}
+					<br />({newCrop.seedCost} x{" "}
 					{newCrop.regrow === "Yes" ? 1 : newCrop.harvestsSeason})
 				</>
 			);
 			newCrop.seedCostShopYear = (
 				<>
-					{newCrop.seedCostShopYearTotal} ({newCrop.seedCost} x{" "}
+					{newCrop.seedCostShopYearTotal}
+					<br />({newCrop.seedCost} x{" "}
 					{newCrop.regrow === "Yes" ? 1 : newCrop.yieldYear})
 				</>
 			);
@@ -631,17 +638,17 @@ const calcInitTableData = (crops) =>
 			//
 			// daily profit: none
 			newCrop.dailyProfitCropSingle = (
-				newCrop.sellCropSingle / newCrop.growTime
+				newCrop.sellCropSingle / newCrop.growTimeSingle
 			).toFixed(1);
 			newCrop.dailyProfitCropSeason = (
-				newCrop.sellSeasonTotal / newCrop.harvestLastSeason
+				newCrop.sellCropSeasonTotal / newCrop.harvestLastSeason
 			).toFixed(1);
 			newCrop.dailyProfitCropYear = (
-				newCrop.sellYearTotal / newCrop.harvestLastYear
+				newCrop.sellCropYearTotal / newCrop.harvestLastYear
 			).toFixed(1);
 			// daily profit: shop
 			newCrop.dailyProfitCropShopSingle = (
-				newCrop.profitCropShopSingle / newCrop.growTime
+				newCrop.profitCropShopSingle / newCrop.growTimeSingle
 			).toFixed(1);
 			newCrop.dailyProfitCropShopSeason = (
 				newCrop.profitCropShopSeason / newCrop.harvestLastSeason
@@ -651,7 +658,7 @@ const calcInitTableData = (crops) =>
 			).toFixed(1);
 			// daily profit: seed maker
 			newCrop.dailyProfitCropSeedSingle = (
-				newCrop.profitCropSeedSingle / newCrop.growTime
+				newCrop.profitCropSeedSingle / newCrop.growTimeSingle
 			).toFixed(1);
 			newCrop.dailyProfitCropSeedSeason = (
 				newCrop.profitCropSeedSeason / newCrop.harvestLastSeason

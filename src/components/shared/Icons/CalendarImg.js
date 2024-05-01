@@ -1,4 +1,6 @@
-const CalendarImg = ({ label }) => {
-	return <img src={"images/Calendar.png"} alt={"calendar"} className="icon" />;
+import RenderImg from "./RenderImg";
+
+const CalendarImg = ({ styles = {} }) => {
+	return <RenderImg label={"Calendar"} styles={styles} />;
 };
 export default CalendarImg;
